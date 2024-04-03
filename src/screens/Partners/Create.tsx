@@ -1,0 +1,797 @@
+import {
+  Button, Checkbox, Col, Divider, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile,
+} from 'antd';
+import { useContext, useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
+import { handleErrorResponse, openToastNotification, showError } from '../../helpers/globalFunctions';
+import UploadFile from '../../components/UploadFile/Index';
+import { useTranslation } from 'react-i18next';
+import { createPartner, getPartner, updatePartner } from '../../services/api/partner';
+import { Partner } from '../../interface/Partner';
+import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
+import Loader from '../../components/Loader';
+import { ApiError } from '../../services/api/Index';
+import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
+
+const { Title } = Typography;
+const { Option } = Select;
+const { TextArea } = Input;
+
+interface Service {
+  id: number;
+  name: string;
+  fee: number;
+  feeType: 'FIXED_FEE';
+  checked: boolean;
+}
+
+function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
+  const { t } = useTranslation();
+  const BUTTONS: any = t("BUTTONS", { returnObjects: true });
+  const HEADING: any = t("HEADING", { returnObjects: true });
+  const ERRORS: any = t("ERRORS", { returnObjects: true });
+  const LABELS: any = t("LABELS", { returnObjects: true });
+  const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
+  const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
+  const { setSuccess } = useContext(GlobalContext) as GlobalContextProps;
+
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const [fileList, setFileList] = useState<AntUploadFile[]>([]);
+  const [isAdminAccount, setIsAdminAccount] = useState(false)
+  const [isDataChanges, setIsDataChanges] = useState(false)
+  const [services, setServices] = useState<Service[]>([
+    { id: 1, name: 'Doctor Consultation', fee: 0, feeType: 'FIXED_FEE', checked: true },
+  ]);
+  const [errors, setErrors] = useState({
+    name: "",
+    businessId: "",
+    licenseNumber: "",
+    status: "",
+    uploadLogo: "",
+    contractNumber: "",
+    searchAndSelectCity: "",
+    streetAddress: "",
+    postalCode: "",
+    emailAddress: "",
+    phoneNumber: "",
+    contactPerson: "",
+    fixedFee: "",
+  });
+
+  let params = useParams();
+  let partnerID = params.partnerID || "";
+
+  const inputNameRef = useRef<null | HTMLElement>(null);
+  const inputBusinessIdRef = useRef<null | HTMLElement>(null);
+  const inputLicenseNumberRef = useRef<null | HTMLElement>(null);
+  const inputStatusRef = useRef<null | HTMLElement>(null);
+  const inputContractNumberRef = useRef<null | HTMLElement>(null);
+  const inputSearchAndSelectCityRef = useRef<null | HTMLElement>(null);
+  const inputStreetAddressRef = useRef<null | HTMLElement>(null);
+  const inputPostalCodeRef = useRef<null | HTMLElement>(null);
+  const inputEmailAddressRef = useRef<null | HTMLElement>(null);
+  const inputPhoneNumberRef = useRef<null | HTMLElement>(null);
+  const inputContactPersonRef = useRef<null | HTMLElement>(null);
+  const inputdocConsFixedFeeRef = useRef<null | HTMLElement>(null);
+
+  const getInputRefByFieldName = (fieldName: string | undefined) => {
+    switch (fieldName) {
+      case "name":
+        return inputNameRef;
+      case "businessId":
+        return inputBusinessIdRef;
+      case "licenseNumber":
+        return inputLicenseNumberRef;
+      case "status":
+        return inputStatusRef;
+      case "contractNumber":
+        return inputContractNumberRef;
+      case "searchAndSelectCity":
+        return inputSearchAndSelectCityRef;
+      case "streetAddress":
+        return inputStreetAddressRef;
+      case "postalCode":
+        return inputPostalCodeRef;
+      case "emailAddress":
+        return inputEmailAddressRef;
+      case "phoneNumber":
+        return inputPhoneNumberRef;
+      case "contactPerson":
+        return inputContactPersonRef;
+      case "fixedFee":
+        return inputdocConsFixedFeeRef;
+      default:
+        return null;
+    }
+  };
+
+  const partnerRequest = () => {
+    const request = {
+      name: form.getFieldValue('name'),
+      businessId: form.getFieldValue('businessId'),
+      licenseNumber: form.getFieldValue('licenseNumber'),
+      status: form.getFieldValue('status'),
+      // imageUrl: fileList?.length > 0 ? fileList[0] : {},
+      imageUrl: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+      contractNumber: form.getFieldValue('contractNumber'),
+      registeredCityId: 1,
+      currencyId: 1,
+      registeredStreetAddress: form.getFieldValue('streetAddress'),
+      registeredPostalCode: form.getFieldValue('postalCode'),
+      emailAddress: form.getFieldValue('emailAddress'),
+      phoneNumber: form.getFieldValue('phoneNumber'),
+      contactPerson: form.getFieldValue('contactPerson'),
+      createAdminAccount: isAdminAccount,
+      services: createServicepayload(),
+    }
+    return request;
+  }
+
+  const handleFinish = async () => {
+    try {
+      showLoader();
+      let response: any = {}
+      if (!partnerID) response = await createPartner(partnerRequest());
+
+      if (partnerID) response = await updatePartner(partnerID, partnerRequest());
+      form.resetFields();
+      setFileList([]);
+      !partnerID && navigate(-1);
+
+      if (partnerID && response.success) {
+        getPartnerDetail()
+        openToastNotification(
+          "Partner updated successfully",
+          "notifications toast-notification-success"
+        );
+      } else {
+        setSuccess("Partner created successfully")
+      }
+
+    } catch (error) {
+      const _error = error as ApiError;
+      const { errorMessage } = handleErrorResponse(_error);
+      openToastNotification(
+        errorMessage,
+        "notifications toast-notification-error"
+      );
+      console.log("error", _error);
+    } finally {
+      hideLoader();
+    }
+  }
+
+  const getPartnerDetail = async () => {
+    try {
+      showLoader();
+      const response = await getPartner(partnerID);
+      setFormValues(response?.data?.partner);
+    } catch (error) {
+      const _error = error as ApiError;
+      const { errorMessage } = handleErrorResponse(_error);
+      openToastNotification(
+        errorMessage,
+        "notifications toast-notification-error"
+      );
+      console.log("error", _error);
+    } finally {
+      hideLoader();
+    }
+  }
+
+  const setFormValues = (currentPartner: Partner) => {
+    form.setFieldsValue({
+      name: currentPartner?.name,
+      businessId: currentPartner?.businessId,
+      licenseNumber: currentPartner?.licenseNumber,
+      status: currentPartner?.status,
+      contractNumber: currentPartner?.contractNumber,
+      searchAndSelectCity: currentPartner?.registeredCity?.name,
+      streetAddress: currentPartner?.registeredStreetAddress,
+      postalCode: currentPartner?.registeredPostalCode,
+      emailAddress: currentPartner?.emailAddress,
+      phoneNumber: currentPartner?.phoneNumber,
+      contactPerson: currentPartner?.contactPerson,
+      docConsFixedFee: currentPartner?.services && currentPartner?.services[0]?.feeValue,
+    })
+    setFileList([{ uid: '-1', name: 'image', status: 'done', url: currentPartner?.imageUrl }]);
+  }
+
+  const submitFailed = (errorInfo: any) => {
+    setSuccess("test success")
+    navigate(-1);
+    const errorFields = errorInfo.errorFields;
+    let firstErrorFieldName = "";
+    for (const error of errorFields) {
+      console.log('error', error);
+
+      const fieldName = error?.name[0].toString() || "";
+      if (!firstErrorFieldName) {
+        firstErrorFieldName = fieldName;
+        const inputRef = getInputRefByFieldName(firstErrorFieldName);
+        showError(error.errors[0]);
+        if (inputRef && inputRef.current) {
+          inputRef.current.focus();
+        }
+      }
+    }
+  };
+
+  const handleUpdate = () => {
+  }
+
+  const handleOnChange = () => {
+    setIsDataChanges(true)
+  }
+
+  const uploadLogoHandler = (e: any) => {
+    setIsDataChanges(true)
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  }
+
+  const createServicepayload = () => {
+    return services
+      .filter((service) => service.checked)
+      .map(({ id, fee, feeType }) => ({
+        serviceId: id,
+        feeValue: fee,
+        feeType,
+        status: 'ENABLED',
+      }));
+  };
+
+  const handleCheckboxChange = (serviceId: number) => {
+    const updatedServices = services.map((service) =>
+      service.id === serviceId ? { ...service, checked: !service.checked } : service
+    );
+    setServices(updatedServices);
+    setIsDataChanges(true)
+
+  };
+
+  const handleInputChange = (serviceId: number, fee: number) => {
+    const updatedServices = services.map((service) =>
+      service.id === serviceId ? { ...service, fee } : service
+    );
+    setServices(updatedServices);
+    setIsDataChanges(true)
+  };
+
+  useEffect(() => {
+    partnerID && getPartnerDetail();
+  }, [])
+
+  return (
+    <div className={isUpdateForm ? 'update-partner-content' : 'create-partner-content'}>
+      {isLoading ? <Loader /> : <Form
+        onFinish={handleFinish}
+        onFinishFailed={submitFailed}
+        name='basic'
+        labelCol={{ span: 24 }}
+        wrapperCol={{ span: 24 }}
+        form={form}
+        autoComplete='off'
+        onValuesChange={handleOnChange}
+      >
+
+        {!isUpdateForm && <Row justify={"space-between"} className='mb-2'>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 12 }}
+            lg={{ span: 12 }}
+          >
+            <Title level={3} className='remove-vertical-margin '>
+              {isUpdateForm ? "Update partner" : "Create partner"}
+            </Title>
+          </Col>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 12 }}
+            lg={{ span: 12 }}
+          >
+
+          </Col>
+        </Row>}
+        <Row justify='end'>
+          <Col>
+            <Space>
+              <Button
+                type='default'
+                htmlType='button'
+                onClick={() => navigate(-1)}
+              >
+                {LABELS.CANCEL}
+              </Button>
+              <Button
+                type='primary'
+                htmlType='submit'
+                disabled={(partnerID && (isDataChanges ? false : true) || false)}
+              >
+                {isUpdateForm ? BUTTONS.UPDATE : BUTTONS.SAVE}
+              </Button>
+            </Space>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+
+          <Col
+            lg={{ span: 15 }}
+            md={{ span: 24 }}
+            sm={{ span: 24 }}
+            xs={{ span: 24 }}
+          >
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 24 }}
+                md={{ span: 24 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Title level={3} className='remove-vertical-margin '>
+                  {HEADING.BASIC_DETAILS}
+                </Title>
+              </Col>
+            </Row>
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.name ? "error" : ""}
+                  name='name'
+                  label={
+                    <label className='label '>
+                      {LABELS.NAME}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.NAME }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Name" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Name" }) }, { pattern: new RegExp(/^[a-zA-Z0-9 ]+$/), message: t("ERRORS.VALID_INPUT", { type: "Name" }) }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.NAME}
+                    ref={inputNameRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.businessId ? "error" : ""}
+                  name='businessId'
+                  label={
+                    <label className='label '>
+                      {LABELS.BUSINESS_ID}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.BUSINESS_ID, }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Business ID" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Business ID" }) }, { pattern: new RegExp(/^[a-zA-Z0-9 ]+$/), message: t("ERRORS.VALID_INPUT", { type: "Business ID" }) }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.BUSINESS_ID}
+                    ref={inputBusinessIdRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={8}>
+
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.licenseNumber ? "error" : ""}
+                  name='licenseNumber'
+                  label={
+                    <label className='label '>
+                      {LABELS.LICENSE_NUMBER}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.LICENSE_NUMBER }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "License number" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "License number" }) }, { pattern: new RegExp(/^[a-zA-Z0-9 ]+$/), message: t("ERRORS.VALID_INPUT", { type: "License number" }) }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.LICENSE_NUMBER}
+                    ref={inputLicenseNumberRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.status ? "error" : ""}
+                  name='status'
+                  label={
+                    <label className='label '>
+                      {LABELS.STATUS}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.STATUS }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Select
+                    placeholder={PLACEHOLDERS.STATUS}
+                    ref={inputStatusRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  >
+                    <Option value={LABELS.ENABLED.toUpperCase()}>{LABELS.ENABLED}</Option>
+                    <Option value={LABELS.DISABLED.toUpperCase()}>{LABELS.DISABLED}</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+
+            </Row>
+
+            <Row gutter={8}>
+
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item name="fileList" label="File Upload" valuePropName="fileList" getValueFromEvent={uploadLogoHandler}>
+                  <UploadFile
+                    setFileList={setFileList}
+                    fileList={fileList}
+                    fileType={"image/png"}
+                    fileTypeError={ERRORS?.IMAGE_FILE_TYPE}
+                    requiredImage={false}
+                    errorMessage={ERRORS.UPLOAD_LOGO}
+                    validateTrigger={["handleSave", "handleUpdate"]}
+                    defaultFileList={fileList}
+                    label={LABELS.UPLOAD_LOGO}
+                    name={"image"}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.contractNumber ? "error" : ""}
+                  name='contractNumber'
+                  label={
+                    <label className='label '>
+                      {LABELS.CONTRACT_NUMBER}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.CONTRACT_NUMBER }, { max: 16, message: t("ERRORS.MAX_LENGTH_16", { type: "Contact number" }) }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Contact number" }) }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.CONTRACT_NUMBER}
+                    ref={inputContractNumberRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row justify={"space-between"} className='mb-2'>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 12 }}
+                lg={{ span: 12 }}
+              >
+                <Title level={3} className='remove-vertical-margin '>
+                  {HEADING.REGISTERED_ADDRESS}
+                </Title>
+              </Col>
+            </Row>
+
+            <Row gutter={8}>
+
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                {/* create a select with some defined cities */}
+                <Form.Item
+                  validateStatus={errors.searchAndSelectCity ? "error" : ""}
+                  name='searchAndSelectCity'
+                  label={
+                    <label className='label '>
+                      {LABELS.CITY}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.SEARCH_AND_SELECT_CITY }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Select
+                    placeholder={LABELS.SEARCH_AND_SELECT_CITY}
+                    ref={inputSearchAndSelectCityRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  >
+                    <Option value='new york'>{LABELS.NEW_YORK}</Option>
+                    <Option value='los angeles'>{LABELS.LOS_ANGELES}</Option>
+                    <Option value='chicago'>{LABELS.CHICAGO}</Option>
+                    <Option value='san francisco'>{LABELS.SAN_FRANCISCO}</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+
+            </Row>
+
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 24 }}
+                md={{ span: 24 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.streetAddress ? "error" : ""}
+                  name='streetAddress'
+                  label={
+                    <label className='label '>
+                      {LABELS.STREET_ADDRESS}
+                    </label>
+                  }
+                  rules={[{ message: ERRORS.STREET_ADDRESS }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Street address" }) }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <TextArea
+                    placeholder={LABELS.STREET_ADDRESS}
+                    ref={inputStreetAddressRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                    rows={4}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.postalCode ? "error" : ""}
+                  name='postalCode'
+                  label={
+                    <label className='label '>
+                      {LABELS.POSTAL_CODE}
+                    </label>
+                  }
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.POSTAL_CODE}
+                    ref={inputPostalCodeRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row justify={"space-between"} className='mb-2'>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 12 }}
+                lg={{ span: 12 }}
+              >
+                <Title level={3} className='remove-vertical-margin '>
+                  {HEADING.CONTACT_DETAILS}
+                </Title>
+              </Col>
+            </Row>
+
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.contactPerson ? "error" : ""}
+                  name='contactPerson'
+                  label={
+                    <label className='label '>
+                      {LABELS.CONTACT_PERSON}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.CONTACT_PERSON }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Contact person" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Contact person" }) }, { pattern: new RegExp(/^[a-zA-Z0-9 ]+$/), message: t("ERRORS.VALID_INPUT", { type: "Contact person" }) }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.CONTACT_PERSON}
+                    ref={inputContactPersonRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  />
+                </Form.Item>
+              </Col>
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.emailAddress ? "error" : ""}
+                  name='emailAddress'
+                  label={
+                    <label className='label '>
+                      {LABELS.EMAIL_ADDRESS}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.EMAIL_ADDRESS }, { type: 'email', message: t("ERRORS.VALID_EMAIL", { type: "Email" }) }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.EMAIL_ADDRESS}
+                    ref={inputEmailAddressRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.phoneNumber ? "error" : ""}
+                  name='phoneNumber'
+                  label={
+                    <label className='label '>
+                      {LABELS.PHONE_NUMBER}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.PHONE_NUMBER }, { max: 16, message: t("ERRORS.MAX_LENGTH_16", { type: "Phone number" }) }, { pattern: new RegExp(/^(\+?\d{1,3}[\s-]?)?((\(\d{3}\)\s?)|(\d{3})[\s-]?)\d{3}[\s-]?\d{4}$/), message: t("ERRORS.VALID_INPUT", { type: "Phone number" }) }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.PHONE_NUMBER}
+                    ref={inputPhoneNumberRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  />
+                </Form.Item>
+              </Col>
+              {!isUpdateForm && <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+
+                <Form.Item
+                  label={
+                    <label className='label '>
+                      {""}
+                    </label>
+                  } >
+                  <Checkbox checked={isAdminAccount} onChange={(e: { target: { checked: boolean } }) => setIsAdminAccount(e.target.checked)}>
+                    {LABELS.CREATE_ADMIN_ACCOUNT}
+                  </Checkbox>
+                </Form.Item>
+
+              </Col>}
+            </Row>
+          </Col>
+
+          {/* create a horizental divider according to defined row and col structure,  */}
+          <Col
+            lg={{ span: 1 }}
+            md={{ span: 0 }}
+            sm={{ span: 0 }}
+            xs={{ span: 0 }}
+          >
+            <Divider orientation={"center"} type='vertical' style={{ height: '100%' }} />
+          </Col>
+
+
+
+          <Col
+            lg={{ span: 8 }}
+            md={{ span: 24 }}
+            sm={{ span: 24 }}
+            xs={{ span: 24 }}
+          >
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 24 }}
+                md={{ span: 24 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Title level={3} className='remove-vertical-margin '>
+                  {HEADING.CONFiGURATIONS}
+                </Title>
+              </Col>
+            </Row>
+
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 24 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                {/* display the checkbox and the input in single row */}
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+
+                  {services.map((service) => (
+                    <div key={service.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+                      <Form.Item>
+                        <Checkbox className='d-none' checked={true} onChange={() => handleCheckboxChange(service.id)}>
+                          {service.name}
+                        </Checkbox>
+                        {service.name}
+                      </Form.Item>
+                      <Form.Item
+                        validateStatus={errors.fixedFee ? "error" : ""}
+                        name='docConsFixedFee'
+                        rules={[{ required: true, message: ERRORS.FIXED_FEE }]}
+                        validateTrigger={["handleFinish", "handleUpdate"]}>
+                        <Input
+                          placeholder="Enter fee"
+                          value={666}
+                          onChange={(e) => handleInputChange(service.id, Number(e.target.value))}
+                          disabled={!service.checked}
+                        />
+                      </Form.Item>
+                    </div>
+                  ))}
+                </div>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Form >}
+    </div >
+  )
+}
+
+export default PartnerCreateUpdate
