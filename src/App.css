@@ -1,38 +1,259 @@
-.App {
+body {
+  margin: 0;
+}
+
+.main-container {
+  height: calc(100vh - 131px) !important;
+}
+
+.partner-content {
+  padding: 20px;
+}
+
+.manage-account-content {
+  padding: 20px;
+
+}
+
+.create-partner-content {
+  padding: 20px;
+}
+
+.terms-of-use{
+  padding: 20px;
+}
+
+.text-title {
+  color: white !important;
+  height: "100%";
+  flex: 1;
+  margin: 0 !important;
+  cursor: pointer;
+}
+
+.breadcrumb-content {
+  margin-top: 10px;
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.notifications {
+  border-radius: 3px;
+  padding: 5px 12px !important;
+  border-left: 5px solid;
+  font-weight: 600;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.12);
+}
+
+.toast-notification-success {
+  background-color: rgba(212, 237, 218, 1) !important;
+  border-color: #51a775;
+  color: #51a775;
+}
+
+.toast-notification-error {
+  background-color: #f3c3c3 !important;
+  border-color: #a75151;
+  color: #a75151;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.text-center {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
+
+.mb-1 {
+  margin-bottom: 10px;
+}
+
+.mb-2 {
+  margin-bottom: 20px;
+}
+
+.mb-3 {
+  margin-bottom: 30px;
+}
+
+.mb-5 {
+  margin-bottom: 50px;
+}
+
+.mt-1 {
+  margin-top: 10px;
+}
+
+.mt-2 {
+  margin-top: 20px;
+}
+
+.mt-3 {
+  margin-top: 30px;
+}
+
+.mt-5 {
+  margin-top: 50px;
+}
+
+.mr-1 {
+  margin-right: 10px;
+}
+
+.mr-2 {
+  margin-right: 20px;
+}
+
+.mr-3 {
+  margin-right: 30px;
+}
+
+.mr-5 {
+  margin-right: 50px;
+}
+
+.ml-1 {
+  margin-left: 10px;
+}
+
+.ml-2 {
+  margin-left: 20px;
+}
+
+.ml-3 {
+  margin-left: 30px;
+}
+
+.ml-5 {
+  margin-left: 50px;
+}
+
+.p-1 {
+  padding: 10px;
+}
+
+.p-2 {
+  padding: 20px;
+}
+
+.p-3 {
+  padding: 30px;
+}
+
+.p-5 {
+  padding: 50px;
+}
+
+.pt-1 {
+  padding-top: 10px;
+}
+
+.pt-2 {
+  padding-top: 20px;
+}
+
+.pt-3 {
+  padding-top: 30px;
+}
+
+.pt-5 {
+  padding-top: 50px;
+}
+
+.pb-1 {
+  padding-bottom: 10px;
+}
+
+.pb-2 {
+  padding-bottom: 20px;
+}
+
+.pb-3 {
+  padding-bottom: 30px;
+}
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.d-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.d-none {
+  display: none;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-overlay>* {
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.cursor-pointer {
+  cursor: pointer;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.login-form {
+  padding: 10px 30px;
+  background: rgba(255, 255, 255, 0.24);
+  border-radius: 15px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7.2px);
+  -webkit-backdrop-filter: blur(7.2px);
+  border: 2px solid rgba(0, 33, 71, 0.5);
 }
 
-.App-link {
-  color: #61dafb;
+.text-heading-fontsize {
+  font-size: 22px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* ant.design component customize */
+
+/* button customization */
+/* :where(.css-dev-only-do-not-override-1v50p1o).ant-btn-primary {
+  color: #183A59;
+  background-color: #F9C510;
+}
+
+:where(.css-dev-only-do-not-override-1cf654g).ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+  color: #183A59;
+} */
+
+:where(.css-dev-only-do-not-override-1lslvvd).ant-btn-primary {
+  box-shadow: 0 0px 00px rgba(0, 0, 0, 0.0);
+}
+
+:where(.css-dev-only-do-not-override-1lslvvd).ant-tabs .ant-tabs-tab.ant-tabs-tab-active {
+  background-color: #FAFAFA !important;
+}
+
+:where(.css-dev-only-do-not-override-1lslvvd).ant-tabs-card>.ant-tabs-nav .ant-tabs-tab,
+:where(.css-dev-only-do-not-override-1lslvvd).ant-tabs-card>div>.ant-tabs-nav .ant-tabs-tab {
+  background-color: transparent !important;
+}
+
+:where(.css-dev-only-do-not-override-1lslvvd).ant-tabs .ant-tabs-tab.ant-tabs-tab-active {
+  background-color: #FAFAFA !important;
 }

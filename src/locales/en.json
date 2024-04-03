@@ -1,0 +1,240 @@
+{
+    "MENULABEL": {
+        "PARTNER": "Partner",
+        "DASHBOARD": "dashboard"
+    },
+    "LABELS": {
+        "NO_RECORDS_FOUND": "No record in the table",
+        "REGISERED_NAME": "Registered Name",
+        "SERVICES": "Services",
+        "CONTACT_PERSON": "Contact Person",
+        "CITY": "City",
+        "NAME": "Name",
+        "BUSINESS_ID": "Business ID",
+        "LICENSE_NUMBER": "License Number",
+        "STATUS": "Status",
+        "UPLOAD_LOGO": "Upload Logo",
+        "CONTRACT_NUMBER": "Contract Number",
+        "SEARCH_AND_SELECT_CITY": "Please select city",
+        "STREET_ADDRESS": "Street Address",
+        "POSTAL_CODE": "Postal Code",
+        "EMAIL_ADDRESS": "Email Address",
+        "PHONE_NUMBER": "Phone Number",
+        "SERVICE_CONFIGURATION": "Service Configuration",
+        "CURRENCY": "Currency",
+        "CANCEL": "Cancel",
+        "SAVE": "Save",
+        "CREATE": "Create",
+        "ENABLED": "Enabled",
+        "DISABLED": "Disabled",
+        "DOCTOR_CONSULTATION": "Doctor Consultation",
+        "CREATE_ADMIN_ACCOUNT": "Create a Admin Account",
+        "CODE": "Code",
+        "WELCOME": "Welcome to Health4Travel Admin",
+        "EMAIL": "Email",
+        "VERIFY_EMAIL": "Verify Email",
+        "FOUR_DIGIT_CODE": "Enter the 4-digit code sent to your email",
+        "OTP_RESEND_COUNTER": "Resend code in {counter} seconds",
+        "SERVICE_TYPE": "Service Type",
+        "LAST_MODIFIED": "Last Modified",
+        "ROLE": "Role",
+        "LONGITUDE": "Longitude",
+        "LATITUDE": "Latitude",
+        "CUSTOM_GUIDELINES": "Custom Guidelines",
+        "DAY": "Day",
+        "START_TIME": "Start Time",
+        "END_TIME": "End Time",
+        "BREAK_START": "Break Start",
+        "BREAK_END": "Break End",
+        "PRICE": "Price (€)",
+        "DESCRIPTION": "Description",
+        "EXPEXTED_DIMENSIONS_LXW": "Expected dimensions LxW",
+        "CUSTOMER_SEES": "Customer sees",
+        "SLOT_DURATION": "Slot Duration"
+    },
+    "PLACEHOLDERS": {
+        "SEARCH": "Search",
+        "STATUS": "Status*(enabled/disabled)",
+        "FIXED_FEE": "Fixed Fee",
+        "EMAIL": "Please enter email"
+    },
+    "ERRORS": {
+        "NAME": "Please enter name",
+        "BUSINESS_ID": "Please enter business id",
+        "LICENSE_NUMBER": "Please enter license number",
+        "STATUS": "Please select status",
+        "UPLOAD_LOGO": "Please upload logo",
+        "CONTRACT_NUMBER": "Please enter contact number",
+        "VALID_INPUT": "Please enter valid {{type}}",
+        "SEARCH_AND_SELECT_CITY": "Please select city",
+        "STREET_ADDRESS": "Please enter street address",
+        "POSTAL_CODE": "Please enter postal code",
+        "POSTAL_CODE_VALID": "Please enter valid postal code",
+        "EMAIL_ADDRESS": "Please enter email address",
+        "PHONE_NUMBER": "Please enter phone number",
+        "SERVICE_CONFIGURATION": "Please enter service configuration",
+        "CURRENCY": "Please enter currency",
+        "CONTACT_PERSON": "Please enter contact person",
+        "FIXED_FEE": "Please enter fixed fee",
+        "IMAGE_FILE_TYPE": "Please upload a valid image file",
+        "SOME_THING_WENT_WRONG": "Something went wrong",
+        "EMAIL": "Please enter email",
+        "OTP_WRONG_TYPE": "OTP is invalid",
+        "OTP_BLANK_ERROR": "Please enter the OTP",
+        "CODE": "Please enter code",
+        "LONGITUDE": "Please enter longitude",
+        "LATITUDE": "Please enter latitude",
+        "PRICE": "Please enter price",
+        "ROLE": "Please select role",
+        "VALID_EMAIL": "Please enter valid email",
+        "MIN_LENGTH_3": "Please enter minimum 3 characters of {{type}}",
+        "MAX_LENGTH_50": "Please enter maximum 50 characters of {{type}}",
+        "MAX_LENGTH_16": "Please enter maximum 16 characters of {{type}}",
+        "MIN_LENGTH_10": "Please enter minimum 10 characters of {{type}}",
+        "SLOT_DURATION": "Please enter slot duration"
+    },
+    "BUTTONS": {
+        "ADD": "Add",
+        "SAVE": "Save",
+        "CANCEL": "Cancel",
+        "CREATE": "Create",
+        "SEND": "Send",
+        "VERIFY": "Verify",
+        "RESEND": "Resend",
+        "BACK": "Back",
+        "NEXT": "Next",
+        "SUBMIT": "Submit",
+        "DELETE": "Delete",
+        "UPDATE": "Update",
+        "SEARCH": "Search",
+        "RESET": "Reset",
+        "RESEND_CODE": "Resend Code"
+    },
+    "API_ERRORS": {
+        "UNAUTHORIZED": "Unauthorized",
+        "NOT_FOUND": "Not Found",
+        "PAYLOAD_TOO_LARGE": "Payload Too Large",
+        "INTERNAL_SERVER_ERROR": "Internal Server Error",
+        "SOME_THING_WENT_WRONG": "Something went wrong"
+    },
+    "TABS_KEY": {
+        "ENABLED": "Enabled",
+        "DISABLED": "Disabled",
+        "ALL": "All"
+    },
+    "HEADING": {
+        "HEALTH$TRAVEL_ADMIN": "Health4Travel - Admin",
+        "BASIC_DETAILS": "Basic Details",
+        "REGISTERED_ADDRESS": "Registered Address",
+        "CONTACT_DETAILS": "Contact Details",
+        "CONFiGURATIONS": "Configurations",
+        "OPERATING_HOURS": "Operating Hours",
+        "SELECT_LOCATIONS": "Select Locations(partner)"
+    },
+    "TABS_LABEL": {
+        "CURRENT": "current",
+        "PROFILE": "profile",
+        "PARTNERS": "partners",
+        "LOCATIONS": "locations",
+        "PRODUCTS": "products",
+        "USER_ACCESS": "user access"
+    },
+    "TABLE_NO_RECORDS_TEXT": {
+        "PARTNERS": "No partners found.",
+        "LOCATIONS": "No locations found.",
+        "PRODUCTS": "No products found.",
+        "USERS": "No users found."
+    },
+    "privacyPolicy": {
+        "title": "Health4Travel Acceptable Use Agreement",
+        "introText": "This Health4Travel Acceptable Use Agreement (\"Agreement\") is entered into by and between Health4Travel (iFlyIT BV) (\"Health4Travel\") and all users of the Health4Travel platform (\"User\").",
+        "purpose": {
+            "title": "Purpose",
+            "text": "This Agreement sets forth the terms and conditions under which Users may access and use the Health4Travel platform (\"Platform\"). By accessing or using the Platform, you agree to be bound by the terms of this Agreement."
+        },
+        "userConduct": {
+            "title": "User Conduct",
+            "text1": "Users must use the Platform in a lawful and ethical manner.",
+            "text2": "Prohibited activities include, but are not limited to:",
+            "items": [
+                "Fraudulent or misleading practices.",
+                "Harassment, hate speech, or threats.",
+                "Unauthorized access to other users' accounts or data.",
+                "Violation of intellectual property rights."
+            ]
+        },
+        "contentGuidelines": {
+            "title": "Content Guidelines",
+            "text": "Users must adhere to the following content guidelines:",
+            "items": [
+                "Post accurate and non-deceptive content.",
+                "Prohibit content that is offensive, harmful, or illegal.",
+                "Respect intellectual property rights; do not use copyrighted materials without permission."
+            ]
+        },
+        "prohibitedItems": {
+            "title": "Prohibited Items or Services",
+            "text": "Users may not offer, list, or promote:",
+            "items": [
+                "Products or services that are illegal, counterfeit, or infringe on intellectual property rights.",
+                "Controlled substances, illegal drugs, or drug paraphernalia.",
+                "Items or services that are prohibited by applicable laws or regulations."
+            ]
+        },
+        "privacyAndData": {
+            "title": "Privacy and Data Handling",
+            "text": "Users must comply with the Health4Travel Privacy Policy, available at ",
+            "link": "https://health4travel.com/wp-content/uploads/2023/09/T2T-privacy-policy.pdf"
+        },
+        "intellectualProperty": {
+            "title": "Intellectual Property",
+            "text1": "Users are responsible for ensuring they have the necessary rights and permissions to use intellectual property on the Platform.",
+            "text2": "Health4Travel respects intellectual property rights and will respond to valid infringement claims promptly."
+        },
+        "userAccounts": {
+            "title": "User Accounts",
+            "text1": "Users are responsible for maintaining the security and accuracy of their accounts.",
+            "text2": "Do not share login credentials or allow unauthorized access to your account."
+        },
+        "terminationOfAccounts": {
+            "title": "Termination of Accounts",
+            "text": "Health4Travel reserves the right to suspend or terminate a User's access to the Platform for violations of this Agreement or for any other reason, in its sole discretion."
+        },
+        "disputeResolution": {
+            "title": "Dispute Resolution",
+            "text": "Users agree to resolve disputes with other Users through peaceful means, including negotiation and mediation if necessary."
+        },
+        "reportingViolations": {
+            "title": "Reporting Violations",
+            "text": "Users can report violations of this Agreement or other misconduct on the Platform through the designated reporting mechanism."
+        },
+        "liabilityDisclaimer": {
+            "title": "Liability Disclaimer",
+            "text": "Health4Travel is a platform and technology provider and is not responsible or liable for the quality, safety, or legality of products or services offered by Users on the Platform."
+        },
+        "governingLaw": {
+            "title": "Governing Law",
+            "text": "This Agreement shall be governed by and construed in accordance with the laws of The Netherlands."
+        },
+        "updatesToAgreement": {
+            "title": "Updates to the Agreement",
+            "text": "Health4Travel reserves the right to modify this Agreement and will provide notice of any changes via email and the platform. Continued use of the Platform constitutes acceptance of the revised Agreement."
+        },
+        "contactInformation": {
+            "title": "Contact Information",
+            "text": "For questions or concerns regarding this Agreement, please contact Health4Travel at ",
+            "email": "info@health4travel.fi"
+        },
+        "acceptance": {
+            "text": "By using the Health4Travel Platform, you acknowledge that you have read, understood, and agree to abide by the terms and conditions of this Acceptable Use Agreement."
+        }
+    },
+    "HEALTH4TRAVEL": "Health4Travel",
+    "SUCCESS": {
+        "LOGIN_SUCCESS": "Login Successfully!"
+    },
+    "REFRESH_TOKEN_KEY": "refreshToken",
+    "DELAY_COUNT": 30,
+    "timeFormat": "HH:mm",
+    "ACCESS_TOKEN_KEY": "accessToken"
+}

@@ -1,0 +1,134 @@
+import { Button, Col, Row, Tabs } from 'antd';
+import Search from 'antd/es/input/Search';
+import { useNavigate } from 'react-router-dom';
+import Table from '../Table/Index';
+import { useTranslation } from 'react-i18next';
+
+interface ListViewProps {
+    columns: any[];
+    onSearch: (value: string) => void;
+    totalRecord: number;
+    tabOnChange: (key: string) => void;
+    data: any[];
+    handlePageSizeChange?: (
+        page: number,
+        pageSize: number,
+        search: string
+    ) => void;    page: number;
+    search: string;
+    setPage: React.Dispatch<React.SetStateAction<number>>;
+    loading: boolean;
+    noRecordText: string;
+    createPath: string;
+    getRecords: (
+        page: number,
+        pageSize: number,
+        search: string
+    ) => void;
+    currentTab: string;
+    pageSize: number;
+    scroll:number
+}
+
+const ListView: React.FC<ListViewProps> = ({ columns, onSearch, totalRecord, tabOnChange, data, handlePageSizeChange, page, search, setPage, loading, noRecordText, createPath, getRecords, currentTab, pageSize, scroll }) => {
+    const navigate = useNavigate();
+    const { t } = useTranslation();
+    const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
+    const TABS_KEY: any = t("TABS_KEY", { returnObjects: true });
+
+    return (
+        <div>
+            <div className='mb-2' />
+            <Row justify={"center"} align={"middle"}>
+                <Col xs={23} sm={{ span: 10, offset: 13 }} md={{ span: 10, offset: 13 }} lg={{ span: 6, offset: 17 }} className='search-create-container' >
+                    <Row gutter={4} align={"middle"}>
+                        <Col span={8}>
+                            <Button
+                                type='primary'
+                                block
+                                className='text-capitalize'
+                                size='middle'
+                                onClick={() => navigate(createPath)}
+                            >
+                                Create
+                            </Button>
+                        </Col>
+                        <Col span={16}>
+                            <Search
+                                placeholder={PLACEHOLDERS.SEARCH}
+                                onSearch={onSearch}
+                                size="middle"
+                                allowClear={true}
+                                data-testid='search-data'
+                            />
+                        </Col>
+                    </Row>
+                </Col>
+                <Col span={24}>
+                    <Tabs
+                        onChange={tabOnChange}
+                        type='card'
+                        activeKey={currentTab}
+                    >
+                        <Tabs.TabPane tab={TABS_KEY.ENABLED} key="enabled">
+                            <Row>
+                                <Col span={24}>
+                                    <Table
+                                        pageSizeNum={pageSize}
+                                        columns={columns}
+                                        data={data || []}
+                                        totalRecord={totalRecord}
+                                        handlePageSizeChange={handlePageSizeChange}
+                                        currentPage={page}
+                                        search={search}
+                                        setPage={setPage}
+                                        handleCurrentPageChange={getRecords}
+                                        scroll={scroll}
+                                        pagination={true}
+                                        noRecordText={
+                                            loading ? "Loading..." : noRecordText
+                                        }
+                                    />
+                                </Col>
+                            </Row>
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab={TABS_KEY.DISABLED} key="disabled">
+                            <Table
+                                columns={columns}
+                                data={data || []}
+                                totalRecord={totalRecord}
+                                handlePageSizeChange={handlePageSizeChange}
+                                currentPage={page}
+                                search={search}
+                                setPage={setPage}
+                                handleCurrentPageChange={getRecords}
+                                pagination={true}
+                                noRecordText={
+                                    loading ? "Loading..." : noRecordText
+                                }
+                            />
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab={TABS_KEY.ALL} key="all">
+                            <Table
+                                columns={columns}
+                                data={data || []}
+                                totalRecord={totalRecord}
+                                handlePageSizeChange={handlePageSizeChange}
+                                currentPage={page}
+                                search={search}
+                                setPage={setPage}
+                                handleCurrentPageChange={getRecords}
+                                pagination={true}
+                                noRecordText={
+                                    loading ? "Loading..." : noRecordText
+                                }
+                            />
+                        </Tabs.TabPane>
+                    </Tabs>
+                </Col>
+            </Row>
+        </div>
+    );
+};
+
+export default ListView;
