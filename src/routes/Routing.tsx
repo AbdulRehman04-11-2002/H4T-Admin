@@ -1,27 +1,20 @@
 import { Routes, Route } from 'react-router-dom';
 import Breadcrumb from '../components/Breadcrumb/Index';
-import PartnersList from '../screens/Partners/Index';
+import PartnersList from '../screens/Partners/PartnersList';
 import PartnerCreate from '../screens/Partners/Create';
 import ManageAccount from '../screens/ManageAccount/ManageAccount';
 import Login from '../screens/Login/Index';
-import Sidebar from '../components/SideBar';
 import LocationCreateUpdate from '../screens/ManageAccount/LocationCreateUpdate';
 import ProductCreateUpdate from '../screens/ManageAccount/ProductCreateUpdate';
 import UserCreateUpdate from '../screens/ManageAccount/userCreateUpdate';
 import TermsOfuse from '../screens/TermsOfUse/Index';
-
 const Routing = () => {
+
     return (
         <>
-            <div className=''>
-                {window.location.pathname !== '/login'
-                    && <Breadcrumb />}
-
-            </div>
+            <Breadcrumb />
             <Routes>
                 <Route path='/' element={<PartnersList />} />
-                <Route path='/login' element={<Login />} />
-                <Route path="/termsofuse" element={<TermsOfuse />} />
                 <Route path='Partner'>
                     <Route path='' element={<PartnersList />} />
                     <Route path='Create' element={<PartnerCreate />} />

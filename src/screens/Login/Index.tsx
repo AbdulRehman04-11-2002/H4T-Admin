@@ -24,39 +24,32 @@ import {
 } from "antd";
 import { ApiError } from "../../services/api/Index";
 import { LoaderContext } from "../../context/LoaderContext";
-import { GlobalContext } from "../../context/GlobalContext";
+import { GlobalContext, GlobalContextProps } from "../../context/GlobalContext";
 import { Storage } from "../../services/storage";
 import { useTranslation } from "react-i18next";
+import { getME } from "../../services/api/global";
 
 const { Title, Text } = Typography;
 
 const Login: React.FC<LoginProps> = ({ setToken }) => {
   const { t } = useTranslation();
   const BUTTONS: any = t("BUTTONS", { returnObjects: true });
-  const DELAY_COUNT:number = +t("DELAY_COUNT");
+  const DELAY_COUNT: number = +t("DELAY_COUNT");
   const ERRORS: any = t("ERRORS", { returnObjects: true });
   const LABELS: any = t("LABELS", { returnObjects: true });
   const SUCCESS: any = t("SUCCESS", { returnObjects: true });
   const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
-
 
   const [flag, setFlag] = useState<boolean>(false);
   const [delayCounter, setDelayCounter] = useState<number>(0);
   const [canRequestNewCode, setCanRequestNewCode] = useState<boolean>(false);
   const [response, setResponse] = useState<any>({
     session: "",
-    user_id: "",
+    userId: "",
     email: "",
   });
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext)!;
-  const { success, userDetails, setSuccess, clearMessage, setUserDetails } = {} as {
-    success: boolean;
-    userDetails: any;
-    setSuccess: (value: string) => void;
-    clearMessage: () => void;
-    setUserDetails: (details: any) => void;
-  };
-  useContext(GlobalContext);
+  const { success, userDetails, setSuccess, clearMessage, setUserDetails, setME } = useContext(GlobalContext) as GlobalContextProps;
 
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -80,7 +73,6 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
   const handleOnChange = (changedValues: string) => {
     const name = Object.keys(changedValues)?.[0];
     const value = Object.values(changedValues)?.[0];
-    console.log(name, value, "name, value");
 
     form.setFieldValue(name, value);
     setResponse({ ...response, [name]: value });
@@ -98,11 +90,11 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
     showLoader()
     try {
       const response = await login(request);
-      if (response?.session && response?.user_id) {
+      if (response?.data?.session && response?.data?.user_id) {
         setResponse((prev: any) => ({
           ...prev,
-          session: response?.session,
-          user_id: response?.user_id,
+          session: response?.data?.session,
+          user_id: response?.data?.user_id,
         }));
         setCanRequestNewCode(false);
         setDelayCounter(DELAY_COUNT);
@@ -116,12 +108,10 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
         "notifications toast-notification-error"
       );
     } finally {
-      showLoader()
+      hideLoader()
     }
   };
-
   const getOtp = async (values: SubmitEmailProps) => {
-    console.log(values, "values");
     const email = form.getFieldValue("email");
     if (!email) {
       inputEmailRef?.current?.focus();
@@ -133,14 +123,11 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
       email,
     };
     try {
-      // const result = await login(request);
-      // console.log(result, "result");
-
-      // i want to create a dummy working email authentication, please write the code
-      if (values.email) {
+      const result = await login(request);
+      if (result?.data?.session && result?.data?.user_id) {
         setResponse({
-          session: 'session',
-          user_id: 'user_id',
+          session: result?.data?.session,
+          user_id: result?.data?.user_id,
           email: values.email,
         });
         setCanRequestNewCode(false);
@@ -148,23 +135,6 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
         setDelayCounter(DELAY_COUNT);
         inputOtpRef?.current?.focus();
       }
-
-
-
-
-
-
-      // if (result?.session && result?.user_id) {
-      //   setResponse({
-      //     session: result?.session,
-      //     user_id: result?.user_id,
-      //     email: values.email,
-      //   });
-      //   setCanRequestNewCode(false);
-      //   setFlag(true);
-      //   setDelayCounter(DELAY_COUNT);
-      //   inputOtpRef?.current?.focus();
-      // }
 
     } catch (error) {
       console.log(error, "error");
@@ -199,62 +169,61 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
   };
 
   const handleFinish = async (values: SubmitOtpProps) => {
-    navigate("/");
-    return
-    // const { otp } = values;
-    // if (!otp || otp === undefined || otp.includes("")) {
-    //   openToastNotification(
-    //     ERRORS.OTP_BLANK_ERROR,
-    //     "notifications toast-notification-error"
-    //   );
-    //   return form.setFields([
-    //     {
-    //       name: "otp",
-    //       errors: [ERRORS.OTP_WRONG_TYPE],
-    //     },
-    //   ]);
-    // }
+    const { otp } = values;
+    if (!otp || otp === undefined || otp.includes("")) {
+      openToastNotification(
+        ERRORS.OTP_BLANK_ERROR,
+        "notifications toast-notification-error"
+      );
+      return form.setFields([
+        {
+          name: "otp",
+          errors: [ERRORS.OTP_WRONG_TYPE],
+        },
+      ]);
+    }
 
-    // showLoader()
+    showLoader()
 
-    // const request: VerifyRequest = {
-    //   session: response?.session || "",
-    //   code: otp && otp.toString().replaceAll(",", ""),
-    //   user_id: response?.user_id || "",
-    // };
-    // try {
-    //   const response = await verifyCode(request);
-    //   if (response.AccessToken && response.RefreshToken) {
-    //     Storage.setAccessAndRefreshTokens(
-    //       response.AccessToken,
-    //       response.RefreshToken
-    //     );
-    //     const result = await fetchCurrentUser();
-    //     if (result) {
-    //       setToken(true);
-    //       const obj = {
-    //         name: result.name,
-    //         email: result.email,
-    //         image: result.imageRef,
-    //       };
-    //       setUserDetails(obj);
-    //       setSuccess(SUCCESS.LOGIN_SUCCESS);
-    //       navigate("/");
-    //     }
-    //   }
-    // } catch (error) {
-    //   const _error = error as ApiError;
-    //   openToastNotification(
-    //     JSON.parse(_error.message)?.msg,
-    //     "notifications toast-notification-error"
-    //   );
-    //   setResponse((prev: any) => ({
-    //     ...prev,
-    //     session: JSON.parse(_error.message)?.session,
-    //   }));
-    // } finally {
-    //   showLoader()
-    // }
+    const request: VerifyRequest = {
+      session: response?.session || "",
+      code: otp && otp.toString().replaceAll(",", ""),
+      userId: response?.user_id || "",
+    };
+    try {
+      const response = await verifyCode(request);
+      if (response?.data?.AccessToken && response?.data?.RefreshToken) {
+        Storage.setAccessAndRefreshTokens(
+          response?.data?.AccessToken,
+          response?.data?.RefreshToken
+        );
+
+        const result = await getME("ENABLED");
+        const email = form.getFieldValue("email");
+        if (result) {
+          setUserDetails({ ...userDetails, email })
+          setME(result);
+          setToken(true);
+          setSuccess(SUCCESS.LOGIN_SUCCESS);
+          navigate("/");
+        }
+      }
+    } catch (error) {
+      console.log(error, "error otp");
+      const _error = error as any;
+      console.log(_error, "error otp");
+
+      openToastNotification(
+        _error.message.error,
+        "notifications toast-notification-error"
+      );
+      setResponse((prev: any) => ({
+        ...prev,
+        session: _error.message.session,
+      }));
+    } finally {
+      hideLoader()
+    }
   };
 
   return (
@@ -306,12 +275,11 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
               onFinishFailed={getOtpError}
               autoComplete='off'
               onValuesChange={handleOnChange}
-              form={form}
             >
               <Form.Item
                 validateTrigger={"getOtp"}
                 messageVariables={{ label: LABELS.EMAIL }}
-                rules={[{ type: 'email', message:  t("ERRORS.VALID_INPUT", {type:"email"}) }, { required: true, message: ERRORS.EMAIL }]}
+                rules={[{ type: 'email', message: t("ERRORS.VALID_INPUT", { type: "email" }) }, { required: true, message: ERRORS.EMAIL }]}
                 label={
                   <label className='label text-capitalize'>
                     {LABELS.EMAIL}
@@ -351,6 +319,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
               className='login-form'
               style={{ display: flag ? "block" : "none" }}
               onValuesChange={handleValuesChange}
+              form={form}
 
             >
               <Row justify={"center"}>
@@ -374,9 +343,10 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
               <Form.Item name='otp'>
                 <InputOTP
                   inputType='numeric'
-                  length={4}
+                  length={6}
                   disabled={isLoading}
                   autoFocus
+                  autoSubmit={() => handleFinish}
                 />
               </Form.Item>
               <Form.Item>

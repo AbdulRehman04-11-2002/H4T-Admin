@@ -40,7 +40,7 @@
         "ROLE": "Role",
         "LONGITUDE": "Longitude",
         "LATITUDE": "Latitude",
-        "CUSTOM_GUIDELINES": "Custom Guidelines",
+        "CUSTOM_GUIDELINES": "Customer Guidelines",
         "DAY": "Day",
         "START_TIME": "Start Time",
         "END_TIME": "End Time",
@@ -50,7 +50,8 @@
         "DESCRIPTION": "Description",
         "EXPEXTED_DIMENSIONS_LXW": "Expected dimensions LxW",
         "CUSTOMER_SEES": "Customer sees",
-        "SLOT_DURATION": "Slot Duration"
+        "SLOT_DURATION": "Slot Duration",
+        "TERMS_OF_USE": "Terms of Use"
     },
     "PLACEHOLDERS": {
         "SEARCH": "Search",
@@ -91,7 +92,11 @@
         "MAX_LENGTH_50": "Please enter maximum 50 characters of {{type}}",
         "MAX_LENGTH_16": "Please enter maximum 16 characters of {{type}}",
         "MIN_LENGTH_10": "Please enter minimum 10 characters of {{type}}",
-        "SLOT_DURATION": "Please enter slot duration"
+        "SLOT_DURATION": "Please select slot duration",
+        "START_TIME": "Please select start time",
+        "END_TIME": "Please select end time",
+        "BREAK_START": "Please select break start",
+        "BREAK_END": "Please select break end"
     },
     "BUTTONS": {
         "ADD": "Add",
@@ -129,7 +134,15 @@
         "CONTACT_DETAILS": "Contact Details",
         "CONFiGURATIONS": "Configurations",
         "OPERATING_HOURS": "Operating Hours",
-        "SELECT_LOCATIONS": "Select Locations(partner)"
+        "SELECT_LOCATIONS": "Select Locations(partner)",
+        "UPDATE_SERVICE_LOCATION": "Update Service Location",
+        "CREATE_SERVICE_LOCATION": "Create Service Location",
+        "CREATE_USER": "Create User",
+        "UPDATE_USER": "Update User",
+        "CREATE_PRODUCT": "Create Product",
+        "UPDATE_PRODUCT": "Update Product"
+
+
     },
     "TABS_LABEL": {
         "CURRENT": "current",
@@ -137,7 +150,7 @@
         "PARTNERS": "partners",
         "LOCATIONS": "locations",
         "PRODUCTS": "products",
-        "USER_ACCESS": "user access"
+        "USER_ACCESS": "userAccess"
     },
     "TABLE_NO_RECORDS_TEXT": {
         "PARTNERS": "No partners found.",
@@ -145,6 +158,7 @@
         "PRODUCTS": "No products found.",
         "USERS": "No users found."
     },
+    
     "privacyPolicy": {
         "title": "Health4Travel Acceptable Use Agreement",
         "introText": "This Health4Travel Acceptable Use Agreement (\"Agreement\") is entered into by and between Health4Travel (iFlyIT BV) (\"Health4Travel\") and all users of the Health4Travel platform (\"User\").",

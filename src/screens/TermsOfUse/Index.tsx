@@ -8,7 +8,7 @@ interface PrivacyPolicyProps {
     // You can add any additional props here
 }
 
-const PrivacyPolicy: React.FC<PrivacyPolicyProps> = () => {
+const TermsOfUse: React.FC<PrivacyPolicyProps> = () => {
     const { t } = useTranslation();
     const privacyPolicy: any = t('privacyPolicy', { returnObjects: true });
 
@@ -122,4 +122,4 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = () => {
     );
 };
 
-export default PrivacyPolicy;
+export default TermsOfUse;

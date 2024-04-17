@@ -44,17 +44,16 @@ const DynamicBreadcrumb: React.FC = () => {
     const breadcrumbItems = getBreadcrumbItems();
 
     return (
-        <Breadcrumb style={{ backgroundColor: "#fafafa", padding: "10px 20px", margin: 0 }}>
-            {breadcrumbItems.map((item, index) => (
-                <Item key={index}>
-                    {index === breadcrumbItems.length - 1 ? (
-                        item.title
-                    ) : (
-                        <Link onClick={showLoader} to={item.path || ''}>{item.title}</Link>
-                    )}
-                </Item>
-            ))}
-        </Breadcrumb>
+        <Breadcrumb style={{ backgroundColor: "#fafafa", padding: "10px 20px", margin: 0 }} items={breadcrumbItems.map((item, index) => {
+            return ({
+                key: index,
+                title: index === breadcrumbItems.length - 1 ? (
+                    item.title
+                ) : (
+                    <Link onClick={showLoader} to={item.path || ''}>{item.title}</Link>
+                )
+            })
+        })} />
     );
 };
 

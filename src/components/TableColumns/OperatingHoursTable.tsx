@@ -5,13 +5,14 @@ import { useTranslation } from "react-i18next";
 
 interface TableColumnProps {
     handleOperatingHoursChange: (timeString: string | string[], index: number, dayName: string) => void;
-    onChange: (e: any, Day: string, index: number) => void;
+    onCheckBoxChange: (e: any, Day: string, index: number) => void;
+    ERRORS: any;
 }
 
-export const OperatingHours = ({ handleOperatingHoursChange, onChange }: TableColumnProps) => {
+export const OperatingHours = ({ handleOperatingHoursChange, onCheckBoxChange, ERRORS }: TableColumnProps) => {
     const { t } = useTranslation();
     const LABELS: any = t("LABELS", { returnObjects: true });
-    const timeFormat = t("timeFormat");
+    const timeFormat = "HH:mm";
 
     return [
 
@@ -25,7 +26,7 @@ export const OperatingHours = ({ handleOperatingHoursChange, onChange }: TableCo
             width: "8%",
             showSorterTooltip: false,
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'><Checkbox onChange={(e) => onChange(e, record.DAY, record.INDEX)}></Checkbox></div>
+                <div className='fontWeight-semiBold'><Checkbox checked={record.status === "ENABLED" ? true : false} onChange={(e) => onCheckBoxChange(e, record.DAY, record.index)}></Checkbox></div>
             ),
         },
         {
@@ -38,7 +39,7 @@ export const OperatingHours = ({ handleOperatingHoursChange, onChange }: TableCo
             width: "8%",
             showSorterTooltip: false,
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'>{record.DAY}</div>
+                <div className='fontWeight-semiBold'>{record.day}</div>
             ),
         },
         {
@@ -54,16 +55,18 @@ export const OperatingHours = ({ handleOperatingHoursChange, onChange }: TableCo
                 return (
                     <div className='fontWeight-semiBold'>
                         <Form.Item
-                            key={record.INDEX}
-                            name={record.day}
+                            key={record.index + "startTime"}
+                            name={"startTime" + record.day}
                             style={{ margin: 0 }}
+                            rules={[{ required: record.status === "ENABLED" && record.startTime === "" ? true : false, message: ERRORS.START_TIME }]}
                         >
                             <TimePicker
-                                onChange={(time: Dayjs, timeString: string | string[]) => handleOperatingHoursChange(timeString, record.INDEX, "START_TIME")}
-                                value={dayjs(record.START_TIME ? record.START_TIME : "00:00", timeFormat)}
+                                disabled={record.status === "ENABLED" ? false : true}
+                                onChange={(time: Dayjs, timeString: string | string[]) => handleOperatingHoursChange(timeString, record.index, "startTime")}
+                                defaultValue={record.startTime ? dayjs(record.startTime, timeFormat) : null}
                                 format={timeFormat}
                                 style={{ borderRadius: 0 }}
-                                disabled={!record.IS_ENABLED}
+                                key={record.index + "startTime"}
                             />
                         </Form.Item></div>
                 )
@@ -78,22 +81,26 @@ export const OperatingHours = ({ handleOperatingHoursChange, onChange }: TableCo
             dataIndex: "END_TIME",
             width: "21%",
             showSorterTooltip: false,
-            render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'>
-                    <Form.Item
-                        key={record.INDEX}
-                        name={record.day}
-                        style={{ margin: 0 }}
-                    >
-                        <TimePicker
-                            onChange={(time: Dayjs, timeString: string | string[]) => handleOperatingHoursChange(timeString, record.INDEX, "END_TIME")}
-                            value={dayjs(record.END_TIME ? record.END_TIME : "00:00", timeFormat)}
-                            format={timeFormat}
-                            style={{ borderRadius: 0 }}
-                            disabled={!record.IS_ENABLED}
-                        />
-                    </Form.Item></div>
-            ),
+            render: (_: any, record: any) => {
+                return (
+                    <div className='fontWeight-semiBold'>
+                        <Form.Item
+                            key={record.index + "endTime"}
+                            name={"endTime" + record.day}
+                            style={{ margin: 0 }}
+                            rules={[{ required: (record.status === "ENABLED" && record.endTime === "") ? true : false, message: ERRORS.END_TIME }]}
+                        >
+                            <TimePicker
+                                onChange={(time: Dayjs, timeString: string | string[]) => handleOperatingHoursChange(timeString, record.index, "endTime")}
+                                defaultValue={record.endTime ? dayjs(record.endTime, timeFormat) : null}
+                                format={timeFormat}
+                                style={{ borderRadius: 0 }}
+                                key={record.index + "endTime"}
+                                disabled={record.status === "ENABLED" ? false : true}
+                            />
+                        </Form.Item></div>
+                )
+            },
         },
         {
             title: (
@@ -101,22 +108,24 @@ export const OperatingHours = ({ handleOperatingHoursChange, onChange }: TableCo
                     {LABELS.BREAK_START}
                 </strong>
             ),
-            dataIndex: "BREAK_START",
+            dataIndex: "breakStart",
             width: "21%",
             showSorterTooltip: false,
             render: (_: any, record: any) => (
                 <div className='fontWeight-semiBold'>
                     <Form.Item
-                        key={record.INDEX}
-                        name={record.day}
+                        key={record.index}
+                        name={"breakStart" + record.day}
                         style={{ margin: 0 }}
+                        rules={[{ required: record.status === "ENABLED" && record.breakStart === "" ? true : false, message: ERRORS.BREAK_START }]}
                     >
                         <TimePicker
-                            onChange={(time: Dayjs, timeString: string | string[]) => handleOperatingHoursChange(timeString, record.INDEX, "BREAK_START")}
-                            value={dayjs(record.BREAK_START ? record.BREAK_START : "00:00", timeFormat)}
+                            onChange={(time: Dayjs, timeString: string | string[]) => handleOperatingHoursChange(timeString, record.index, "breakStart")}
+                            defaultValue={record.breakStart ? dayjs(record.breakStart, timeFormat) : null}
                             format={timeFormat}
                             style={{ borderRadius: 0 }}
-                            disabled={!record.IS_ENABLED}
+                            key={record.index + "breakStart"}
+                            disabled={record.status === "ENABLED" ? false : true}
                         />
                     </Form.Item></div>
             ),
@@ -127,22 +136,24 @@ export const OperatingHours = ({ handleOperatingHoursChange, onChange }: TableCo
                     {LABELS.BREAK_END}
                 </strong>
             ),
-            dataIndex: "BREAK_END",
+            dataIndex: "breakEnd",
             width: "21%",
             showSorterTooltip: false,
             render: (_: any, record: any) => (
                 <div className='fontWeight-semiBold'>
                     <Form.Item
-                        key={record.INDEX}
-                        name={record.day}
+                        key={record.index}
+                        name={"breakEnd" + record.day}
                         style={{ margin: 0 }}
+                        rules={[{ required: record.status === "ENABLED" && record.breakEnd === "" ? true : false, message: ERRORS.BREAK_END }]}
                     >
                         <TimePicker
-                            onChange={(time: Dayjs, timeString: string | string[]) => handleOperatingHoursChange(timeString, record.INDEX, "BREAK_END")}
-                            value={dayjs(record.BREAK_END ? record.BREAK_END : "00:00", timeFormat)}
+                            onChange={(time: Dayjs, timeString: string | string[]) => handleOperatingHoursChange(timeString, record.index, "breakEnd")}
+                            defaultValue={record.breakEnd ? dayjs(record.breakEnd, timeFormat) : null}
                             format={timeFormat}
                             style={{ borderRadius: 0 }}
-                            disabled={!record.IS_ENABLED}
+                            key={record.index + "breakEnd"}
+                            disabled={record.status === "ENABLED" ? false : true}
                         />
                     </Form.Item></div>
             ),

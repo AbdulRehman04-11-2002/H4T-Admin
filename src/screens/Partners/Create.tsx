@@ -33,8 +33,8 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const LABELS: any = t("LABELS", { returnObjects: true });
   const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
-  const { setSuccess } = useContext(GlobalContext) as GlobalContextProps;
-
+  const { setSuccess, ME } = useContext(GlobalContext) as GlobalContextProps;
+  const [cityOptions, setCityOptions] = useState<{ label: string; value: string }[]>([]);
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [fileList, setFileList] = useState<AntUploadFile[]>([]);
@@ -43,6 +43,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [services, setServices] = useState<Service[]>([
     { id: 1, name: 'Doctor Consultation', fee: 0, feeType: 'FIXED_FEE', checked: true },
   ]);
+  const [imageUrl, setImageUrl] = useState('');
   const [errors, setErrors] = useState({
     name: "",
     businessId: "",
@@ -59,8 +60,8 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     fixedFee: "",
   });
 
-  let params = useParams();
-  let partnerID = params.partnerID || "";
+  const params = useParams();
+  const partnerID = params.partnerID || "";
 
   const inputNameRef = useRef<null | HTMLElement>(null);
   const inputBusinessIdRef = useRef<null | HTMLElement>(null);
@@ -105,6 +106,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         return null;
     }
   };
+  console.log("file list", fileList[0]);
 
   const partnerRequest = () => {
     const request = {
@@ -112,10 +114,10 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       businessId: form.getFieldValue('businessId'),
       licenseNumber: form.getFieldValue('licenseNumber'),
       status: form.getFieldValue('status'),
-      // imageUrl: fileList?.length > 0 ? fileList[0] : {},
-      imageUrl: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+      file: !isUpdateForm ? fileList[0] : fileList[0].thumbUrl ? fileList[0] : {},
+      imageUrl: isUpdateForm ? (fileList[0] && fileList[0].thumbUrl ? "" : imageUrl) : "",
       contractNumber: form.getFieldValue('contractNumber'),
-      registeredCityId: 1,
+      registeredCityId: form.getFieldValue('searchAndSelectCity'),
       currencyId: 1,
       registeredStreetAddress: form.getFieldValue('streetAddress'),
       registeredPostalCode: form.getFieldValue('postalCode'),
@@ -123,14 +125,16 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       phoneNumber: form.getFieldValue('phoneNumber'),
       contactPerson: form.getFieldValue('contactPerson'),
       createAdminAccount: isAdminAccount,
-      services: createServicepayload(),
+      services: JSON.stringify(createServicepayload()),
     }
+    console.log("request", request);
+
     return request;
   }
 
   const handleFinish = async () => {
+    showLoader();
     try {
-      showLoader();
       let response: any = {}
       if (!partnerID) response = await createPartner(partnerRequest());
 
@@ -187,7 +191,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       licenseNumber: currentPartner?.licenseNumber,
       status: currentPartner?.status,
       contractNumber: currentPartner?.contractNumber,
-      searchAndSelectCity: currentPartner?.registeredCity?.name,
+      searchAndSelectCity: currentPartner?.registeredCity?.id,
       streetAddress: currentPartner?.registeredStreetAddress,
       postalCode: currentPartner?.registeredPostalCode,
       emailAddress: currentPartner?.emailAddress,
@@ -195,12 +199,20 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       contactPerson: currentPartner?.contactPerson,
       docConsFixedFee: currentPartner?.services && currentPartner?.services[0]?.feeValue,
     })
+    // setServices(services.map((service) => {
+    //   const serviceFee = currentPartner?.services?.find((partnerService) => partnerService.service.id === service.id);
+
+    //   return {
+    //     ...service,
+    //     checked: serviceFee ? true : false,
+    //     fee: serviceFee?.feeValue || 0,
+    //   }
+    // }))
     setFileList([{ uid: '-1', name: 'image', status: 'done', url: currentPartner?.imageUrl }]);
+    setImageUrl(currentPartner?.imageUrl || '');
   }
 
   const submitFailed = (errorInfo: any) => {
-    setSuccess("test success")
-    navigate(-1);
     const errorFields = errorInfo.errorFields;
     let firstErrorFieldName = "";
     for (const error of errorFields) {
@@ -223,14 +235,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   const handleOnChange = () => {
     setIsDataChanges(true)
-  }
-
-  const uploadLogoHandler = (e: any) => {
-    setIsDataChanges(true)
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
   }
 
   const createServicepayload = () => {
@@ -263,7 +267,10 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   useEffect(() => {
     partnerID && getPartnerDetail();
+    ME?.systemLocations && setCityOptions(ME?.systemLocations.map((location: any) => { return { label: location.name, value: location.id } }) || [])
+    // ME.systemServices && setServices(ME.systemServices.map((service: any) => { return { id: service.id, name: service.name, fee: 0, feeType: 'FIXED_FEE', checked: false } }) || [])
   }, [])
+
 
   return (
     <div className={isUpdateForm ? 'update-partner-content' : 'create-partner-content'}>
@@ -304,7 +311,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
               <Button
                 type='default'
                 htmlType='button'
-                onClick={() => navigate(-1)}
+                onClick={() => navigate("/")}
               >
                 {LABELS.CANCEL}
               </Button>
@@ -459,16 +466,15 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 sm={{ span: 23 }}
                 xs={{ span: 23 }}
               >
-                <Form.Item name="fileList" label="File Upload" valuePropName="fileList" getValueFromEvent={uploadLogoHandler}>
+                <Form.Item name="fileList" label="File Upload" valuePropName="fileList">
                   <UploadFile
                     setFileList={setFileList}
-                    fileList={fileList}
+                    fileListArr={fileList}
                     fileType={"image/png"}
                     fileTypeError={ERRORS?.IMAGE_FILE_TYPE}
                     requiredImage={false}
                     errorMessage={ERRORS.UPLOAD_LOGO}
                     validateTrigger={["handleSave", "handleUpdate"]}
-                    defaultFileList={fileList}
                     label={LABELS.UPLOAD_LOGO}
                     name={"image"}
                   />
@@ -541,10 +547,11 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     autoFocus={false}
                     disabled={false}
                   >
-                    <Option value='new york'>{LABELS.NEW_YORK}</Option>
-                    <Option value='los angeles'>{LABELS.LOS_ANGELES}</Option>
-                    <Option value='chicago'>{LABELS.CHICAGO}</Option>
-                    <Option value='san francisco'>{LABELS.SAN_FRANCISCO}</Option>
+                    {cityOptions.map((city) => (
+                      <Option key={city.value} value={city.value}>
+                        {city.label}
+                      </Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>
@@ -765,25 +772,28 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   {services.map((service) => (
                     <div key={service.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
                       <Form.Item>
-                        <Checkbox className='d-none' checked={true} onChange={() => handleCheckboxChange(service.id)}>
+                        <Checkbox className='d-none' checked={service.checked} onChange={() => handleCheckboxChange(service.id)}>
                           {service.name}
                         </Checkbox>
                         {service.name}
                       </Form.Item>
                       <Form.Item
                         validateStatus={errors.fixedFee ? "error" : ""}
-                        name='docConsFixedFee'
+                        name={'docConsFixedFee'}
                         rules={[{ required: true, message: ERRORS.FIXED_FEE }]}
                         validateTrigger={["handleFinish", "handleUpdate"]}>
                         <Input
                           placeholder="Enter fee"
-                          value={666}
+                          value={service.fee}
                           onChange={(e) => handleInputChange(service.id, Number(e.target.value))}
                           disabled={!service.checked}
                         />
                       </Form.Item>
                     </div>
                   ))}
+                  <label className='label '>
+                    {"Currency: Euro"}
+                  </label>
                 </div>
               </Col>
             </Row>

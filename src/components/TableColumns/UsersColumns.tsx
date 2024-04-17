@@ -18,11 +18,9 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
                 <strong className='text-center sp-color-table-header text-capitalize'>
                 </strong>
             ),
-            dataIndex: "REGISTERED_NAME",
+            dataIndex: "logo",
             width: "2%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) =>
-                moment(a.REGISTERED_NAME).isAfter(b.REGISTERED_NAME) ? 1 : -1,
             render: (_: any, record: any) => (
                 <div className='fontWeight-semiBold'><DatabaseOutlined /></div>
             ),
@@ -33,14 +31,14 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
                     {LABELS.NAME}
                 </strong>
             ),
-            dataIndex: "NAME",
+            dataIndex: "name",
             width: "15%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a.NAME.localeCompare(b.NAME),
+            sorter: (a: any, b: any) => a.name.localeCompare(b.name),
             render: (_: any, record: any) => {
-                
+
                 return (
-                    <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageaccount/${record?.id}/updateuser`}>{record?.NAME}</Link></div>
+                    <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageaccount/${record?.id}/updateuser`}>{record?.name}</Link></div>
                 )
             },
         },
@@ -50,12 +48,12 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
                     {LABELS.EMAIL}
                 </strong>
             ),
-            dataIndex: "EMAIL",
+            dataIndex: "email",
             width: "10%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a.EMAIL.localeCompare(b.EMAIL),
-            render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'>{record?.EMAIL}</div>
+            sorter: (a: any, b: any) => a.email.localeCompare(b.email),
+            render: (email: any, record: any) => (
+                <div className='fontWeight-semiBold'>{record.email}</div>
             ),
         },
         {
@@ -64,12 +62,19 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
                     {LABELS.ROLE}
                 </strong>
             ),
-            dataIndex: "ROLE",
+            dataIndex: "role",
             width: "10%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a.ROLE.localeCompare(b.ROLE),
+            sorter: (a: any, b: any) => a.role.localeCompare(b.role),
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'>{record?.ROLE}</div>
+                <div className='fontWeight-semiBold'>{
+                    record?.user_roles?.map((role: any, index: number) => {
+                        return (
+                            role?.role?.name + (index === record?.user_roles?.length - 1 ? '' : ',')
+                        )
+
+                    })
+                }</div>
             ),
         },
 

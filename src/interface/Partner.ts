@@ -36,25 +36,6 @@ export interface Partner {
     services: Service[];
 }
 
-export interface PartnerLocation {
-    id: number;
-    name: string;
-    code: string;
-    phoneNumber: string;
-    postalCode: string;
-    longitude: string;
-    lattitude: string;
-    streetAddress: string;
-    customerGuidelines: string;
-    imageUrl: string;
-    status: string;
-    cityId: number;
-    partnerId: number;
-    partner: Partner;
-    city: RegisteredCity;
-    partner_location_timings: any[]; // You might want to define a type for this as well
-}
-
 export interface PartnerApiResponse {
     success: boolean;
     data: PartnerResponse;
@@ -91,15 +72,6 @@ export interface GetPartnersApiResponse {
     success: boolean;
     data: {
         response: PartnersListResponse;
-    };
-    message: string[];
-    error: PrismaError | null;
-}
-
-export interface GetPartnerLocationApiResponse {
-    success: boolean;
-    data: {
-        response: PartnerLocation;
     };
     message: string[];
     error: PrismaError | null;

@@ -10,7 +10,7 @@ interface TableColumnProps {
     partnerID: string;
 }
 
-export const LocationColumns = ({partnerID }: TableColumnProps) => {
+export const LocationColumns = ({ partnerID }: TableColumnProps) => {
     const { t } = useTranslation();
     const LABELS: any = t("LABELS", { returnObjects: true });
 
@@ -35,13 +35,13 @@ export const LocationColumns = ({partnerID }: TableColumnProps) => {
                     {LABELS.CODE}
                 </strong>
             ),
-            dataIndex: "location",
+            dataIndex: "code",
             width: "10%",
             showSorterTooltip: false,
             sorter: (a: any, b: any) =>
-                moment(a.CODE).isAfter(b.CODE) ? 1 : -1,
+                moment(a.code).isAfter(b.code) ? 1 : -1,
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'>{record?.CODE}</div>
+                <div className='fontWeight-semiBold'>{record?.code}</div>
             ),
         },
         {
@@ -50,12 +50,12 @@ export const LocationColumns = ({partnerID }: TableColumnProps) => {
                     {LABELS.NAME}
                 </strong>
             ),
-            dataIndex: "NAME",
+            dataIndex: "name",
             width: "15%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a.NAME.localeCompare(b.NAME),
+            sorter: (a: any, b: any) => a.name.localeCompare(b.name),
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageaccount/${record?.id}/updatelocation`}>{record?.NAME}</Link> </div>
+                <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageaccount/${record?.id}/updatelocation`}>{record?.name}</Link> </div>
             ),
         },
         {
@@ -67,9 +67,9 @@ export const LocationColumns = ({partnerID }: TableColumnProps) => {
             dataIndex: "CITY",
             width: "10%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a.CONTACT_PERSON.localeCompare(b.CONTACT_PERSON),
+            sorter: (a: any, b: any) => a?.city?.name?.localeCompare(b?.city?.name),
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'>{record?.CITY}</div>
+                <div className='fontWeight-semiBold'>{record?.city?.name}</div>
             ),
         },
 

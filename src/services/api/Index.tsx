@@ -2,7 +2,7 @@ import axios from "axios";
 import { refreshToken } from "./auth";
 import { Storage } from "../storage";
 import { ERRORS, REFRESH_TOKEN_KEY, baseURL } from "../../constants/contants";
-console.log(baseURL, "baseURL");
+import { RefreshTokenRequest } from "../../interface/Request";
 
 export const api = axios.create({
   baseURL: baseURL,
@@ -11,9 +11,11 @@ export const api = axios.create({
   },
 });
 
+
 api.interceptors.request.use(
   async (config) => {
-    const token = await Storage.getAccessToken();
+    const token = Storage.getAccessToken();
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -27,9 +29,12 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
+
     return response;
   },
   async (error) => {
+    console.log("error in interceptors", error);
+    // debugger
     const configError = error?.config;
     let message = ERRORS.SOME_THING_WENT_WRONG;
     let statusCode = 500;
@@ -44,18 +49,18 @@ api.interceptors.response.use(
       }
       statusCode = error.response?.status || 500;
       if (
-        statusCode === 401 &&
+        statusCode === 500 &&
         error?.response?.data.message.includes("expired")
       ) {
-        const request: any = {
-          refresh_token: localStorage.getItem(REFRESH_TOKEN_KEY) || "",
+        const request: RefreshTokenRequest = {
+          refreshToken: localStorage.getItem(REFRESH_TOKEN_KEY) || "",
         };
         try {
           const response = await refreshToken(request);
           if (response) {
-            Storage.setAccessToken(response.AccessToken);
+            Storage.setAccessToken(response.data.AccessToken);
             configError.headers.Authorization =
-              "Bearer " + response.AccessToken;
+              "Bearer " + response.data.AccessToken;
             return axios(configError);
           }
         } catch {
@@ -81,6 +86,6 @@ export class ApiError {
 }
 
 const reload = () => {
-  Storage.removeAccessAndRefreshToken();
-  window.location.reload();
+  // Storage.removeAccessAndRefreshToken();
+  // window.location.reload();
 };

@@ -3,18 +3,14 @@ import Search from 'antd/es/input/Search';
 import { useNavigate } from 'react-router-dom';
 import Table from '../Table/Index';
 import { useTranslation } from 'react-i18next';
+import Loader from '../Loader';
+import { useState } from 'react';
 
 interface ListViewProps {
     columns: any[];
-    onSearch: (value: string) => void;
     totalRecord: number;
     tabOnChange: (key: string) => void;
     data: any[];
-    handlePageSizeChange?: (
-        page: number,
-        pageSize: number,
-        search: string
-    ) => void;    page: number;
     search: string;
     setPage: React.Dispatch<React.SetStateAction<number>>;
     loading: boolean;
@@ -27,19 +23,34 @@ interface ListViewProps {
     ) => void;
     currentTab: string;
     pageSize: number;
-    scroll:number
+    scroll: number;
+    isLoading: boolean;
+    searchValue: string;
+    setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+    setPageSize: (pageSize: number) => void;
+    page: number;
 }
 
-const ListView: React.FC<ListViewProps> = ({ columns, onSearch, totalRecord, tabOnChange, data, handlePageSizeChange, page, search, setPage, loading, noRecordText, createPath, getRecords, currentTab, pageSize, scroll }) => {
+const ListView: React.FC<ListViewProps> = ({ columns, totalRecord, tabOnChange, data, setPage, loading, noRecordText, createPath, getRecords, currentTab, pageSize, scroll, isLoading, setSearchValue, setPageSize, searchValue, page }) => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
     const TABS_KEY: any = t("TABS_KEY", { returnObjects: true });
+    const [search, setSearch] = useState<string>("");
+
+    const onSearch = (value: string) => {
+        setSearch(value);
+        setSearchValue(value);
+    };
+
+    const handlePageSizeChange = (current: number = 1, pageSize: number) => {
+        setPageSize(pageSize);
+    };
 
     return (
         <div>
             <div className='mb-2' />
-            <Row justify={"center"} align={"middle"}>
+            {isLoading ? <Loader /> : <Row justify={"center"} align={"middle"}>
                 <Col xs={23} sm={{ span: 10, offset: 13 }} md={{ span: 10, offset: 13 }} lg={{ span: 6, offset: 17 }} className='search-create-container' >
                     <Row gutter={4} align={"middle"}>
                         <Col span={8}>
@@ -60,6 +71,8 @@ const ListView: React.FC<ListViewProps> = ({ columns, onSearch, totalRecord, tab
                                 size="middle"
                                 allowClear={true}
                                 data-testid='search-data'
+                                onChange={(e) => setSearchValue(e.target.value)}
+                                value={searchValue}
                             />
                         </Col>
                     </Row>
@@ -74,7 +87,7 @@ const ListView: React.FC<ListViewProps> = ({ columns, onSearch, totalRecord, tab
                             <Row>
                                 <Col span={24}>
                                     <Table
-                                        pageSizeNum={pageSize}
+                                        pageSize={pageSize}
                                         columns={columns}
                                         data={data || []}
                                         totalRecord={totalRecord}
@@ -106,6 +119,7 @@ const ListView: React.FC<ListViewProps> = ({ columns, onSearch, totalRecord, tab
                                 noRecordText={
                                     loading ? "Loading..." : noRecordText
                                 }
+                                pageSize={pageSize}
                             />
                         </Tabs.TabPane>
                         <Tabs.TabPane tab={TABS_KEY.ALL} key="all">
@@ -122,11 +136,12 @@ const ListView: React.FC<ListViewProps> = ({ columns, onSearch, totalRecord, tab
                                 noRecordText={
                                     loading ? "Loading..." : noRecordText
                                 }
+                                pageSize={pageSize}
                             />
                         </Tabs.TabPane>
                     </Tabs>
                 </Col>
-            </Row>
+            </Row>}
         </div>
     );
 };

@@ -6,7 +6,10 @@ interface GlobalContextState {
         name: string;
         image: string;
         mobileNumber: string;
+        email: string;
     };
+    ME: any;
+
 }
 
 export interface GlobalContextProps extends GlobalContextState {
@@ -16,7 +19,17 @@ export interface GlobalContextProps extends GlobalContextState {
         name: string;
         image: string;
         mobileNumber: string;
+        email: string;
     }) => void;
+    setME: (ME: any) => void;
+    userDetails: {
+        name: string;
+        image: string;
+        mobileNumber: string;
+        email: string;
+    };
+
+
 }
 
 interface GlobalProviderProps {
@@ -26,13 +39,16 @@ interface GlobalProviderProps {
 export const GlobalContext = createContext<GlobalContextProps | undefined>(undefined);
 
 export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
+    const ME = localStorage.getItem('ME');
     const [state, setState] = useState<GlobalContextState>({
         success: '',
         userDetails: {
             name: '',
             image: '',
             mobileNumber: '',
+            email: ''
         },
+        ME: ME ? ME : {},
     });
 
     const setSuccess = (success: string) => {
@@ -43,10 +59,16 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         setState((prevState) => ({ ...prevState, success: '' }));
     };
 
+    const setME = (ME: any) => {
+        setState((prevState) => ({ ...prevState, ME }));
+        localStorage.setItem('ME', ME);
+    };
+
     const setUserDetails = (userDetails: {
         name: string;
         image: string;
         mobileNumber: string;
+        email: string;
     }) => {
         setState((prevState) => ({ ...prevState, userDetails }));
     };
@@ -56,6 +78,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         setSuccess,
         clearMessage,
         setUserDetails,
+        setME
     };
 
     return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>;

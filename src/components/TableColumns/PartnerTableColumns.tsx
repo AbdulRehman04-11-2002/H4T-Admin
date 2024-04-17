@@ -20,6 +20,7 @@ export const PartnerTableColumns = ({ LABELS, showLoader }: TableColumnProps) =>
                 <strong className='text-center sp-color-table-header text-capitalize'>
                 </strong>
             ),
+            key: "logo",
             dataIndex: "logo",
             showSorterTooltip: false,
             render: (_: any, record: any) => {
@@ -37,6 +38,7 @@ export const PartnerTableColumns = ({ LABELS, showLoader }: TableColumnProps) =>
                 </strong>
             ),
             dataIndex: "name",
+            key: "name",
             showSorterTooltip: false,
             sorter: (a: any, b: any) =>
                 moment(a.name).isAfter(b.name) ? 1 : -1,
@@ -75,6 +77,7 @@ export const PartnerTableColumns = ({ LABELS, showLoader }: TableColumnProps) =>
                 </strong>
             ),
             dataIndex: "contractPerson",
+            key: "contractPerson",
             showSorterTooltip: false,
             sorter: (a: any, b: any) => a.contactPerson.localeCompare(b.contactPerson),
             render: (_: any, record: any) => (
@@ -88,6 +91,7 @@ export const PartnerTableColumns = ({ LABELS, showLoader }: TableColumnProps) =>
                 </strong>
             ),
             dataIndex: "CITY",
+            key: "CITY",
             showSorterTooltip: false,
             sorter: (a: any, b: any) => a.registeredCity?.name.localeCompare(b.registeredCity?.name),
             render: (_: any, record: any) => (

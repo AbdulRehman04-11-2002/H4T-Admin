@@ -1,6 +1,5 @@
 import React from "react";
 import { Col, Row, Table as AntTable, Typography, Empty } from "antd";
-import { useTranslation } from "react-i18next";
 
 
 
@@ -14,7 +13,7 @@ interface TablePropsInterface<T> {
         pageSize: number,
         search: string
     ) => void;
-    pageSizeNum?: number;
+    pageSize: number;
     currentPage: number;
     search?: string;
     setPage: React.Dispatch<React.SetStateAction<number>>;
@@ -40,20 +39,17 @@ const Table: (
     setPage,
     handleCurrentPageChange = () => { },
     pagination = true,
-    pageSizeNum,
+    pageSize,
     scroll = 1300,
     noRecordText,
 }) => {
-        const { t } = useTranslation();
-        const LABELS: any = t("LABELS", { returnObjects: true });
-
 
         return (
             <>
                 <Row>
                     <Col span={24}>
                         <AntTable
-
+                            rowKey={(record) => record.id}
                             bordered={true}
                             size='small'
                             columns={columns}
@@ -73,8 +69,6 @@ const Table: (
                                         responsive: true,
                                         position: ["bottomRight"],
                                         onShowSizeChange: (current, pageSize) => {
-                                            console.log("current", current, "pageSize", pageSize);
-
                                             if (pagination) {
                                                 handlePageSizeChange(current, pageSize, search);
                                             }
@@ -85,7 +79,7 @@ const Table: (
                                                 handleCurrentPageChange(current, pageSize, search);
                                             }
                                         },
-                                        pageSize: pageSizeNum || 10,
+                                        pageSize: pageSize || 10,
                                     }
                                     : pagination
                             }
@@ -94,7 +88,7 @@ const Table: (
                                     <Empty
                                         description={
                                             <Text style={{ fontWeight: 600, fontSize: '1.4rem' }}>
-                                                {noRecordText ? noRecordText : LABELS.NO_RECORDS_FOUND}
+                                                {noRecordText ? noRecordText : "LABELS.NO_RECORDS_FOUND"}
                                             </Text>
                                         }
                                     />

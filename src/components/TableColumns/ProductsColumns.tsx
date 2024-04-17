@@ -8,9 +8,10 @@ interface StatusOrderMap {
 
 interface TableColumnProps {
     partnerID: string;
+    ME: any
 }
 
-export const ProductsColumns = ({partnerID }: TableColumnProps) => {
+export const ProductsColumns = ({ partnerID, ME }: TableColumnProps) => {
     const { t } = useTranslation();
     const LABELS: any = t("LABELS", { returnObjects: true });
 
@@ -41,10 +42,13 @@ export const ProductsColumns = ({partnerID }: TableColumnProps) => {
             width: "10%",
             showSorterTooltip: false,
             sorter: (a: any, b: any) =>
-                moment(a.CODE).isAfter(b.CODE) ? 1 : -1,
-            render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'>{record?.CODE}</div>
-            ),
+                moment(a.code).isAfter(b.code) ? 1 : -1,
+            render: (_: any, record: any) => {
+
+                return (
+                    <div className='fontWeight-semiBold'>{record?.code}</div>
+                )
+            },
         },
         {
             title: (
@@ -55,9 +59,9 @@ export const ProductsColumns = ({partnerID }: TableColumnProps) => {
             dataIndex: "NAME",
             width: "15%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a.NAME.localeCompare(b.NAME),
+            sorter: (a: any, b: any) => a.name.localeCompare(b.name),
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageaccount/${record?.id}/updateproduct`}>{record?.NAME}</Link></div>
+                <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageaccount/${record?.id}/updateproduct`}>{record?.name}</Link></div>
             ),
         },
         {
@@ -69,10 +73,11 @@ export const ProductsColumns = ({partnerID }: TableColumnProps) => {
             dataIndex: "SERVICE_TYPE",
             width: "10%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a.CONTACT_PERSON.localeCompare(b.CONTACT_PERSON),
-            render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'>{record?.SERVICE_TYPE}</div>
-            ),
+            render: (_: any, record: any) => {
+                return (
+                    <div className='fontWeight-semiBold'>{record?.partner_service?.service?.name}</div>
+                )
+            },
         },
         {
             title: (
@@ -83,9 +88,9 @@ export const ProductsColumns = ({partnerID }: TableColumnProps) => {
             dataIndex: "LAST_MODIFIED",
             width: "10%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a.CONTACT_PERSON.localeCompare(b.CONTACT_PERSON),
+            sorter: (a: any, b: any) => a.lastModified.localeCompare(b.lastModified),
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'>{record?.LAST_MODIFIED}</div>
+                <div className='fontWeight-semiBold'>{record?.lastModified}</div>
             ),
         },
 

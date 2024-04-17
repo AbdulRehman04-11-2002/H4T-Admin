@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
-import { UploadOutlined } from "@ant-design/icons";
+import React, { useMemo, useState } from "react";
+import { PlusOutlined } from "@ant-design/icons";
 import { showError, validateFileType } from "../../helpers/globalFunctions";
-import { Button, Form, Upload, UploadFile as AntUploadFile } from "antd";
+import { Button, Form, Upload, UploadFile as AntUploadFile, Image, GetProp, UploadProps, UploadFile as uploadFileType } from "antd";
 
 interface Props {
     name: string;
@@ -10,24 +10,48 @@ interface Props {
     errorMessage: string;
     fileTypeError: string;
     requiredImage: boolean;
-    fileList: AntUploadFile[];
+    fileListArr: AntUploadFile[];
     validateTrigger: string[];
-    defaultFileList?: AntUploadFile[];
     setFileList: React.Dispatch<React.SetStateAction<AntUploadFile[]>>;
 }
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
 const UploadFile: React.FC<Props> = ({
     name,
     label,
     fileType,
-    fileList,
+    fileListArr,
     setFileList,
-    defaultFileList,
     errorMessage,
     requiredImage,
     fileTypeError,
     validateTrigger,
 }) => {
+    const [previewImage, setPreviewImage] = useState('');
+    const [previewOpen, setPreviewOpen] = useState(false);
+
+    const handlePreview = async (file: uploadFileType) => {
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj as FileType);
+        }
+
+        setPreviewImage(file.url || (file.preview as string));
+        setPreviewOpen(true);
+    };
+
+    const getBase64 = (file: FileType): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = (error) => reject(error);
+        });
+
+
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+    }
 
     const uploadProps = useMemo(
         () => ({
@@ -48,39 +72,57 @@ const UploadFile: React.FC<Props> = ({
                 return false;
             },
             onRemove: (file: AntUploadFile) => {
-                if (fileList.some((item) => item.uid === file.uid)) {
-                    setFileList((fileList) =>
-                        fileList.filter((item) => item.uid !== file.uid)
+                let FileListDup = fileListArr
+                if (FileListDup?.some((item) => item.uid === file.uid)) {
+                    setFileList((FileListDup) =>
+                        FileListDup.filter((item) => item.uid !== file.uid)
                     );
                     return true;
                 }
                 return false;
             },
         }),
-        [fileList, setFileList]
+        [fileListArr, setFileList]
+    );
+
+    const uploadButton = (
+        <button style={{ border: 0, background: 'none' }} type="button">
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
+        </button>
     );
 
     return (
-        <Form.Item
-            label={<label className='label'>{label}</label>}
-            name={name}
-            rules={[{ required: requiredImage, message: errorMessage }]}
-            validateTrigger={validateTrigger}
-        >
-            <Upload
-                accept={fileType}
-                listType='picture'
-                className='w-100'
-                maxCount={1}
-                {...uploadProps}
-                fileList={fileList}
-                defaultFileList={defaultFileList}
+        <>
+            <Form.Item
+                // label={<label className='label'>{label}</label>}
+                name={name}
+                rules={[{ required: requiredImage, message: errorMessage }]}
+                validateTrigger={validateTrigger}
             >
-                <Button icon={<UploadOutlined />} block className='image-upload'>
-                    {"Upload"}
-                </Button>
-            </Upload>
-        </Form.Item>
+                <Upload
+                    accept={fileType}
+                    listType='picture-card'
+                    // className='w-100'
+                    maxCount={1}
+                    onPreview={handlePreview}
+                    {...uploadProps}
+                    fileList={fileListArr}
+                    onChange={handleChange}
+                >
+                    {uploadButton}
+                </Upload>
+            </Form.Item>
+            <Image
+                wrapperStyle={{ display: 'none' }}
+                preview={{
+                    visible: previewOpen,
+                    onVisibleChange: (visible) => setPreviewOpen(visible),
+                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                }}
+                src={previewImage}
+            />
+        </>
     );
 };
 

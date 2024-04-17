@@ -8,9 +8,11 @@ import { LoaderProvider } from './context/LoaderContext';
 import { GlobalProvider } from './context/GlobalContext';
 import './utils/i18n';
 import { Content, Footer } from 'antd/es/layout/layout';
+import Loader from './components/Loader';
+import { useTranslation } from 'react-i18next';
+import AppLayout from './components/AppLayout/Index';
 
 function App() {
-
 
 
   return (
@@ -44,27 +46,7 @@ function App() {
       <GlobalProvider>
         <LoaderProvider>
           <BrowserRouter>
-            {/* <Routes>
-              <Route path="/" element={<Navigate to="/login" />} />
-              <Route path="*" element={<Navigate to="/login" />} />
-            </Routes> */}
-            <Layout
-              style={{
-                minHeight: "100vh"
-              }}
-            >              <Layout>
-                <AppHeader />
-                <Content>
-                  <Routing />
-                </Content>
-              </Layout>
-              <Footer style={{ textAlign: 'center', backgroundColor: "#FAFAFA" }}>
-                Health4Travel ©{new Date().getFullYear()} <Link to={"/termsofuse"}>Terms of use</Link>
-              </Footer>
-            </Layout>
-
-
-
+            <AppLayout />
           </BrowserRouter>
         </LoaderProvider>
       </GlobalProvider>

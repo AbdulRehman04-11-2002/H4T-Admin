@@ -41,6 +41,15 @@ const getTab = () => {
     return localStorage.getItem("tab");
 };
 
+const setMEData = (data: any) => {
+    localStorage.setItem("me", JSON.stringify(data));
+}
+
+const getMEData = () => {
+    const data = localStorage.getItem("me");
+    return data
+}
+
 export const Storage = {
     getAccessToken,
     getRefreshToken,
@@ -51,4 +60,6 @@ export const Storage = {
     removeAccessAndRefreshToken,
     setTab,
     getTab,
+    setMEData,
+    getMEData
 };

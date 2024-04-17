@@ -191,7 +191,7 @@ body {
 }
 
 .d-none {
-  display: none;
+  display: none !important;
 }
 
 .loading-overlay {
