@@ -32,7 +32,7 @@ export const PartnerTableColumns = ({ LABELS, showLoader }: TableColumnProps) =>
                         {record.imageUrl ? <Image
                             width={40}
                             src={record.imageUrl}
-                        /> : <DatabaseOutlined />}
+                        /> : <DatabaseOutlined style={{ width: 40, height: 40 }} />}
                     </div>
                 )
             },

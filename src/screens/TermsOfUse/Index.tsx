@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Typography, Divider } from 'antd';
 import { useTranslation } from 'react-i18next';
 
@@ -11,6 +11,11 @@ interface PrivacyPolicyProps {
 const TermsOfUse: React.FC<PrivacyPolicyProps> = () => {
     const { t } = useTranslation();
     const privacyPolicy: any = t('privacyPolicy', { returnObjects: true });
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
 
     return (
         <div className='terms-of-use'>

@@ -3,9 +3,6 @@ import { DatabaseOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Image } from "antd";
-interface StatusOrderMap {
-    [key: string]: number;
-}
 
 interface TableColumnProps {
     partnerID: string;
@@ -30,7 +27,7 @@ export const LocationColumns = ({ partnerID }: TableColumnProps) => {
                     {record.imageUrl ? <Image
                         width={40}
                         src={record.imageUrl}
-                    /> : <DatabaseOutlined />}
+                    /> : <DatabaseOutlined style={{ width: 40, height: 40 }} />}
                 </div>
             ),
         },

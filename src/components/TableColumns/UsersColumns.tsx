@@ -1,4 +1,3 @@
-import moment from "moment";
 import { DatabaseOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -17,6 +16,7 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
         {
             title: (
                 <strong className='text-center sp-color-table-header text-capitalize'>
+                    User image
                 </strong>
             ),
             dataIndex: "logo",
@@ -26,7 +26,7 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
                     {record.imageUrl ? <Image
                         width={40}
                         src={record.imageUrl}
-                    /> : <DatabaseOutlined />}
+                    /> : <DatabaseOutlined style={{ width: 40, height: 40 }} />}
                 </div>
             ),
         },

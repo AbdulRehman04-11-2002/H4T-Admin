@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react';
+import { Storage } from '../services/storage';
 
 interface GlobalContextState {
     success: string;
@@ -39,7 +40,7 @@ interface GlobalProviderProps {
 export const GlobalContext = createContext<GlobalContextProps | undefined>(undefined);
 
 export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
-    const ME = localStorage.getItem('ME');
+    const ME = Storage.getMEData();
     const [state, setState] = useState<GlobalContextState>({
         success: '',
         userDetails: {
@@ -61,7 +62,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
 
     const setME = (ME: any) => {
         setState((prevState) => ({ ...prevState, ME }));
-        localStorage.setItem('ME', ME);
+        Storage.setMEData(ME);
     };
 
     const setUserDetails = (userDetails: {

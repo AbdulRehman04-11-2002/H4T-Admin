@@ -30,8 +30,8 @@ export const ProductsColumns = ({ partnerID, ME }: TableColumnProps) => {
                 <div className='fontWeight-semiBold'>
                     {record.imageUrl ? <Image
                         width={40}
-                        src={record.imageUrl}
-                    /> : <DatabaseOutlined />}
+                        src={record?.imageUrl}
+                    /> : <DatabaseOutlined style={{ width: 40, height: 40 }} />}
                 </div>
             ),
         },

@@ -3,16 +3,16 @@ import Breadcrumb from '../components/Breadcrumb/Index';
 import PartnersList from '../screens/Partners/PartnersList';
 import PartnerCreate from '../screens/Partners/Create';
 import ManageAccount from '../screens/ManageAccount/ManageAccount';
-import Login from '../screens/Login/Index';
 import LocationCreateUpdate from '../screens/ManageAccount/LocationCreateUpdate';
 import ProductCreateUpdate from '../screens/ManageAccount/ProductCreateUpdate';
-import UserCreateUpdate from '../screens/ManageAccount/userCreateUpdate';
-import TermsOfuse from '../screens/TermsOfUse/Index';
-const Routing = () => {
+import UserCreateUpdate from '../screens/ManageAccount/UserCreateUpdate';
+import TermsOfUse from '../screens/TermsOfUse/Index';
+import DynamicBreadcrumb from '../components/Breadcrumb/Index';
 
+const Routing = () => {
     return (
         <>
-            <Breadcrumb />
+            <DynamicBreadcrumb />
             <Routes>
                 <Route path='/' element={<PartnersList />} />
                 <Route path='Partner'>
@@ -26,9 +26,10 @@ const Routing = () => {
                     <Route path=':partnerID/ManageAccount/createuser' element={<UserCreateUpdate />} />
                     <Route path=':partnerID/ManageAccount/:userID/updateuser' element={<UserCreateUpdate isUpdateForm={true} />} />
                 </Route>
+                <Route path='/terms-of-use' element={<TermsOfUse />} />
             </Routes>
         </>
-    )
-}
+    );
+};
 
 export default Routing;

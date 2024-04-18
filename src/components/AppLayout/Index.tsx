@@ -1,21 +1,23 @@
-import { Layout } from 'antd'
-import { useContext, useEffect, useState } from 'react'
-import AppHeader from '../Header/Index'
-import { Content, Footer } from 'antd/es/layout/layout'
-import Routing from '../../routes/Routing'
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext'
-import { Storage } from '../../services/storage'
-import { RefreshTokenRequest } from '../../interface/Request'
-import { refreshToken } from '../../services/api/auth'
-import Login from '../../screens/Login/Index'
-import TermsOfUse from '../../screens/TermsOfUse/Index'
-import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext'
-import Loader from '../Loader'
+import { Layout } from 'antd';
+import { useContext, useEffect, useState } from 'react';
+import AppHeader from '../Header/Index';
+import { Content, Footer } from 'antd/es/layout/layout';
+import Routing from '../../routes/Routing';
+import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
+import { Storage } from '../../services/storage';
+import { RefreshTokenRequest } from '../../interface/Request';
+import { refreshToken } from '../../services/api/auth';
+import Login from '../../screens/Login/Index';
+import TermsOfUse from '../../screens/TermsOfUse/Index';
+import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
+import Loader from '../Loader';
+import DynamicBreadcrumb from '../Breadcrumb/Index';
 
 function AppLayout() {
     const { t } = useTranslation();
+    const LABELS: any = t("LABELS", { returnObjects: true });
     const { setME } = useContext(GlobalContext) as GlobalContextProps;
     const navigate = useNavigate();
     const [token, setToken] = useState<boolean>(
@@ -60,48 +62,54 @@ function AppLayout() {
 
     return (<>
         {isLoading && <Loader />}
-        <Routes>
-            <Route
-                path='/auth/login'
-                element={
-                    !token ? <Login setToken={setToken} /> : <Navigate to='/' />
-                }
-            />
-            <Route
-                path='/auth/*'
-                element={
-                    !token ? <Navigate to='/auth/login' /> : <Navigate to='/' />
-                }
-            />
-            <Route path='/terms-of-use' element={<TermsOfUse />} />
-            <Route
-                path='/*'
-                element={
-                    !token ? (
-                        <Navigate to='/auth/login' />
-                    ) : (
-                        <Layout
-                            style={{
-                                minHeight: "100vh",
-                                // background: theme.colors.grey.grey30,
-                            }}
-                        >
-                            <Layout>
-                                <AppHeader logOutClickHandler={logOutClickHandler} />
-                                <Content>
-                                    <Routing />
-                                </Content>
-                                <Footer>
-                                    
-                                </Footer>
-                            </Layout>
-                        </Layout>
-                    )
-                }
-            />
-        </Routes>
+        <Layout style={{ minHeight: "100vh" }}>
+            <Layout>
+                {token && <AppHeader logOutClickHandler={logOutClickHandler} />}
+                <Content>
+                    <Routes>
+                        <Route
+                            path='/auth/login'
+                            element={
+                                !token ? <Login setToken={setToken} /> : <Navigate to='/' />
+                            }
+                        />
+                        <Route
+                            path='/auth/*'
+                            element={
+                                !token ? <Navigate to='/auth/login' /> : <Navigate to='/' />
+                            }
+                        />
+
+                        <Route
+                            path='/*'
+                            element={
+                                !token ? (
+                                    <Navigate to='/auth/login' />
+                                ) : (
+                                    <Layout
+                                        style={{
+                                            minHeight: "100vh",
+                                            // background: theme.colors.grey.grey30,
+                                        }}
+                                    >
+                                        <Layout>
+                                            <Content>
+                                                <Routing />
+                                            </Content>
+                                            <Footer style={{ textAlign: 'center', backgroundColor: "#FAFAFA" }}>
+                                                Health4Travel ©{new Date().getFullYear()} <Link to={"/terms-of-use"}>{LABELS.TERMS_OF_USE}</Link>
+                                            </Footer>
+                                        </Layout>
+                                    </Layout>
+                                )
+                            }
+                        />
+                    </Routes>
+                </Content>
+            </Layout>
+        </Layout>
     </>
     )
 }
 
-export default AppLayout
+export default AppLayout;
