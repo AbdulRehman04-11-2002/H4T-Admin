@@ -54,7 +54,7 @@ function AppLayout() {
             tokenIsActive(); //when page load
             const interval = setInterval(tokenIsActive, MINUTES * 60000); // Execute tokenIsActive every 2 minutes (2 minutes * 60 seconds * 1000 milliseconds)
             return () => clearInterval(interval); // Cleanup interval on component unmount
-        } \
+        }
     }, [token]);
 
 
