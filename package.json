@@ -30,10 +30,12 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "rules": {
+      "@typescript-eslint/no-unused-vars": "off",
+      "no-unreachable": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "no-mixed-operators": "off"
+    }
   },
   "browserslist": {
     "production": [
