@@ -305,8 +305,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   useEffect(() => {
     locationID && getPartnerLocation();
-    //   !locationID && createOperatingHours();
-    //   ME?.systemLocations && setCityOptions(ME?.systemLocations.map((location: any) => { return { label: location.name, value: location.id } }) || [])
+    !locationID && createOperatingHours();
+    ME?.systemLocations && setCityOptions(ME?.systemLocations.map((location: any) => { return { label: location.name, value: location.id } }) || [])
   }, [])
 
   return (
