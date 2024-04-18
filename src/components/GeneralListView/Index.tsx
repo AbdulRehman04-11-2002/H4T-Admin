@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import Table from '../Table/Index';
 import { useTranslation } from 'react-i18next';
 import Loader from '../Loader';
-import { useState } from 'react';
 
 interface ListViewProps {
     columns: any[];
@@ -29,18 +28,20 @@ interface ListViewProps {
     setSearchValue: React.Dispatch<React.SetStateAction<string>>;
     setPageSize: (pageSize: number) => void;
     page: number;
+    setSearch: (value: string) => void;
+
 }
 
-const ListView: React.FC<ListViewProps> = ({ columns, totalRecord, tabOnChange, data, setPage, loading, noRecordText, createPath, getRecords, currentTab, pageSize, scroll, isLoading, setSearchValue, setPageSize, searchValue, page }) => {
+const ListView: React.FC<ListViewProps> = ({ columns, totalRecord, tabOnChange, data, setPage, loading, noRecordText, createPath, getRecords, currentTab, pageSize, scroll, isLoading, setSearchValue, setPageSize, searchValue, page, setSearch, search }) => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
     const TABS_KEY: any = t("TABS_KEY", { returnObjects: true });
-    const [search, setSearch] = useState<string>("");
 
     const onSearch = (value: string) => {
         setSearch(value);
         setSearchValue(value);
+
     };
 
     const handlePageSizeChange = (current: number = 1, pageSize: number) => {

@@ -11,7 +11,6 @@ import Loader from '../../components/Loader';
 import { Partner } from '../../interface/Partner';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
-import { getME } from '../../services/api/global';
 
 function PartnersList() {
     const { t } = useTranslation();
@@ -95,6 +94,7 @@ function PartnersList() {
                     searchValue={searchValue}
                     setSearchValue={setSearchValue}
                     setPageSize={setPageSize}
+                    setSearch={setSearch}
                 />
             )}
         </div>

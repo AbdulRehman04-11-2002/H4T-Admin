@@ -200,9 +200,16 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
         );
 
         const result = await getME("ENABLED");
-        const email = form.getFieldValue("email");
         if (result) {
-          setUserDetails({ ...userDetails, email })
+          setUserDetails(
+            {
+              name: result.name,
+              imageUrl: result.imageUrl,
+              phoneNumber: result.phoneNumber,
+              email: result.email,
+              role: result.role,
+            }
+          )
           setME(result);
           setToken(true);
           setSuccess(SUCCESS.LOGIN_SUCCESS);

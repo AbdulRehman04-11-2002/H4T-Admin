@@ -133,6 +133,8 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       form.resetFields();
       setFileList([]);
       setSuccess("Partner user created successfully")
+      productID && openToastNotification("Product updated successfully",
+        "notifications toast-notification-success")
 
     } catch (error) {
       const _error = error as ApiError;

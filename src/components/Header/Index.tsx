@@ -5,21 +5,16 @@ import Logo from '../../assets/images/Health4Travel-logo.png';
 import { Link } from 'react-router-dom';
 
 const { Header } = Layout;
-
-interface HeaderCompProps{
+interface HeaderCompProps {
     logOutClickHandler: () => void;
-
+    ME: any
 }
 
-const AppHeader: React.FC<HeaderCompProps> = ({logOutClickHandler}) => {
-    const {
-        token: { colorBgContainer, borderRadiusLG },
-    } = theme.useToken();
-    const confirm: PopconfirmProps['onConfirm'] = (e) => {
+const AppHeader: React.FC<HeaderCompProps> = ({ logOutClickHandler, ME }) => {
+    const confirm: PopconfirmProps['onConfirm'] = () => {
         logOutClickHandler();
 
     };
-
 
     return (
         <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#F9C510' }}>
@@ -40,7 +35,6 @@ const AppHeader: React.FC<HeaderCompProps> = ({logOutClickHandler}) => {
                 </Link>
             </div>
             <div style={{ marginLeft: 20, display: 'flex', alignItems: 'center' }}>
-                {/* <Button style={{ marginRight: '20px' }} type="primary">Logout</Button> */}
                 <Popconfirm
                     title="Logout"
                     description="Are you sure to logout?"
@@ -54,7 +48,7 @@ const AppHeader: React.FC<HeaderCompProps> = ({logOutClickHandler}) => {
                     >Logout</Button>
                 </Popconfirm>
 
-                <Avatar imageUrl='' name='Sufyan' />
+                <Avatar avatarClickHandler={() => null} ME={ME} />
             </div>
         </Header>
     );

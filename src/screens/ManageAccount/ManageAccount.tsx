@@ -159,6 +159,7 @@ function ManageAccount() {
                                 searchValue={searchValue}
                                 setSearchValue={setSearchValue}
                                 setPageSize={setPageSize}
+                                setSearch={setSearch}
                             />,
                         icon: <EnvironmentOutlined />
                     },
@@ -185,6 +186,7 @@ function ManageAccount() {
                             searchValue={searchValue}
                             setSearchValue={setSearchValue}
                             setPageSize={setPageSize}
+                            setSearch={setSearch}
                         />, icon: <BarsOutlined />
                     },
                     {
@@ -210,6 +212,7 @@ function ManageAccount() {
                             searchValue={searchValue}
                             setSearchValue={setSearchValue}
                             setPageSize={setPageSize}
+                            setSearch={setSearch}
                         />, icon: <UsergroupAddOutlined />
                     },
                 ]}

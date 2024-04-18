@@ -166,6 +166,11 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       setFileList([]);
       setSuccess("Partner location created successfully")
 
+      locationID && openToastNotification(
+        "Partner location updated successfully",
+        "notifications toast-notification-success"
+      );
+
     } catch (error) {
       const _error = error as ApiError;
       const { errorMessage } = handleErrorResponse(_error);

@@ -18,7 +18,7 @@ import DynamicBreadcrumb from '../Breadcrumb/Index';
 function AppLayout() {
     const { t } = useTranslation();
     const LABELS: any = t("LABELS", { returnObjects: true });
-    const { setME } = useContext(GlobalContext) as GlobalContextProps;
+    const { setME, ME } = useContext(GlobalContext) as GlobalContextProps;
     const navigate = useNavigate();
     const [token, setToken] = useState<boolean>(
         Storage.getAccessToken() ? true : false
@@ -64,7 +64,7 @@ function AppLayout() {
         {isLoading && <Loader />}
         <Layout style={{ minHeight: "100vh" }}>
             <Layout>
-                {token && <AppHeader logOutClickHandler={logOutClickHandler} />}
+                {token && <AppHeader logOutClickHandler={logOutClickHandler} ME={ME} />}
                 <Content>
                     <Routes>
                         <Route

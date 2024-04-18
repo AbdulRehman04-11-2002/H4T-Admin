@@ -96,7 +96,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     const request = {
       name: form.getFieldValue("name"),
       email: form.getFieldValue("email"),
-      role: userRoles[0]?.value,
+      roleId: userRoles[0]?.value,
       status: form.getFieldValue("status").toUpperCase(),
       file: !isUpdateForm ? fileList[0] : fileList[0].thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0].thumbUrl ? "" : imageUrl) : "",
@@ -118,7 +118,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       form.resetFields();
       setFileList([]);
       setSuccess("Partner user created successfully")
-
+      userID && openToastNotification("Partner user updated successfully", "notifications toast-notification-success")
     } catch (error) {
       const _error = error as ApiError;
       const { errorMessage } = handleErrorResponse(_error);

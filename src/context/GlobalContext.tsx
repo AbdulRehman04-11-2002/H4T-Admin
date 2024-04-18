@@ -5,9 +5,10 @@ interface GlobalContextState {
     success: string;
     userDetails: {
         name: string;
-        image: string;
-        mobileNumber: string;
+        imageUrl: string;
+        phoneNumber: string;
         email: string;
+        role: string;
     };
     ME: any;
 
@@ -18,16 +19,18 @@ export interface GlobalContextProps extends GlobalContextState {
     clearMessage: () => void;
     setUserDetails: (userDetails: {
         name: string;
-        image: string;
-        mobileNumber: string;
+        imageUrl: string;
+        phoneNumber: string;
         email: string;
+        role: string;
     }) => void;
     setME: (ME: any) => void;
     userDetails: {
         name: string;
-        image: string;
-        mobileNumber: string;
+        imageUrl: string;
+        phoneNumber: string;
         email: string;
+        role: string;
     };
 
 
@@ -45,9 +48,10 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         success: '',
         userDetails: {
             name: '',
-            image: '',
-            mobileNumber: '',
-            email: ''
+            imageUrl: '',
+            phoneNumber: '',
+            email: '',
+            role: '',
         },
         ME: ME ? ME : {},
     });
@@ -67,9 +71,10 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
 
     const setUserDetails = (userDetails: {
         name: string;
-        image: string;
-        mobileNumber: string;
+        imageUrl: string;
+        phoneNumber: string;
         email: string;
+        role: string;
     }) => {
         setState((prevState) => ({ ...prevState, userDetails }));
     };
