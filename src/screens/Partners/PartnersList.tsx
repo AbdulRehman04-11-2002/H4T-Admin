@@ -26,7 +26,8 @@ function PartnersList() {
     const [currentTab, setCurrentTab] = useState<string>("enabled");
     const [partners, setPartners] = useState<Partner[]>([]);
     const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
-    const { setSuccess, setME } = useContext(GlobalContext) as GlobalContextProps;
+    const { success, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
+
     const navigate = useNavigate();
 
     const getAllPartners = async (
@@ -69,6 +70,15 @@ function PartnersList() {
         getAllPartners(page, pageSize, search, currentTab);
     }, [page, pageSize, currentTab, search]);
 
+    useEffect(() => {
+        if (success) {
+            openToastNotification(
+                success,
+                "notifications toast-notification-success"
+            );
+            setSuccess("");
+        }
+    }, [])
 
     return (
         <div className='partner-content'>

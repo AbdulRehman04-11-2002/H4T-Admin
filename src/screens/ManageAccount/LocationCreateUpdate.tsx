@@ -63,6 +63,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const HEADING: any = t("HEADING", { returnObjects: true });
   const LABELS: any = t("LABELS", { returnObjects: true });
   const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
+  const SUCCESS: any = t("SUCCESS", { returnObjects: true });
 
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
   let params = useParams();
@@ -161,15 +162,15 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       let response: any = {}
       if (!locationID) response = await createPartnerLocation(partnerLocationRequest());
       if (locationID) response = await updatePartnerLocation(locationID, partnerLocationRequest());
-      navigate(`/partner/${partnerID}/manageaccount`);
       form.resetFields();
       setFileList([]);
-      setSuccess("Partner location created successfully")
 
-      locationID && openToastNotification(
-        "Partner location updated successfully",
-        "notifications toast-notification-success"
-      );
+      if (locationID) {
+        setSuccess(SUCCESS.PARTNER_LOCATION_UPDATED)
+      } else {
+        setSuccess(SUCCESS.PARTNER_LOCATION_CREATED)
+      }
+      navigate(`/partner/${partnerID}/manageaccount`);
 
     } catch (error) {
       const _error = error as ApiError;

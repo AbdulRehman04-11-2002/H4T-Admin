@@ -40,8 +40,9 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const ERRORS: any = t("ERRORS", { returnObjects: true });
   const LABELS: any = t("LABELS", { returnObjects: true });
   const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
+  const SUCCESS: any = t("SUCCESS", { returnObjects: true });
   const { ME, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
-  const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
+  const {  showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
   let params = useParams();
   const { partnerID, productID } = params;
   const [form] = Form.useForm();
@@ -150,12 +151,15 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       let response: any = {}
       if (!productID) response = await createPartnerProduct(createPartnerProductRequest());
       if (productID) response = await updatePartnerProduct(productID, createPartnerProductRequest());
+
+      if(productID){
+        setSuccess(SUCCESS.PARTNER_PRODUCT_UPDATED)
+      }else{
+        setSuccess(SUCCESS.PARTNER_PRODUCT_CREATED)
+      }
       navigate(`/partner/${partnerID}/manageaccount`);
       form.resetFields();
       setFileList([]);
-      setSuccess("Partner user created successfully")
-      productID && openToastNotification("Product updated successfully",
-        "notifications toast-notification-success")
 
     } catch (error) {
       const _error = error as ApiError;

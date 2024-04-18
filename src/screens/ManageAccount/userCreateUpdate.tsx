@@ -42,6 +42,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const ERRORS: any = t("ERRORS", { returnObjects: true });
   const LABELS: any = t("LABELS", { returnObjects: true });
   const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
+  const SUCCESS: any = t("SUCCESS", { returnObjects: true });
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
   const { ME, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
   let params = useParams();
@@ -137,11 +138,16 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       if (!userID) response = await createPartnerUser(partnerUserRequest());
 
       if (userID) response = await updatePartnerUser(userID, partnerUserRequest());
+
+      if (userID) {
+        setSuccess(SUCCESS.PARTNER_USER_UPDATED)
+      } else {
+        setSuccess(SUCCESS.PARTNER_USER_CREATED)
+      }
       navigate(`/partner/${partnerID}/manageaccount`);
+
       form.resetFields();
       setFileList([]);
-      setSuccess("Partner user created successfully")
-      userID && openToastNotification("Partner user updated successfully", "notifications toast-notification-success")
     } catch (error) {
       const _error = error as ApiError;
       const { errorMessage } = handleErrorResponse(_error);

@@ -242,7 +242,15 @@
     },
     "HEALTH4TRAVEL": "Health4Travel",
     "SUCCESS": {
-        "LOGIN_SUCCESS": "Login Successfully!"
+        "LOGIN_SUCCESS": "Login Successfully!",
+        "PARTNER_CREATED": "Partner created successfully",
+        "PARTNER_UPDATED": "Partner updated successfully",
+        "PARTNER_USER_CREATED": "Partner user created successfully",
+        "PARTNER_USER_UPDATED": "Partner user updated successfully",
+        "PARTNER_LOCATION_CREATED": "Partner location created successfully",
+        "PARTNER_LOCATION_UPDATED": "Partner location updated successfully",
+        "PARTNER_PRODUCT_CREATED": "Partner product created successfully",
+        "PARTNER_PRODUCT_UPDATED": "Partner product updated successfully"
     },
     "REFRESH_TOKEN_KEY": "refreshToken",
     "DELAY_COUNT": 30,

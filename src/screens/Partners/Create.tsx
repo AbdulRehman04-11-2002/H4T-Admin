@@ -32,6 +32,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const ERRORS: any = t("ERRORS", { returnObjects: true });
   const LABELS: any = t("LABELS", { returnObjects: true });
   const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
+  const SUCCESS: any = t("SUCCESS", { returnObjects: true });
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
   const { setSuccess, ME } = useContext(GlobalContext) as GlobalContextProps;
   const [cityOptions, setCityOptions] = useState<{ label: string; value: string }[]>([]);
@@ -139,16 +140,15 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       if (partnerID) response = await updatePartner(partnerID, partnerRequest());
       form.resetFields();
       setFileList([]);
-      !partnerID && navigate(-1);
 
-      if (partnerID && response.success) {
-        getPartnerDetail()
+      if (partnerID) {
         openToastNotification(
           "Partner updated successfully",
           "notifications toast-notification-success"
         );
       } else {
-        setSuccess("Partner created successfully")
+        setSuccess(SUCCESS.PARTNER_CREATED);
+        navigate(-1);
       }
 
     } catch (error) {

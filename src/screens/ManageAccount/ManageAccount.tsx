@@ -41,7 +41,7 @@ function ManageAccount() {
     const [locations, setLocations] = useState<PartnerLocation[]>([]);
     const [products, setProducts] = useState<PartnerProduct[]>([]);
 
-    const { ME } = useContext(GlobalContext) as GlobalContextProps;
+    const { ME, success, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
 
     const navigate = useNavigate();
     let params = useParams();
@@ -71,6 +71,7 @@ function ManageAccount() {
     }
 
     const getPartnerDetails = async (currentTab: string, tableTab?: string) => {
+        showLoader();
         switch (currentTab) {
             case TABS_LABEL.PROFILE:
                 navigate(`/Partner/${partnerID}/ManageAccount`);
@@ -121,6 +122,17 @@ function ManageAccount() {
         setCurrentTab(Storage.getTab() || TABS_LABEL.PROFILE);
         setPage(1);
     }, [navigate])
+
+
+    useEffect(() => {
+        if (success) {
+            openToastNotification(
+                success,
+                "notifications toast-notification-success"
+            );
+            setSuccess("");
+        }
+    }, [])
 
 
     return (
