@@ -1,6 +1,7 @@
 import moment from "moment";
 import { DatabaseOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
+import { Image } from "antd";
 
 interface TableColumnProps {
     LABELS: {
@@ -18,6 +19,7 @@ export const PartnerTableColumns = ({ LABELS, showLoader }: TableColumnProps) =>
         {
             title: (
                 <strong className='text-center sp-color-table-header text-capitalize'>
+                    Company logo
                 </strong>
             ),
             key: "logo",
@@ -26,7 +28,12 @@ export const PartnerTableColumns = ({ LABELS, showLoader }: TableColumnProps) =>
             render: (_: any, record: any) => {
 
                 return (
-                    <div className='fontWeight-semiBold'><DatabaseOutlined /></div>
+                    <div className='fontWeight-semiBold'>
+                        {record.imageUrl ? <Image
+                            width={40}
+                            src={record.imageUrl}
+                        /> : <DatabaseOutlined />}
+                    </div>
                 )
             },
         },

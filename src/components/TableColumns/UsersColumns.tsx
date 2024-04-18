@@ -2,6 +2,7 @@ import moment from "moment";
 import { DatabaseOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Image } from "antd";
 
 interface TableColumnProps {
     partnerID: string;
@@ -19,10 +20,14 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
                 </strong>
             ),
             dataIndex: "logo",
-            width: "2%",
             showSorterTooltip: false,
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'><DatabaseOutlined /></div>
+                <div className='fontWeight-semiBold'>
+                    {record.imageUrl ? <Image
+                        width={40}
+                        src={record.imageUrl}
+                    /> : <DatabaseOutlined />}
+                </div>
             ),
         },
         {
@@ -32,7 +37,6 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
                 </strong>
             ),
             dataIndex: "name",
-            width: "15%",
             showSorterTooltip: false,
             sorter: (a: any, b: any) => a.name.localeCompare(b.name),
             render: (_: any, record: any) => {
@@ -49,7 +53,6 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
                 </strong>
             ),
             dataIndex: "email",
-            width: "10%",
             showSorterTooltip: false,
             sorter: (a: any, b: any) => a.email.localeCompare(b.email),
             render: (email: any, record: any) => (
@@ -63,9 +66,7 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
                 </strong>
             ),
             dataIndex: "role",
-            width: "10%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a.role.localeCompare(b.role),
             render: (_: any, record: any) => (
                 <div className='fontWeight-semiBold'>{
                     record?.user_roles?.map((role: any, index: number) => {

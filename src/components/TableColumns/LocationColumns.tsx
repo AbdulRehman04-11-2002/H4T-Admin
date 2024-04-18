@@ -2,6 +2,7 @@ import moment from "moment";
 import { DatabaseOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Image } from "antd";
 interface StatusOrderMap {
     [key: string]: number;
 }
@@ -19,13 +20,18 @@ export const LocationColumns = ({ partnerID }: TableColumnProps) => {
         {
             title: (
                 <strong className='text-center sp-color-table-header text-capitalize'>
+                    Location Image
                 </strong>
             ),
             dataIndex: "REGISTERED_NAME",
-            width: "2%",
             showSorterTooltip: false,
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'><DatabaseOutlined /></div>
+                <div className='fontWeight-semiBold'>
+                    {record.imageUrl ? <Image
+                        width={40}
+                        src={record.imageUrl}
+                    /> : <DatabaseOutlined />}
+                </div>
             ),
         },
 
@@ -36,7 +42,6 @@ export const LocationColumns = ({ partnerID }: TableColumnProps) => {
                 </strong>
             ),
             dataIndex: "code",
-            width: "10%",
             showSorterTooltip: false,
             sorter: (a: any, b: any) =>
                 moment(a.code).isAfter(b.code) ? 1 : -1,
@@ -51,7 +56,6 @@ export const LocationColumns = ({ partnerID }: TableColumnProps) => {
                 </strong>
             ),
             dataIndex: "name",
-            width: "15%",
             showSorterTooltip: false,
             sorter: (a: any, b: any) => a.name.localeCompare(b.name),
             render: (_: any, record: any) => (
@@ -65,7 +69,6 @@ export const LocationColumns = ({ partnerID }: TableColumnProps) => {
                 </strong>
             ),
             dataIndex: "CITY",
-            width: "10%",
             showSorterTooltip: false,
             sorter: (a: any, b: any) => a?.city?.name?.localeCompare(b?.city?.name),
             render: (_: any, record: any) => (

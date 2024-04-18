@@ -2,6 +2,7 @@ import moment from "moment";
 import { DatabaseOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Image } from "antd";
 interface StatusOrderMap {
     [key: string]: number;
 }
@@ -20,15 +21,18 @@ export const ProductsColumns = ({ partnerID, ME }: TableColumnProps) => {
         {
             title: (
                 <strong className='text-center sp-color-table-header text-capitalize'>
+                    Product Image
                 </strong>
             ),
             dataIndex: "REGISTERED_NAME",
-            width: "2%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) =>
-                moment(a.REGISTERED_NAME).isAfter(b.REGISTERED_NAME) ? 1 : -1,
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'><DatabaseOutlined /></div>
+                <div className='fontWeight-semiBold'>
+                    {record.imageUrl ? <Image
+                        width={40}
+                        src={record.imageUrl}
+                    /> : <DatabaseOutlined />}
+                </div>
             ),
         },
 
@@ -39,7 +43,6 @@ export const ProductsColumns = ({ partnerID, ME }: TableColumnProps) => {
                 </strong>
             ),
             dataIndex: "location",
-            width: "10%",
             showSorterTooltip: false,
             sorter: (a: any, b: any) =>
                 moment(a.code).isAfter(b.code) ? 1 : -1,
@@ -57,7 +60,6 @@ export const ProductsColumns = ({ partnerID, ME }: TableColumnProps) => {
                 </strong>
             ),
             dataIndex: "NAME",
-            width: "15%",
             showSorterTooltip: false,
             sorter: (a: any, b: any) => a.name.localeCompare(b.name),
             render: (_: any, record: any) => (
@@ -71,8 +73,8 @@ export const ProductsColumns = ({ partnerID, ME }: TableColumnProps) => {
                 </strong>
             ),
             dataIndex: "SERVICE_TYPE",
-            width: "10%",
             showSorterTooltip: false,
+            sorter: (a: any, b: any) => a?.partner_service?.service?.name.localeCompare(b?.partner_service?.service?.name),
             render: (_: any, record: any) => {
                 return (
                     <div className='fontWeight-semiBold'>{record?.partner_service?.service?.name}</div>
@@ -86,9 +88,8 @@ export const ProductsColumns = ({ partnerID, ME }: TableColumnProps) => {
                 </strong>
             ),
             dataIndex: "LAST_MODIFIED",
-            width: "10%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a.lastModified.localeCompare(b.lastModified),
+            sorter: (a: any, b: any) => a?.lastModified.localeCompare(b?.lastModified),
             render: (_: any, record: any) => (
                 <div className='fontWeight-semiBold'>{record?.lastModified}</div>
             ),

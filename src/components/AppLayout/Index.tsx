@@ -1,7 +1,7 @@
 import { Layout } from 'antd'
 import { useContext, useEffect, useState } from 'react'
 import AppHeader from '../Header/Index'
-import { Content } from 'antd/es/layout/layout'
+import { Content, Footer } from 'antd/es/layout/layout'
 import Routing from '../../routes/Routing'
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -91,6 +91,9 @@ function AppLayout() {
                                 <Content>
                                     <Routing />
                                 </Content>
+                                <Footer>
+                                    
+                                </Footer>
                             </Layout>
                         </Layout>
                     )
