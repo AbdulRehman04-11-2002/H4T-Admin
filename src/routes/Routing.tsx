@@ -5,9 +5,9 @@ import PartnerCreate from '../screens/Partners/Create';
 import ManageAccount from '../screens/ManageAccount/ManageAccount';
 import LocationCreateUpdate from '../screens/ManageAccount/LocationCreateUpdate';
 import ProductCreateUpdate from '../screens/ManageAccount/ProductCreateUpdate';
-import UserCreateUpdate from '../screens/ManageAccount/UserCreateUpdate';
 import TermsOfUse from '../screens/TermsOfUse/Index';
 import DynamicBreadcrumb from '../components/Breadcrumb/Index';
+import UserCreateUpdate from '../screens/ManageAccount/userCreateUpdate';
 
 const Routing = () => {
     return (
