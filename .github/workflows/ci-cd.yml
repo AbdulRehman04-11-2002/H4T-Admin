@@ -6,7 +6,6 @@ on:
             - feature/ci-cd
             - main
 
-
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
@@ -33,12 +32,9 @@ jobs:
                 args: --acl public-read
               env:
                 SOURCE_DIR: build/
-                AWS_S3_BUCKET: $h4t-admin-app-prod
-                AWS_ACCESS_KEY_ID: 123
-                AWS_SECRET_ACCESS_KEY: 456
-                # AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_PROD }}
-                # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_PROD }}
+                AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
             - name: Upload to S3 Dev feature/ci-cd
               if: github.ref == 'refs/heads/feature/ci-cd'
@@ -47,10 +43,7 @@ jobs:
                 args: --acl public-read
               env:
                 SOURCE_DIR: build/
-                AWS_S3_BUCKET: h4t-admin-app-dev
-                AWS_ACCESS_KEY_ID: 123
-                AWS_SECRET_ACCESS_KEY: 456
-                # AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_DEV }}
-                # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_DEV }}
+                AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             
