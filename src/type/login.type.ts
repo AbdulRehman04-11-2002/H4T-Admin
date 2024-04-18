@@ -2,7 +2,7 @@
 export type InternalNamePath = (string | number)[]
 
 export type SubmitOtpProps = {
-    otp: string | undefined
+    otp: string[]
 }
 
 export type SubmitEmailProps = {

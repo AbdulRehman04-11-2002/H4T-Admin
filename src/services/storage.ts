@@ -47,7 +47,7 @@ const setMEData = (data: any) => {
 
 const getMEData = () => {
     const data = localStorage.getItem("me");
-    return data
+    return JSON.parse(data || "{}");
 }
 
 export const Storage = {

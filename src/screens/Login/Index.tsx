@@ -1,4 +1,3 @@
-// import { RootState } from "../../store";
 import { InputOTP } from "antd-input-otp";
 // import { theme } from "../../assets/theme";
 import Loader from "../../components/Loader";
@@ -7,7 +6,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { LoginRequest, VerifyRequest } from "../../interface/Request";
 import { LoginProps, ValidateErrorEntity } from "../../interface/Login";
 import { SubmitEmailProps, SubmitOtpProps } from "../../type/login.type";
-import { fetchCurrentUser, login, verifyCode } from "../../services/api/auth";
+import { login, verifyCode } from "../../services/api/auth";
 import {
   handleErrorResponse,
   openToastNotification,
@@ -40,7 +39,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
   const SUCCESS: any = t("SUCCESS", { returnObjects: true });
   const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
 
-  const [flag, setFlag] = useState<boolean>(false);
+  const [isEmailEntered, setIsEmailEntered] = useState<boolean>(false);
   const [delayCounter, setDelayCounter] = useState<number>(0);
   const [canRequestNewCode, setCanRequestNewCode] = useState<boolean>(false);
   const [response, setResponse] = useState<any>({
@@ -49,7 +48,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
     email: "",
   });
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext)!;
-  const { success, userDetails, setSuccess, clearMessage, setUserDetails, setME } = useContext(GlobalContext) as GlobalContextProps;
+  const { userDetails, setSuccess, setUserDetails, setME } = useContext(GlobalContext) as GlobalContextProps;
 
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -111,6 +110,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
       hideLoader()
     }
   };
+
   const getOtp = async (values: SubmitEmailProps) => {
     const email = form.getFieldValue("email");
     if (!email) {
@@ -131,7 +131,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
           email: values.email,
         });
         setCanRequestNewCode(false);
-        setFlag(true);
+        setIsEmailEntered(true);
         setDelayCounter(DELAY_COUNT);
         inputOtpRef?.current?.focus();
       }
@@ -169,6 +169,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
   };
 
   const handleFinish = async (values: SubmitOtpProps) => {
+
     const { otp } = values;
     if (!otp || otp === undefined || otp.includes("")) {
       openToastNotification(
@@ -214,7 +215,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
       console.log(_error, "error otp");
 
       openToastNotification(
-        _error.message.error,
+        _error?.message?.error || _error.message || "",
         "notifications toast-notification-error"
       );
       setResponse((prev: any) => ({
@@ -270,7 +271,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
               className='login-form'
-              style={{ display: !flag ? "block" : "none" }}
+              style={{ display: !isEmailEntered ? "block" : "none" }}
               onFinish={getOtp}
               onFinishFailed={getOtpError}
               autoComplete='off'
@@ -317,7 +318,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
               className='login-form'
-              style={{ display: flag ? "block" : "none" }}
+              style={{ display: isEmailEntered ? "block" : "none" }}
               onValuesChange={handleValuesChange}
               form={form}
 
@@ -346,7 +347,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
                   length={6}
                   disabled={isLoading}
                   autoFocus
-                  autoSubmit={() => handleFinish}
+                  autoSubmit={(val) => handleFinish({ otp: val })}
                 />
               </Form.Item>
               <Form.Item>

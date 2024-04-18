@@ -161,6 +161,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     setselectedServiceType([1])
     setselectedLocations(data?.partner_product_locations?.map((location: any) => location?.partner_location?.id) || [])
     setImageUrl(data?.imageUrl || "")
+    setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: data?.imageUrl || "" }])
   }
 
   const submitFailed = (errorInfo: any) => {
@@ -259,7 +260,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 <Form.Item
                   label={
                     <label className='label '>
-                      {""}
+                      {LABELS.SERVICE_TYPE}
                     </label>
                   }
                 >

@@ -106,7 +106,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         return null;
     }
   };
-  console.log("file list", fileList[0]);
 
   const partnerRequest = () => {
     const request = {
@@ -127,7 +126,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       createAdminAccount: isAdminAccount,
       services: JSON.stringify(createServicepayload()),
     }
-    console.log("request", request);
 
     return request;
   }
