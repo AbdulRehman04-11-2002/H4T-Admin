@@ -1,0 +1,49 @@
+name: H4T-Admin-FE-CI-CD-Workflow
+
+on:
+    push:
+        branches:
+            - feature/ci-cd
+            - main
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+            
+            - name: Setup Node.js
+              uses: actions/setup-node@v2
+              with:
+                node-version: '20.11.0'
+            
+            - name: Install dependencies
+              run: npm install
+    
+            - name: Build app
+              run: npm run build
+    
+            - name: Upload to S3 Prod
+              if: github.ref == 'refs/heads/main'
+              uses: jakejarvis/s3-sync-action@master
+              with:
+                args: --acl public-read
+              env:
+                SOURCE_DIR: build/
+                AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_PROD }}
+                AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+            - name: Upload to S3 Dev feature/ci-cd
+              if: github.ref == 'refs/heads/feature/ci-cd'
+              uses: jakejarvis/s3-sync-action@master
+              with:
+                args: --acl public-read
+              env:
+                SOURCE_DIR: build/
+                AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_DEV }}
+                AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            
