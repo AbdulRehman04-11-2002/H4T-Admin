@@ -12,6 +12,7 @@ import { createPartnerUser, getPartnerUser, updatePartnerUser } from '../../serv
 import Loader from '../../components/Loader';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
 import { User, UserPartnerLocation } from '../../interface/PartnerUser';
+import { getPartnerLocations } from '../../services/api/partnerLocation';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -20,7 +21,7 @@ type cityValType = string | number | boolean;
 
 function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [fileList, setFileList] = useState<AntUploadFile[]>([]);
-  const [cityOptions, setCityOptions] = useState<{ label: string; value: string }[]>([
+  const [locationOptions, setlocationOptions] = useState<{ label: string; value: string }[]>([
   ])
   const [userRolesOptions, setUserRolesOptions] = useState<{ label: string; value: string }[]>([
   ])
@@ -34,7 +35,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     status: "",
   });
   const [userRoles, setUserRoles] = useState<{ label: string; value: string }[]>([]);
-
+  const [isDataChange, setIsDataChange] = useState(false)
   const { t } = useTranslation();
   const BUTTONS: any = t("BUTTONS", { returnObjects: true });
   const HEADING: any = t("HEADING", { returnObjects: true });
@@ -91,6 +92,28 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       hideLoader();
     }
   }
+
+
+  const fetchPartnerLocations = async () => {
+    showLoader();
+    try {
+      const response = await getPartnerLocations(1, 100, "", "ALL", partnerID || "");
+      console.log('response', response);
+      setlocationOptions(response?.data?.response?.results.map((location: any) => { return { label: `${location?.name} (${location?.city?.name})`, value: location.id } }) || [])
+
+    } catch (error) {
+      const _error = error as ApiError;
+      const { errorMessage } = handleErrorResponse(_error);
+      openToastNotification(
+        errorMessage,
+        "notifications toast-notification-error"
+      );
+      console.log("error", _error);
+    } finally {
+      hideLoader();
+    }
+  }
+
 
   const partnerUserRequest = () => {
     const request = {
@@ -175,12 +198,13 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   const handleOnChange = () => {
     console.log('handleOnChange')
+    setIsDataChange(true)
   }
 
   useEffect(() => {
-    ME?.systemLocations && setCityOptions(ME?.systemLocations.map((location: any) => { return { label: location.name, value: location.id } }) || [])
     ME?.systemRoles && setUserRolesOptions(ME?.systemRoles.map((role: any) => { return { label: role.name, value: role.id } }) || [])
     userID && getPartnerUserDetails()
+    fetchPartnerLocations()
   }, [])
 
   return (
@@ -208,6 +232,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
               <Button
                 type='primary'
                 htmlType='submit'
+                disabled={(userID && (isDataChange ? false : true) || false)}
               >
                 {userID ? BUTTONS.UPDATE : BUTTONS.SAVE}
               </Button>
@@ -406,7 +431,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 xs={{ span: 23 }}
               >
                 <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
-                  <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={cityOptions} onChange={cityOnchange} />
+                  <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={cityOnchange} />
 
                 </Form.Item>
               </Col>
