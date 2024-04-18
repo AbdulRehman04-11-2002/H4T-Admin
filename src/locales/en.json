@@ -49,7 +49,7 @@
         "PRICE": "Price (€)",
         "DESCRIPTION": "Description",
         "EXPEXTED_DIMENSIONS_LXW": "Expected dimensions LxW",
-        "CUSTOMER_SEES": "Customer sees",
+        "CUSTOMER_SEES": "Price + Fixed Fees",
         "SLOT_DURATION": "Slot Duration",
         "TERMS_OF_USE": "Terms of Use"
     },
@@ -141,8 +141,6 @@
         "UPDATE_USER": "Update User",
         "CREATE_PRODUCT": "Create Product",
         "UPDATE_PRODUCT": "Update Product"
-
-
     },
     "TABS_LABEL": {
         "CURRENT": "current",
@@ -158,7 +156,6 @@
         "PRODUCTS": "No products found.",
         "USERS": "No users found."
     },
-    
     "privacyPolicy": {
         "title": "Health4Travel Acceptable Use Agreement",
         "introText": "This Health4Travel Acceptable Use Agreement (\"Agreement\") is entered into by and between Health4Travel (iFlyIT BV) (\"Health4Travel\") and all users of the Health4Travel platform (\"User\").",

@@ -11,6 +11,7 @@ import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
 import { ApiError } from '../../services/api/Index';
 import { createPartnerProduct, getProducts, updatePartnerProduct } from '../../services/api/partnerProduct';
 import { PartnerProduct } from '../../interface/PartnerProduct';
+import { getPartnerLocations } from '../../services/api/partnerLocation';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -21,7 +22,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [isDataChange, setIsDataChange] = useState(false)
   const [serviceOptions, setServiceOptions] = useState<{ label: string; value: number }[]>([])
   const [selectedServiceType, setselectedServiceType] = useState<number[]>([1])
-  const [cityOptions, setCityOptions] = useState<{ label: string; value: number }[]>([])
+  const [locationOptions, setlocationOptions] = useState<{ label: string; value: number }[]>([])
   const [selectedLocations, setselectedLocations] = useState<number[]>([])
   const [imageUrl, setImageUrl] = useState<string>('')
   const [errors, setErrors] = useState({
@@ -90,6 +91,26 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     try {
       const response = await getProducts(productID || "");
       setFormValues(response?.data?.partnerProduct)
+
+    } catch (error) {
+      const _error = error as ApiError;
+      const { errorMessage } = handleErrorResponse(_error);
+      openToastNotification(
+        errorMessage,
+        "notifications toast-notification-error"
+      );
+      console.log("error", _error);
+    } finally {
+      hideLoader();
+    }
+  }
+
+  const fetchPartnerLocations = async () => {
+    showLoader();
+    try {
+      const response = await getPartnerLocations(1, 100, "", "ALL", partnerID || "");
+      console.log('response', response);
+      setlocationOptions(response?.data?.response?.results.map((location: any) => { return { label: `${location?.name} (${location?.city?.name})`, value: location.id } }) || [])
 
     } catch (error) {
       const _error = error as ApiError;
@@ -194,9 +215,9 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   useEffect(() => {
-    ME?.systemLocations && setCityOptions(ME?.systemLocations.map((location: any) => { return { label: location.name, value: location.id } }) || [])
     ME?.systemServices && setServiceOptions(ME?.systemServices.map((service: any) => { return { label: service.name, value: service.id } }) || [])
-    isUpdateForm && getPartnerProductsDetails()
+    productID && getPartnerProductsDetails()
+    fetchPartnerLocations()
   }, [])
 
   return (
@@ -369,20 +390,23 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 sm={{ span: 23 }}
                 xs={{ span: 23 }}
               >
-                <Form.Item name="fileList" label="File Upload" valuePropName="fileList">
-                  <UploadFile
-                    setFileList={setFileList}
-                    fileListArr={fileList}
-                    fileType={"image/png"}
-                    fileTypeError={ERRORS?.IMAGE_FILE_TYPE}
-                    requiredImage={false}
-                    errorMessage={ERRORS.UPLOAD_LOGO}
-                    validateTrigger={["handleSave", "handleUpdate"]}
-                    label={LABELS.UPLOAD_LOGO}
-                    name={"image"}
-                  />
-                </Form.Item>
-                <Text style={{ fontSize: 11, color: "#1677ff" }} >{LABELS.EXPEXTED_DIMENSIONS_LXW}</Text>
+                <div style={{ position: "relative" }}>
+
+                  <Form.Item name="fileList" label="File Upload" valuePropName="fileList">
+                    <UploadFile
+                      setFileList={setFileList}
+                      fileListArr={fileList}
+                      fileType={"image/png"}
+                      fileTypeError={ERRORS?.IMAGE_FILE_TYPE}
+                      requiredImage={false}
+                      errorMessage={ERRORS.UPLOAD_LOGO}
+                      validateTrigger={["handleSave", "handleUpdate"]}
+                      label={LABELS.UPLOAD_LOGO}
+                      name={"image"}
+                    />
+                  </Form.Item>
+                  <Text style={{ fontSize: 11, color: "#1677ff", position: "absolute", bottom: 10 }} >{LABELS.EXPEXTED_DIMENSIONS_LXW}</Text>
+                </div>
               </Col>
 
               <Col
@@ -391,25 +415,28 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 sm={{ span: 23 }}
                 xs={{ span: 23 }}
               >
-                <Form.Item
-                  validateStatus={errors.price ? "error" : ""}
-                  name='price'
-                  label={
-                    <label className='label '>
-                      {LABELS.PRICE}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.PRICE }, { pattern: new RegExp(/^[0-9]+$/), message: t("ERRORS.VALID_INPUT", { type: "Price" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.PRICE}
-                    ref={inputPriceRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-                <Text style={{ fontSize: 11, color: "#1677ff" }} >{LABELS.CUSTOMER_SEES}</Text>
+                <div style={{ position: "relative" }}>
+                  <Form.Item
+                    validateStatus={errors.price ? "error" : ""}
+                    name='price'
+                    label={
+                      <label className='label '>
+                        {LABELS.PRICE}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.PRICE }, { pattern: new RegExp(/^[0-9]+$/), message: t("ERRORS.VALID_INPUT", { type: "Price" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.PRICE}
+                      ref={inputPriceRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                  <Text style={{ fontSize: 11, color: "#1677ff", position: "absolute", bottom: -20 }} >{LABELS.CUSTOMER_SEES}</Text>
+
+                </div>
 
               </Col>
 
@@ -486,7 +513,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 xs={{ span: 23 }}
               >
                 <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
-                  <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={cityOptions} onChange={cityOnchange} />
+                  <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={cityOnchange} />
 
                 </Form.Item>
               </Col>
