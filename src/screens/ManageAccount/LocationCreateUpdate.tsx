@@ -150,8 +150,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       status: form.getFieldValue('status').toUpperCase(),
       partner_location_timings: JSON.stringify(createPayloadForOperatingHours()),
       partnerId: partnerID,
-      file: !isUpdateForm ? fileList[0] : fileList[0].thumbUrl ? fileList[0] : {},
-      imageUrl: isUpdateForm ? (fileList[0] && fileList[0].thumbUrl ? "" : imageUrl) : "",
+      file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
+      imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
     }
     return request;
   }
@@ -186,7 +186,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   const setFormValues = (data: PartnerLocation) => {
-    setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: data?.imageUrl || "" }])
+    data?.imageUrl ? setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: data?.imageUrl || "" }]) : setFileList([]);
     form.setFieldsValue({
       name: data?.name,
       code: data?.code,

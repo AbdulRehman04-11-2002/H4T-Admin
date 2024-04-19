@@ -114,8 +114,8 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       businessId: form.getFieldValue('businessId'),
       licenseNumber: form.getFieldValue('licenseNumber'),
       status: form.getFieldValue('status'),
-      file: !isUpdateForm ? fileList[0] : fileList[0].thumbUrl ? fileList[0] : {},
-      imageUrl: isUpdateForm ? (fileList[0] && fileList[0].thumbUrl ? "" : imageUrl) : "",
+      file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
+      imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
       contractNumber: form.getFieldValue('contractNumber'),
       registeredCityId: form.getFieldValue('searchAndSelectCity'),
       currencyId: 1,
@@ -207,7 +207,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     //     fee: serviceFee?.feeValue || 0,
     //   }
     // }))
-    setFileList([{ uid: '-1', name: 'image', status: 'done', url: currentPartner?.imageUrl }]);
+    currentPartner?.imageUrl ? setFileList([{ uid: '-1', name: 'image', status: 'done', url: currentPartner?.imageUrl }]) : setFileList([]);
     setImageUrl(currentPartner?.imageUrl || '');
   }
 

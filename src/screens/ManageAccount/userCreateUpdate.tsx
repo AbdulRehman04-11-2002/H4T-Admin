@@ -122,8 +122,8 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       email: form.getFieldValue("email"),
       roleId: userRoles[0]?.value,
       status: form.getFieldValue("status").toUpperCase(),
-      file: !isUpdateForm ? fileList[0] : fileList[0].thumbUrl ? fileList[0] : {},
-      imageUrl: isUpdateForm ? (fileList[0] && fileList[0].thumbUrl ? "" : imageUrl) : "",
+      file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
+      imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
       locationIds: JSON.stringify(selectedLocations),
       allowedAllLocations: false,
       partnerId: partnerID
@@ -169,7 +169,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     })
     setselectedLocations(data?.user_partner_locations?.map((location: UserPartnerLocation) => location?.partner_location?.id) || [])
     setUserRoles(data?.user_roles?.map((role: any) => ({ label: '', value: role?.roleId })) || [])
-    setFileList([{ uid: '-1', name: 'image', status: 'done', url: data?.imageUrl ?? "" }]);
+    data?.imageUrl ? setFileList([{ uid: '-1', name: 'image', status: 'done', url: data?.imageUrl ?? "" }]) : setFileList([])
 
     setImageUrl(data?.imageUrl || "")
   }

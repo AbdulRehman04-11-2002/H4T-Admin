@@ -135,8 +135,8 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       guidelines: form.getFieldValue("customerGuidelines"),
       status: form.getFieldValue("status").toUpperCase(),
       partnerServiceId: selectedServiceType[0],
-      file: !isUpdateForm ? fileList[0] : fileList[0].thumbUrl ? fileList[0] : {},
-      imageUrl: isUpdateForm ? (fileList[0] && fileList[0].thumbUrl ? "" : imageUrl) : "",
+      file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
+      imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
       locationIds: JSON.stringify(selectedLocations),
       slotDuration: form.getFieldValue("slotDuration"),
       allowAllLocations: false,
@@ -188,7 +188,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     setselectedServiceType([1])
     setselectedLocations(data?.partner_product_locations?.map((location: any) => location?.partner_location?.id) || [])
     setImageUrl(data?.imageUrl || "")
-    setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: data?.imageUrl || "" }])
+    data?.imageUrl ? setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: data?.imageUrl || "" }]) : setFileList([])
   }
 
   const submitFailed = (errorInfo: any) => {

@@ -50,7 +50,6 @@ function ManageAccount() {
 
     const leftTabOnChange = (currentTab: string) => {
         setCurrentTab(currentTab);
-        showLoader();
         Storage.setTab(currentTab);
         if (currentTab === TABS_LABEL.PROFILE) {
             navigate(`/Partner/${partnerID}/ManageAccount`);
@@ -71,7 +70,6 @@ function ManageAccount() {
     }
 
     const getPartnerDetails = async (currentTab: string, tableTab?: string) => {
-        showLoader();
         switch (currentTab) {
             case TABS_LABEL.PROFILE:
                 navigate(`/Partner/${partnerID}/ManageAccount`);
