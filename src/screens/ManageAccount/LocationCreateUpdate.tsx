@@ -337,13 +337,9 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
             To find the longitude and latitude of a location, you can use various methods:
           </p>
           <ol>
-            <li>Using a GPS device: GPS devices provide accurate longitude and latitude coordinates for your current location.</li>
-            <li>Using online maps: Websites like Google Maps allow you to right-click on a location to get its coordinates.</li>
-            <li>Using a smartphone: Most smartphones have built-in GPS functionality that can display your current coordinates in mapping apps.</li>
+            <li>Using online maps: Websites like Google Maps allow you copy coordinates.</li>
+            <li>Search for a location and then right-click on a location get its coordinates</li>
           </ol>
-          <p>
-            Remember, longitude specifies the east-west position, with positive values indicating east, and latitude specifies the north-south position, with positive values indicating north.
-          </p>
         </Modal>
         <Row justify='end'>
           <Col>
@@ -511,33 +507,6 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 xs={{ span: 23 }}
               >
                 <Form.Item
-                  validateStatus={errors.longitude ? "error" : ""}
-                  name='longitude'
-                  label={
-                    <label className='label '>
-                      {LABELS.LONGITUDE}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.LONGITUDE }, { pattern: new RegExp(/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,25}$/), message: t("ERRORS.VALID_INPUT", { type: "Longitude" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.LONGITUDE}
-                    ref={inputLongitudeRef as any}
-                    autoFocus={false}
-                    disabled={false}
-
-                  />
-                </Form.Item>
-              </Col>
-
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
                   validateStatus={errors.lattitude ? "error" : ""}
                   name='lattitude'
                   label={
@@ -553,6 +522,31 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     ref={inputLatitudeRef as any}
                     autoFocus={false}
                     disabled={false}
+                  />
+                </Form.Item>
+              </Col>
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.longitude ? "error" : ""}
+                  name='longitude'
+                  label={
+                    <label className='label '>
+                      {LABELS.LONGITUDE}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.LONGITUDE }, { pattern: new RegExp(/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,25}$/), message: t("ERRORS.VALID_INPUT", { type: "Longitude" }) }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.LONGITUDE}
+                    ref={inputLongitudeRef as any}
+                    autoFocus={false}
+                    disabled={false}
                     addonAfter={
                       <span
                         style={{ cursor: 'pointer', margin: '5px' }}
@@ -564,7 +558,6 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   />
                 </Form.Item>
               </Col>
-
             </Row>
 
             <Row gutter={8}>
