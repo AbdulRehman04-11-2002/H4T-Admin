@@ -18,13 +18,13 @@ export interface PartnerProduct {
     slotDuration: number;
     description: string | null;
     guidelines: string | null;
-    isAllLocation: boolean | null;
+    allowAllLocations: boolean | null;
     status: string;
     partnerId: number;
     partnerServiceId: number;
     partner_service: PartnerService;
     partner_product_locations: PartnerProductLocation[];
-    partner_product_tags: any[]; 
+    partner_product_tags: any[];
 }
 
 interface PartnerProductsResponse {

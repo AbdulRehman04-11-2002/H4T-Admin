@@ -142,6 +142,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       setFileList([]);
 
       if (partnerID) {
+        getPartnerDetail()
         openToastNotification(
           "Partner updated successfully",
           "notifications toast-notification-success"
@@ -265,7 +266,11 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   useEffect(() => {
     partnerID && getPartnerDetail();
-    ME?.systemLocations && setCityOptions(ME?.systemLocations.map((location: any) => { return { label: location.name, value: location.id } }) || [])
+    let cityOptionsArr: any = []
+    ME?.systemLocations && ME?.systemLocations.map((location: any) => {
+      if (location.type === "CITY" && location.status === "ENABLED") cityOptionsArr.push({ label: location.name, value: location.id })
+    })
+    setCityOptions(cityOptionsArr)
     // ME.systemServices && setServices(ME.systemServices.map((service: any) => { return { id: service.id, name: service.name, fee: 0, feeType: 'FIXED_FEE', checked: false } }) || [])
   }, [])
 

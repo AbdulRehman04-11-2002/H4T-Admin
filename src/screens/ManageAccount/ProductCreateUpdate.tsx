@@ -139,7 +139,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0].thumbUrl ? "" : imageUrl) : "",
       locationIds: JSON.stringify(selectedLocations),
       slotDuration: form.getFieldValue("slotDuration"),
-      isAllLocations: false,
+      allowAllLocations: false,
       partnerId: partnerID,
     }
     return request;

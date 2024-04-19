@@ -89,9 +89,9 @@ export const ProductsColumns = ({ partnerID, ME }: TableColumnProps) => {
             ),
             dataIndex: "LAST_MODIFIED",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a?.lastModified.localeCompare(b?.lastModified),
+            sorter: (a: any, b: any) => a?.modifiedAt.localeCompare(b?.modifiedAt),
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'>{record?.lastModified}</div>
+                <div className='fontWeight-semiBold'>{record?.modifiedAt}</div>
             ),
         },
 
