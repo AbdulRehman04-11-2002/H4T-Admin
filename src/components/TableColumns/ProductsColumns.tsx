@@ -81,19 +81,19 @@ export const ProductsColumns = ({ partnerID, ME }: TableColumnProps) => {
                 )
             },
         },
-        {
-            title: (
-                <strong className='text-center sp-color-table-header text-capitalize'>
-                    {LABELS.LAST_MODIFIED}
-                </strong>
-            ),
-            dataIndex: "LAST_MODIFIED",
-            showSorterTooltip: false,
-            sorter: (a: any, b: any) => a?.modifiedAt.localeCompare(b?.modifiedAt),
-            render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'>{record?.modifiedAt}</div>
-            ),
-        },
+        // {
+        //     title: (
+        //         <strong className='text-center sp-color-table-header text-capitalize'>
+        //             {LABELS.LAST_MODIFIED}
+        //         </strong>
+        //     ),
+        //     dataIndex: "LAST_MODIFIED",
+        //     showSorterTooltip: false,
+        //     sorter: (a: any, b: any) => a?.modifiedAt.localeCompare(b?.modifiedAt),
+        //     render: (_: any, record: any) => (
+        //         <div className='fontWeight-semiBold'>{record?.modifiedAt}</div>
+        //     ),
+        // },
 
     ]
 };

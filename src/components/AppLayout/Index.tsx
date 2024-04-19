@@ -97,7 +97,7 @@ function AppLayout() {
                                                 <Routing />
                                             </Content>
                                             <Footer style={{ textAlign: 'center', backgroundColor: "#FAFAFA" }}>
-                                                Health4Travel ©{new Date().getFullYear()} <Link to={"/terms-of-use"}>{LABELS.TERMS_OF_USE}</Link>
+                                                Health4Travel ©{new Date().getFullYear()} <Link target="_blank" to={"/terms-of-use"}>{LABELS.TERMS_OF_USE}</Link>
                                             </Footer>
                                         </Layout>
                                     </Layout>
