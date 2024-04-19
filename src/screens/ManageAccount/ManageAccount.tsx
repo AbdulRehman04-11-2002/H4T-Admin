@@ -186,7 +186,7 @@ function ManageAccount() {
                             search={search}
                             setPage={setPage}
                             loading={isLoading}
-                            noRecordText={TABLE_NO_RECORDS_TEXT.LOCATIONS}
+                            noRecordText={TABLE_NO_RECORDS_TEXT.PRODUCTS}
                             columns={ProductsColumns({ partnerID: partnerID, ME: ME })}
                             createPath={`/Partner/${partnerID}/ManageAccount/createProduct`}
                             pageSize={pageSize}
