@@ -397,7 +397,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.BUSINESS_ID}
                     </label>
                   }
-                  rules={[{ required: true, message: ERRORS.BUSINESS_ID, }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Business ID" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Business ID" }) }, { pattern: new RegExp(/^[a-zA-Z0-9 ]+$/), message: t("ERRORS.VALID_INPUT", { type: "Business ID" }) }]}
+                  rules={[{ required: true, message: ERRORS.BUSINESS_ID, }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Business ID" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Business ID" }) }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Input
@@ -426,7 +426,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.LICENSE_NUMBER}
                     </label>
                   }
-                  rules={[{ required: true, message: ERRORS.LICENSE_NUMBER }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "License number" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "License number" }) }, { pattern: new RegExp(/^[a-zA-Z0-9 ]+$/), message: t("ERRORS.VALID_INPUT", { type: "License number" }) }]}
+                  rules={[{ required: true, message: ERRORS.LICENSE_NUMBER }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "License number" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "License number" }) }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Input
@@ -653,7 +653,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.CONTACT_PERSON}
                     </label>
                   }
-                  rules={[{ required: true, message: ERRORS.CONTACT_PERSON }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Contact person" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Contact person" }) }, { pattern: new RegExp(/^[a-zA-Z0-9 ]+$/), message: t("ERRORS.VALID_INPUT", { type: "Contact person" }) }]}
+                  rules={[{ required: true, message: ERRORS.CONTACT_PERSON }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Contact person" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Contact person" }) }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Input

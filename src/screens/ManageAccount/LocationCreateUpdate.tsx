@@ -396,7 +396,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.NAME}
                     </label>
                   }
-                  rules={[{ required: true, message: ERRORS.NAME }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Name" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Name" }) }, { pattern: new RegExp(/^[a-zA-Z0-9 ]+$/), message: t("ERRORS.VALID_INPUT", { type: "Name" }) }]}
+                  rules={[{ required: true, message: ERRORS.NAME }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Name" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Name" }) }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Input

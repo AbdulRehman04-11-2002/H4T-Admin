@@ -42,7 +42,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
   const SUCCESS: any = t("SUCCESS", { returnObjects: true });
   const { ME, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
-  const {  showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
+  const { showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
   let params = useParams();
   const { partnerID, productID } = params;
   const [form] = Form.useForm();
@@ -152,9 +152,9 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       if (!productID) response = await createPartnerProduct(createPartnerProductRequest());
       if (productID) response = await updatePartnerProduct(productID, createPartnerProductRequest());
 
-      if(productID){
+      if (productID) {
         setSuccess(SUCCESS.PARTNER_PRODUCT_UPDATED)
-      }else{
+      } else {
         setSuccess(SUCCESS.PARTNER_PRODUCT_CREATED)
       }
       navigate(`/partner/${partnerID}/manageaccount`);
@@ -312,7 +312,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.NAME}
                     </label>
                   }
-                  rules={[{ required: true, message: ERRORS.NAME }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Name" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Name" }) }, { pattern: new RegExp(/^[a-zA-Z0-9 ]+$/), message: t("ERRORS.VALID_INPUT", { type: "Name" }) }]}
+                  rules={[{ required: true, message: ERRORS.NAME }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Name" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Name" }) }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Input
