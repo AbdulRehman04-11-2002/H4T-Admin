@@ -118,10 +118,10 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
       showError(ERRORS.EMAIL);
       return false;
     }
-    showLoader()
     const request: LoginRequest = {
       email,
     };
+    showLoader()
     try {
       const result = await login(request);
       if (result?.data?.session && result?.data?.user_id) {
@@ -184,13 +184,13 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
       ]);
     }
 
-    showLoader()
-
+    
     const request: VerifyRequest = {
       session: response?.session || "",
       code: otp && otp.toString().replaceAll(",", ""),
       userId: response?.user_id || "",
     };
+    showLoader()
     try {
       const response = await verifyCode(request);
       if (response?.data?.AccessToken && response?.data?.RefreshToken) {

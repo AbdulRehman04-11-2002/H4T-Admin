@@ -42,6 +42,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const ERRORS: any = t("ERRORS", { returnObjects: true });
   const LABELS: any = t("LABELS", { returnObjects: true });
   const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
+  const TABLE_NO_RECORDS_TEXT: any = t("TABLE_NO_RECORDS_TEXT", { returnObjects: true });
   const SUCCESS: any = t("SUCCESS", { returnObjects: true });
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
   const { ME, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
@@ -225,25 +226,44 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         autoComplete='off'
         onValuesChange={handleOnChange}
       >
-        <Row justify='end'>
-          <Col>
-            <Space>
-              <Button
-                type='default'
-                htmlType='button'
-                onClick={() => navigate(-1)}
-              >
-                {LABELS.CANCEL}
-              </Button>
-              <Button
-                type='primary'
-                htmlType='submit'
-                disabled={(userID && (isDataChange ? false : true) || false)}
-              >
-                {userID ? BUTTONS.UPDATE : BUTTONS.SAVE}
-              </Button>
-            </Space>
+        <Row justify={"space-between"} className='mb-2'>
+          <Col
+            lg={{ span: 12 }}
+            md={{ span: 12 }}
+            sm={{ span: 23 }}
+            xs={{ span: 23 }}
+          >
+            <Title level={3} className='remove-vertical-margin '>
+              {isUpdateForm ? HEADING.UPDATE_USER : HEADING.CREATE_USER}
+            </Title>
           </Col>
+
+          <Col
+            lg={{ span: 12 }}
+            md={{ span: 12 }}
+            sm={{ span: 23 }}
+            xs={{ span: 23 }}
+          >
+            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", height: "100%" }}>
+              <Space>
+                <Button
+                  type='default'
+                  htmlType='button'
+                  onClick={() => navigate("/")}
+                >
+                  {LABELS.CANCEL}
+                </Button>
+                <Button
+                  type='primary'
+                  htmlType='submit'
+                  disabled={(partnerID && (isDataChange ? false : true) || false)}
+                >
+                  {isUpdateForm ? BUTTONS.UPDATE : BUTTONS.SAVE}
+                </Button>
+              </Space>
+            </div>
+          </Col>
+
         </Row>
         <Row gutter={16}>
 
@@ -253,18 +273,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
             sm={{ span: 24 }}
             xs={{ span: 24 }}
           >
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 24 }}
-                md={{ span: 24 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Title level={3} className='remove-vertical-margin '>
-                  {userID ? HEADING.UPDATE_USER : HEADING.CREATE_USER}
-                </Title>
-              </Col>
-            </Row>
             <Row gutter={8}>
               <Col
                 lg={{ span: 12 }}
@@ -376,6 +384,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     validateTrigger={["handleSave", "handleUpdate"]}
                     label={LABELS.UPLOAD_LOGO}
                     name={"image"}
+                    setImageUrl={setImageUrl}
                   />
                 </Form.Item>
               </Col>
@@ -440,6 +449,9 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={cityOnchange} />
 
                 </Form.Item>
+                {!locationOptions.length && <Title level={5} >
+                  {TABLE_NO_RECORDS_TEXT.LOCATION_AVAILABLE}
+                </Title>}
               </Col>
 
 

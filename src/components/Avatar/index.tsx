@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Avatar as AntAvatar, Popover } from "antd";
+import React from "react";
+import { Avatar as AntAvatar } from "antd";
+import CustomPopover from "../Popover/Index";
 
 interface Props {
     avatarClickHandler: () => void;
@@ -7,22 +8,15 @@ interface Props {
 }
 
 const Avatar: React.FC<Props> = ({ avatarClickHandler, ME }) => {
-    const [visible, setVisible] = useState(false);
-
-    const handleVisibleChange = (visible: boolean) => {
-        setVisible(visible);
-    };
 
     return (
-        <Popover
-            content={<div>
-                {ME?.user?.name ? <p>Name : {ME?.user?.name}</p> : ""}
-                {ME?.user?.email ? <p>Email : {ME?.user?.email}</p> : ""}
-                {ME?.user?.role ? <p>Role : {ME?.user?.role}</p> : ""}
-            </div>}
+        <CustomPopover
             trigger="hover"
-            visible={(ME?.user?.name || ME?.user?.email || ME?.user?.role) ? visible : false}
-            onVisibleChange={handleVisibleChange}
+            content={<div>
+                {ME?.user?.name ? <p style={{ height: "40px", display: "flex", alignItems: "center" }} className="m-0">Name : {ME?.user?.name}</p> : ""}
+                {ME?.user?.email ? <p style={{ height: "40px", display: "flex", alignItems: "center" }} className="m-0">Email : {ME?.user?.email}</p> : ""}
+                {ME?.user?.role ? <p style={{ height: "40px", display: "flex", alignItems: "center" }} className="m-0">Role : {ME?.user?.role}</p> : ""}
+            </div>}
         >
             <AntAvatar
                 onClick={avatarClickHandler}
@@ -37,7 +31,7 @@ const Avatar: React.FC<Props> = ({ avatarClickHandler, ME }) => {
             >
                 {ME?.user?.name?.charAt(0)}
             </AntAvatar>
-        </Popover>
+        </CustomPopover>
     );
 };
 

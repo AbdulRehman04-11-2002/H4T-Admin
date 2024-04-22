@@ -10,10 +10,8 @@ import { Storage } from '../../services/storage';
 import { RefreshTokenRequest } from '../../interface/Request';
 import { refreshToken } from '../../services/api/auth';
 import Login from '../../screens/Login/Index';
-import TermsOfUse from '../../screens/TermsOfUse/Index';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
 import Loader from '../Loader';
-import DynamicBreadcrumb from '../Breadcrumb/Index';
 
 function AppLayout() {
     const { t } = useTranslation();
@@ -89,7 +87,6 @@ function AppLayout() {
                                     <Layout
                                         style={{
                                             minHeight: "100vh",
-                                            // background: theme.colors.grey.grey30,
                                         }}
                                     >
                                         <Layout>

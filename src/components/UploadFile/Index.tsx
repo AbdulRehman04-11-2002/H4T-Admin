@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { showError, validateFileType } from "../../helpers/globalFunctions";
-import { Button, Form, Upload, UploadFile as AntUploadFile, Image, GetProp, UploadProps, UploadFile as uploadFileType } from "antd";
+import {  Form, Upload, UploadFile as AntUploadFile, Image, GetProp, UploadProps, UploadFile as uploadFileType } from "antd";
 
 interface Props {
     name: string;
@@ -13,6 +13,7 @@ interface Props {
     fileListArr: AntUploadFile[];
     validateTrigger: string[];
     setFileList: React.Dispatch<React.SetStateAction<AntUploadFile[]>>;
+    setImageUrl: React.Dispatch<React.SetStateAction<string>>;
 }
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -27,6 +28,7 @@ const UploadFile: React.FC<Props> = ({
     requiredImage,
     fileTypeError,
     validateTrigger,
+    setImageUrl
 }) => {
     const [previewImage, setPreviewImage] = useState('');
     const [previewOpen, setPreviewOpen] = useState(false);
@@ -72,11 +74,11 @@ const UploadFile: React.FC<Props> = ({
                 return false;
             },
             onRemove: (file: AntUploadFile) => {
-                let FileListDup = fileListArr
-                if (FileListDup?.some((item) => item.uid === file.uid)) {
-                    setFileList((FileListDup) =>
-                        FileListDup.filter((item) => item.uid !== file.uid)
+                if (fileListArr?.some((item) => item.uid === file.uid)) {
+                    setFileList((fileEle) =>
+                        fileEle.filter((item) => item.uid !== file.uid)
                     );
+                    setImageUrl('');
                     return true;
                 }
                 return false;

@@ -1,5 +1,5 @@
 import {
-  Button, Checkbox, Col, Divider, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile,
+  Button, Checkbox, Col, Divider, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile, Flex,
 } from 'antd';
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -40,7 +40,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const navigate = useNavigate();
   const [fileList, setFileList] = useState<AntUploadFile[]>([]);
   const [isAdminAccount, setIsAdminAccount] = useState(false)
-  const [isDataChanges, setIsDataChanges] = useState(false)
+  const [isDataChange, setIsDataChange] = useState(false)
   const [services, setServices] = useState<Service[]>([
     { id: 1, name: 'Doctor Consultation', fee: 0, feeType: 'FIXED_FEE', checked: true },
   ]);
@@ -116,6 +116,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       status: form.getFieldValue('status'),
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
+      // ...(isUpdateForm && !(fileList[0] && fileList[0]?.thumbUrl) && { imageUrl: imageUrl }),
       contractNumber: form.getFieldValue('contractNumber'),
       registeredCityId: form.getFieldValue('searchAndSelectCity'),
       currencyId: 1,
@@ -233,7 +234,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   const handleOnChange = () => {
-    setIsDataChanges(true)
+    setIsDataChange(true)
   }
 
   const createServicepayload = () => {
@@ -260,7 +261,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       service.id === serviceId ? { ...service, checked: !service.checked } : service
     );
     setServices(updatedServices);
-    setIsDataChanges(true)
+    setIsDataChange(true)
 
   };
 
@@ -269,7 +270,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       service.id === serviceId ? { ...service, fee } : service
     );
     setServices(updatedServices);
-    setIsDataChanges(true)
+    setIsDataChange(true)
   };
 
   useEffect(() => {
@@ -285,532 +286,534 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   return (
     <div className={isUpdateForm ? 'update-partner-content' : 'create-partner-content'}>
-      {isLoading ? <Loader /> : <Form
-        onFinish={handleFinish}
-        onFinishFailed={submitFailed}
-        name='basic'
-        labelCol={{ span: 24 }}
-        wrapperCol={{ span: 24 }}
-        form={form}
-        autoComplete='off'
-        onValuesChange={handleOnChange}
-      >
+      {isLoading ? <Loader /> :
+        <Form
+          onFinish={handleFinish}
+          onFinishFailed={submitFailed}
+          name='basic'
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+          form={form}
+          autoComplete='off'
+          onValuesChange={handleOnChange}
+        >
 
-        {!isUpdateForm && <Row justify={"space-between"} className='mb-2'>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 12 }}
-            lg={{ span: 12 }}
-          >
-            <Title level={3} className='remove-vertical-margin '>
-              {isUpdateForm ? "Update partner" : "Create partner"}
-            </Title>
-          </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 12 }}
-            lg={{ span: 12 }}
-          >
+          <Row justify={"space-between"} className='mb-2'>
+            <Col
+              lg={{ span: 12 }}
+              md={{ span: 12 }}
+              sm={{ span: 23 }}
+              xs={{ span: 23 }}
+            >
+              <Title level={3} className='remove-vertical-margin '>
+                {isUpdateForm ? HEADING.UPDATE_PARTNER : HEADING.CREATE_PARTNER}
+              </Title>
+            </Col>
 
-          </Col>
-        </Row>}
-        <Row justify='end'>
-          <Col>
-            <Space>
-              <Button
-                type='default'
-                htmlType='button'
-                onClick={() => navigate("/")}
-              >
-                {LABELS.CANCEL}
-              </Button>
-              <Button
-                type='primary'
-                htmlType='submit'
-                disabled={(partnerID && (isDataChanges ? false : true) || false)}
-              >
-                {isUpdateForm ? BUTTONS.UPDATE : BUTTONS.SAVE}
-              </Button>
-            </Space>
-          </Col>
-        </Row>
-        <Row gutter={16}>
-
-          <Col
-            lg={{ span: 15 }}
-            md={{ span: 24 }}
-            sm={{ span: 24 }}
-            xs={{ span: 24 }}
-          >
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 24 }}
-                md={{ span: 24 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Title level={3} className='remove-vertical-margin '>
-                  {HEADING.BASIC_DETAILS}
-                </Title>
-              </Col>
-            </Row>
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.name ? "error" : ""}
-                  name='name'
-                  label={
-                    <label className='label '>
-                      {LABELS.NAME}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.NAME }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Name" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Name" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.NAME}
-                    ref={inputNameRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.businessId ? "error" : ""}
-                  name='businessId'
-                  label={
-                    <label className='label '>
-                      {LABELS.BUSINESS_ID}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.BUSINESS_ID, }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Business ID" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Business ID" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.BUSINESS_ID}
-                    ref={inputBusinessIdRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Row gutter={8}>
-
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.licenseNumber ? "error" : ""}
-                  name='licenseNumber'
-                  label={
-                    <label className='label '>
-                      {LABELS.LICENSE_NUMBER}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.LICENSE_NUMBER }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "License number" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "License number" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.LICENSE_NUMBER}
-                    ref={inputLicenseNumberRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.status ? "error" : ""}
-                  name='status'
-                  label={
-                    <label className='label '>
-                      {LABELS.STATUS}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.STATUS }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Select
-                    placeholder={PLACEHOLDERS.STATUS}
-                    ref={inputStatusRef as any}
-                    autoFocus={false}
-                    disabled={false}
+            <Col
+              lg={{ span: 12 }}
+              md={{ span: 12 }}
+              sm={{ span: 23 }}
+              xs={{ span: 23 }}
+            >
+              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", height: "100%" }}>
+                <Space>
+                  <Button
+                    type='default'
+                    htmlType='button'
+                    onClick={() => navigate("/")}
                   >
-                    <Option value={LABELS.ENABLED.toUpperCase()}>{LABELS.ENABLED}</Option>
-                    <Option value={LABELS.DISABLED.toUpperCase()}>{LABELS.DISABLED}</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-
-            </Row>
-
-            <Row gutter={8}>
-
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item name="fileList" label="File Upload" valuePropName="fileList">
-                  <UploadFile
-                    setFileList={setFileList}
-                    fileListArr={fileList}
-                    fileType={"image/png"}
-                    fileTypeError={ERRORS?.IMAGE_FILE_TYPE}
-                    requiredImage={false}
-                    errorMessage={ERRORS.UPLOAD_LOGO}
-                    validateTrigger={["handleSave", "handleUpdate"]}
-                    label={LABELS.UPLOAD_LOGO}
-                    name={"image"}
-                  />
-                </Form.Item>
-              </Col>
-
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.contractNumber ? "error" : ""}
-                  name='contractNumber'
-                  label={
-                    <label className='label '>
-                      {LABELS.CONTRACT_NUMBER}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.CONTRACT_NUMBER }, { max: 16, message: t("ERRORS.MAX_LENGTH_16", { type: "Contact number" }) }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Contact number" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.CONTRACT_NUMBER}
-                    ref={inputContractNumberRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Row justify={"space-between"} className='mb-2'>
-              <Col
-                xs={{ span: 24 }}
-                sm={{ span: 24 }}
-                md={{ span: 12 }}
-                lg={{ span: 12 }}
-              >
-                <Title level={3} className='remove-vertical-margin '>
-                  {HEADING.REGISTERED_ADDRESS}
-                </Title>
-              </Col>
-            </Row>
-
-            <Row gutter={8}>
-
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                {/* create a select with some defined cities */}
-                <Form.Item
-                  validateStatus={errors.searchAndSelectCity ? "error" : ""}
-                  name='searchAndSelectCity'
-                  label={
-                    <label className='label '>
-                      {LABELS.CITY}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.SEARCH_AND_SELECT_CITY }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Select
-                    placeholder={LABELS.SEARCH_AND_SELECT_CITY}
-                    ref={inputSearchAndSelectCityRef as any}
-                    autoFocus={false}
-                    disabled={false}
+                    {LABELS.CANCEL}
+                  </Button>
+                  <Button
+                    type='primary'
+                    htmlType='submit'
+                    disabled={(partnerID && (isDataChange ? false : true) || false)}
                   >
-                    {cityOptions.map((city) => (
-                      <Option key={city.value} value={city.value}>
-                        {city.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
+                    {isUpdateForm ? BUTTONS.UPDATE : BUTTONS.SAVE}
+                  </Button>
+                </Space>
+              </div>
+            </Col>
 
-            </Row>
+          </Row>
 
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 24 }}
-                md={{ span: 24 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.streetAddress ? "error" : ""}
-                  name='streetAddress'
-                  label={
-                    <label className='label '>
-                      {LABELS.STREET_ADDRESS}
-                    </label>
-                  }
-                  rules={[{ message: ERRORS.STREET_ADDRESS }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Street address" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
+          <Row gutter={16}>
+
+            <Col
+              lg={{ span: 15 }}
+              md={{ span: 24 }}
+              sm={{ span: 24 }}
+              xs={{ span: 24 }}
+            >
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 24 }}
+                  md={{ span: 24 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
                 >
-                  <TextArea
-                    placeholder={LABELS.STREET_ADDRESS}
-                    ref={inputStreetAddressRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                    rows={4}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.postalCode ? "error" : ""}
-                  name='postalCode'
-                  label={
-                    <label className='label '>
-                      {LABELS.POSTAL_CODE}
-                    </label>
-                  }
-                  validateTrigger={["handleFinish", "handleUpdate"]}
+                  <Title level={3} className='remove-vertical-margin '>
+                    {HEADING.BASIC_DETAILS}
+                  </Title>
+                </Col>
+              </Row>
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
                 >
-                  <Input
-                    placeholder={LABELS.POSTAL_CODE}
-                    ref={inputPostalCodeRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
+                  <Form.Item
+                    validateStatus={errors.name ? "error" : ""}
+                    name='name'
+                    label={
+                      <label className='label '>
+                        {LABELS.NAME}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.NAME }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Name" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Name" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.NAME}
+                      ref={inputNameRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
 
-            <Row justify={"space-between"} className='mb-2'>
-              <Col
-                xs={{ span: 24 }}
-                sm={{ span: 24 }}
-                md={{ span: 12 }}
-                lg={{ span: 12 }}
-              >
-                <Title level={3} className='remove-vertical-margin '>
-                  {HEADING.CONTACT_DETAILS}
-                </Title>
-              </Col>
-            </Row>
-
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.contactPerson ? "error" : ""}
-                  name='contactPerson'
-                  label={
-                    <label className='label '>
-                      {LABELS.CONTACT_PERSON}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.CONTACT_PERSON }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Contact person" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Contact person" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
                 >
-                  <Input
-                    placeholder={LABELS.CONTACT_PERSON}
-                    ref={inputContactPersonRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.emailAddress ? "error" : ""}
-                  name='emailAddress'
-                  label={
-                    <label className='label '>
-                      {LABELS.EMAIL_ADDRESS}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.EMAIL_ADDRESS }, { type: 'email', message: t("ERRORS.VALID_EMAIL", { type: "Email" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
+                  <Form.Item
+                    validateStatus={errors.businessId ? "error" : ""}
+                    name='businessId'
+                    label={
+                      <label className='label '>
+                        {LABELS.BUSINESS_ID}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.BUSINESS_ID, }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Business ID" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Business ID" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.BUSINESS_ID}
+                      ref={inputBusinessIdRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row gutter={8}>
+
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
                 >
-                  <Input
-                    placeholder={LABELS.EMAIL_ADDRESS}
-                    ref={inputEmailAddressRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
+                  <Form.Item
+                    validateStatus={errors.licenseNumber ? "error" : ""}
+                    name='licenseNumber'
+                    label={
+                      <label className='label '>
+                        {LABELS.LICENSE_NUMBER}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.LICENSE_NUMBER }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "License number" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "License number" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.LICENSE_NUMBER}
+                      ref={inputLicenseNumberRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
 
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.phoneNumber ? "error" : ""}
-                  name='phoneNumber'
-                  label={
-                    <label className='label '>
-                      {LABELS.PHONE_NUMBER}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.PHONE_NUMBER }, { max: 16, message: t("ERRORS.MAX_LENGTH_16", { type: "Phone number" }) }, { pattern: new RegExp(/^(\+?\d{1,3}[\s-]?)?((\(\d{3}\)\s?)|(\d{3})[\s-]?)\d{3}[\s-]?\d{4}$/), message: t("ERRORS.VALID_INPUT", { type: "Phone number" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
                 >
-                  <Input
-                    placeholder={LABELS.PHONE_NUMBER}
-                    ref={inputPhoneNumberRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-              {!isUpdateForm && <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
+                  <Form.Item
+                    validateStatus={errors.status ? "error" : ""}
+                    name='status'
+                    label={
+                      <label className='label '>
+                        {LABELS.STATUS}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.STATUS }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Select
+                      placeholder={PLACEHOLDERS.STATUS}
+                      ref={inputStatusRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    >
+                      <Option value={LABELS.ENABLED.toUpperCase()}>{LABELS.ENABLED}</Option>
+                      <Option value={LABELS.DISABLED.toUpperCase()}>{LABELS.DISABLED}</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
 
-                <Form.Item
-                  label={
-                    <label className='label '>
-                      {""}
-                    </label>
-                  } >
-                  <Checkbox checked={isAdminAccount} onChange={(e: { target: { checked: boolean } }) => setIsAdminAccount(e.target.checked)}>
-                    {LABELS.CREATE_ADMIN_ACCOUNT}
-                  </Checkbox>
-                </Form.Item>
+              </Row>
 
-              </Col>}
-            </Row>
-          </Col>
+              <Row gutter={8}>
 
-          {/* create a horizental divider according to defined row and col structure,  */}
-          <Col
-            lg={{ span: 1 }}
-            md={{ span: 0 }}
-            sm={{ span: 0 }}
-            xs={{ span: 0 }}
-          >
-            <Divider orientation={"center"} type='vertical' style={{ height: '100%' }} />
-          </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item name="fileList" label="File Upload" valuePropName="fileList">
+                    <UploadFile
+                      setFileList={setFileList}
+                      fileListArr={fileList}
+                      fileType={"image/png"}
+                      fileTypeError={ERRORS?.IMAGE_FILE_TYPE}
+                      requiredImage={false}
+                      errorMessage={ERRORS.UPLOAD_LOGO}
+                      validateTrigger={["handleSave", "handleUpdate"]}
+                      label={LABELS.UPLOAD_LOGO}
+                      name={"image"}
+                      setImageUrl={setImageUrl}
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.contractNumber ? "error" : ""}
+                    name='contractNumber'
+                    label={
+                      <label className='label '>
+                        {LABELS.CONTRACT_NUMBER}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.CONTRACT_NUMBER }, { max: 16, message: t("ERRORS.MAX_LENGTH_16", { type: "Contact number" }) }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Contact number" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.CONTRACT_NUMBER}
+                      ref={inputContractNumberRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row justify={"space-between"} className='mb-2'>
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 12 }}
+                  lg={{ span: 12 }}
+                >
+                  <Title level={3} className='remove-vertical-margin '>
+                    {HEADING.REGISTERED_ADDRESS}
+                  </Title>
+                </Col>
+              </Row>
+
+              <Row gutter={8}>
+
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  {/* create a select with some defined cities */}
+                  <Form.Item
+                    validateStatus={errors.searchAndSelectCity ? "error" : ""}
+                    name='searchAndSelectCity'
+                    label={
+                      <label className='label '>
+                        {LABELS.CITY}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.SEARCH_AND_SELECT_CITY }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Select
+                      placeholder={LABELS.SEARCH_AND_SELECT_CITY}
+                      ref={inputSearchAndSelectCityRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    >
+                      {cityOptions.map((city) => (
+                        <Option key={city.value} value={city.value}>
+                          {city.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+
+              </Row>
+
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 24 }}
+                  md={{ span: 24 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.streetAddress ? "error" : ""}
+                    name='streetAddress'
+                    label={
+                      <label className='label '>
+                        {LABELS.STREET_ADDRESS}
+                      </label>
+                    }
+                    rules={[{ message: ERRORS.STREET_ADDRESS }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Street address" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <TextArea
+                      placeholder={LABELS.STREET_ADDRESS}
+                      ref={inputStreetAddressRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                      rows={4}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.postalCode ? "error" : ""}
+                    name='postalCode'
+                    label={
+                      <label className='label '>
+                        {LABELS.POSTAL_CODE}
+                      </label>
+                    }
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.POSTAL_CODE}
+                      ref={inputPostalCodeRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row justify={"space-between"} className='mb-2'>
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 12 }}
+                  lg={{ span: 12 }}
+                >
+                  <Title level={3} className='remove-vertical-margin '>
+                    {HEADING.CONTACT_DETAILS}
+                  </Title>
+                </Col>
+              </Row>
+
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.contactPerson ? "error" : ""}
+                    name='contactPerson'
+                    label={
+                      <label className='label '>
+                        {LABELS.CONTACT_PERSON}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.CONTACT_PERSON }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Contact person" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Contact person" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.CONTACT_PERSON}
+                      ref={inputContactPersonRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.emailAddress ? "error" : ""}
+                    name='emailAddress'
+                    label={
+                      <label className='label '>
+                        {LABELS.EMAIL_ADDRESS}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.EMAIL_ADDRESS }, { type: 'email', message: t("ERRORS.VALID_EMAIL", { type: "Email" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.EMAIL_ADDRESS}
+                      ref={inputEmailAddressRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.phoneNumber ? "error" : ""}
+                    name='phoneNumber'
+                    label={
+                      <label className='label '>
+                        {LABELS.PHONE_NUMBER}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.PHONE_NUMBER }, { max: 16, message: t("ERRORS.MAX_LENGTH_16", { type: "Phone number" }) }, { pattern: new RegExp(/^(\+?\d{1,3}[\s-]?)?((\(\d{3}\)\s?)|(\d{3})[\s-]?)\d{3}[\s-]?\d{4}$/), message: t("ERRORS.VALID_INPUT", { type: "Phone number" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.PHONE_NUMBER}
+                      ref={inputPhoneNumberRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
+                {!isUpdateForm && <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+
+                  <Form.Item
+                    label={
+                      <label className='label '>
+                        {""}
+                      </label>
+                    } >
+                    <Checkbox checked={isAdminAccount} onChange={(e: { target: { checked: boolean } }) => setIsAdminAccount(e.target.checked)}>
+                      {LABELS.CREATE_ADMIN_ACCOUNT}
+                    </Checkbox>
+                  </Form.Item>
+
+                </Col>}
+              </Row>
+            </Col>
+
+            {/* create a horizental divider according to defined row and col structure,  */}
+            <Col
+              lg={{ span: 1 }}
+              md={{ span: 0 }}
+              sm={{ span: 0 }}
+              xs={{ span: 0 }}
+            >
+              <Divider orientation={"center"} type='vertical' style={{ height: '100%' }} />
+            </Col>
 
 
 
-          <Col
-            lg={{ span: 8 }}
-            md={{ span: 24 }}
-            sm={{ span: 24 }}
-            xs={{ span: 24 }}
-          >
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 24 }}
-                md={{ span: 24 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Title level={3} className='remove-vertical-margin '>
-                  {HEADING.CONFiGURATIONS}
-                </Title>
-              </Col>
-            </Row>
+            <Col
+              lg={{ span: 8 }}
+              md={{ span: 24 }}
+              sm={{ span: 24 }}
+              xs={{ span: 24 }}
+            >
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 24 }}
+                  md={{ span: 24 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Title level={3} className='remove-vertical-margin '>
+                    {HEADING.CONFiGURATIONS}
+                  </Title>
+                </Col>
+              </Row>
 
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 24 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                {/* display the checkbox and the input in single row */}
-                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 24 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  {/* display the checkbox and the input in single row */}
+                  <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
 
-                  {services.map((service) => (
-                    <div key={service.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-                      <Form.Item>
-                        <Checkbox className='d-none' checked={service.checked} onChange={() => handleCheckboxChange(service.id)}>
+                    {services.map((service) => (
+                      <div key={service.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+                        <Form.Item>
+                          <Checkbox className='d-none' checked={service.checked} onChange={() => handleCheckboxChange(service.id)}>
+                            {service.name}
+                          </Checkbox>
                           {service.name}
-                        </Checkbox>
-                        {service.name}
-                      </Form.Item>
-                      <Form.Item
-                        validateStatus={errors.fixedFee ? "error" : ""}
-                        name={'docConsFixedFee'}
-                        rules={[{ required: true, message: ERRORS.FIXED_FEE }]}
-                        validateTrigger={["handleFinish", "handleUpdate"]}>
-                        <Input
-                          placeholder="Enter fee"
-                          value={service.fee}
-                          onChange={(e) => handleInputChange(service.id, Number(e.target.value))}
-                          disabled={!service.checked}
-                        />
-                      </Form.Item>
-                    </div>
-                  ))}
-                  <label className='label '>
-                    {"Currency: Euro"}
-                  </label>
-                </div>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </Form >}
+                        </Form.Item>
+                        <Form.Item
+                          validateStatus={errors.fixedFee ? "error" : ""}
+                          name={'docConsFixedFee'}
+                          rules={[{ required: true, message: ERRORS.FIXED_FEE }]}
+                          validateTrigger={["handleFinish", "handleUpdate"]}>
+                          <Input
+                            placeholder="Enter fee"
+                            value={service.fee}
+                            onChange={(e) => handleInputChange(service.id, Number(e.target.value))}
+                            disabled={!service.checked}
+                          />
+                        </Form.Item>
+                      </div>
+                    ))}
+                    <label className='label '>
+                      {"Currency: Euro"}
+                    </label>
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Form >}
     </div >
   )
 }

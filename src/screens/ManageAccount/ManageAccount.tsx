@@ -18,7 +18,6 @@ import { handleErrorResponse, openToastNotification } from '../../helpers/global
 import { ApiError } from '../../services/api/Index';
 import { getPartnerUsers } from '../../services/api/partner';
 import { User } from '../../interface/PartnerUser';
-import Loader from '../../components/Loader';
 import { getPartnerLocations } from '../../services/api/partnerLocation';
 import { getPartnerProducts } from '../../services/api/partnerProduct';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
@@ -62,11 +61,10 @@ function ManageAccount() {
     };
 
     const onTableTabChange = (tab: string) => {
-        setCurrentTableTab(tab);
-        getPartnerDetails(currentTab, tab);
-        setPage(1);
         setSearchValue("");
         setSearch("");
+        setCurrentTableTab(tab);
+        setPage(1);
     }
 
     const getPartnerDetails = async (currentTab: string, tableTab?: string) => {
@@ -113,7 +111,7 @@ function ManageAccount() {
     }
 
     useEffect(() => {
-        getPartnerDetails(Storage.getTab() || TABS_LABEL.PROFILE, "Enabled");
+        getPartnerDetails(Storage.getTab() || TABS_LABEL.PROFILE, currentTableTab);
     }, [page, pageSize, currentTab, currentTableTab, search])
 
     useEffect(() => {

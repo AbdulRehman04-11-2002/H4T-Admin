@@ -48,8 +48,8 @@
         "BREAK_END": "Break End",
         "PRICE": "Price (€)",
         "DESCRIPTION": "Description",
-        "EXPEXTED_DIMENSIONS_LXW": "Expected dimensions LxW",
-        "CUSTOMER_SEES": "Price + Fixed Fees",
+        "EXPEXTED_DIMENSIONS_LXW": "Expected dimensions Lxw",
+        "CUSTOMER_SEES": "Customer sees",
         "SLOT_DURATION": "Slot Duration",
         "TERMS_OF_USE": "Terms of Use"
     },
@@ -135,12 +135,16 @@
         "CONFiGURATIONS": "Configurations",
         "OPERATING_HOURS": "Operating Hours",
         "SELECT_LOCATIONS": "Select Locations(partner)",
-        "UPDATE_SERVICE_LOCATION": "Update Service Location",
-        "CREATE_SERVICE_LOCATION": "Create Service Location",
         "CREATE_USER": "Create User",
         "UPDATE_USER": "Update User",
         "CREATE_PRODUCT": "Create Product",
-        "UPDATE_PRODUCT": "Update Product"
+        "UPDATE_PRODUCT": "Update Product",
+        "CREATE_PARTNER": "Create Partner",
+        "UPDATE_PARTNER": "Update Partner",
+        "CREATE_PARTNER_LOCATION": "Create Location",
+        "UPDATE_PARTNER_LOCATION": "Update Location",
+        "CREATE_PARTNER_PRODUCT": "Create Product",
+        "UPDATE_PARTNER_PRODUCT": "Update Product"
     },
     "TABS_LABEL": {
         "CURRENT": "current",
@@ -154,7 +158,8 @@
         "PARTNERS": "No partners found.",
         "LOCATIONS": "No locations found.",
         "PRODUCTS": "No products found.",
-        "USERS": "No users found."
+        "USERS": "No users found.",
+        "LOCATION_AVAILABLE": "No locations available."
     },
     "privacyPolicy": {
         "title": "Health4Travel Acceptable Use Agreement",
@@ -251,6 +256,14 @@
         "PARTNER_LOCATION_UPDATED": "Partner location updated successfully",
         "PARTNER_PRODUCT_CREATED": "Partner product created successfully",
         "PARTNER_PRODUCT_UPDATED": "Partner product updated successfully"
+    },
+    "LONGITUDE_LATITUDE": {
+        "title": "How to find Longitude and Latitude",
+        "text": "To find the longitude and latitude of a location, you can use various methods:",
+        "list": [
+            "Using online maps: Websites like Google Maps allow you copy coordinates.",
+            "Search for a location and then right-click on a location get its coordinates"
+        ]
     },
     "REFRESH_TOKEN_KEY": "refreshToken",
     "DELAY_COUNT": 30,

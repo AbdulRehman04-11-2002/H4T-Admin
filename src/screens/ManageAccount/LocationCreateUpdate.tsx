@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 import { ApiError } from '../../services/api/Index';
 import { createPartnerLocation, getLocation, updatePartnerLocation } from '../../services/api/partnerLocation';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
-import Loader from '../../components/Loader';
 import {
   ExclamationCircleOutlined
 } from '@ant-design/icons';
@@ -63,6 +62,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const HEADING: any = t("HEADING", { returnObjects: true });
   const LABELS: any = t("LABELS", { returnObjects: true });
   const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
+  const LONGITUDE_LATITUDE: any = t("LONGITUDE_LATITUDE", { returnObjects: true });
   const SUCCESS: any = t("SUCCESS", { returnObjects: true });
 
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
@@ -327,39 +327,58 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         onValuesChange={handleOnChange}
       >
         <Modal
-          title='How to find Longitude and Latitude'
+          title={LONGITUDE_LATITUDE.title}
           open={modalVisible}
           onCancel={() => setModalVisible(false)}
           footer={null}
 
         >
           <p>
-            To find the longitude and latitude of a location, you can use various methods:
+            {LONGITUDE_LATITUDE.text}
           </p>
           <ol>
-            <li>Using online maps: Websites like Google Maps allow you copy coordinates.</li>
-            <li>Search for a location and then right-click on a location get its coordinates</li>
+            <li>{LONGITUDE_LATITUDE?.list[0]}.</li>
+            <li>{LONGITUDE_LATITUDE?.list[1]}.</li>
           </ol>
         </Modal>
-        <Row justify='end'>
-          <Col>
-            <Space>
-              <Button
-                type='default'
-                htmlType='button'
-                onClick={() => navigate(-1)}
-              >
-                {LABELS.CANCEL}
-              </Button>
-              <Button
-                type='primary'
-                htmlType='submit'
-                disabled={(locationID && (isDataChange ? false : true) || false)}
-              >
-                {locationID ? BUTTONS.UPDATE : BUTTONS.SAVE}
-              </Button>
-            </Space>
+        <Row justify={"space-between"} className='mb-2'>
+          <Col
+            lg={{ span: 12 }}
+            md={{ span: 12 }}
+            sm={{ span: 23 }}
+            xs={{ span: 23 }}
+          >
+            <Title level={3} className='remove-vertical-margin '>
+              {isUpdateForm ? HEADING.UPDATE_PARTNER_LOCATION : HEADING.CREATE_PARTNER_LOCATION}
+            </Title>
           </Col>
+
+          <Col
+            lg={{ span: 12 }}
+            md={{ span: 12 }}
+            sm={{ span: 23 }}
+            xs={{ span: 23 }}
+          >
+            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", height: "100%" }}>
+              <Space>
+                <Button
+                  type='default'
+                  htmlType='button'
+                  onClick={() => navigate("/")}
+                >
+                  {LABELS.CANCEL}
+                </Button>
+                <Button
+                  type='primary'
+                  htmlType='submit'
+                  disabled={(partnerID && (isDataChange ? false : true) || false)}
+                >
+                  {isUpdateForm ? BUTTONS.UPDATE : BUTTONS.SAVE}
+                </Button>
+              </Space>
+            </div>
+          </Col>
+
         </Row>
         <Row gutter={16}>
 
@@ -369,18 +388,6 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
             sm={{ span: 24 }}
             xs={{ span: 24 }}
           >
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 24 }}
-                md={{ span: 24 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Title level={3} className='remove-vertical-margin '>
-                  {locationID ? HEADING.UPDATE_SERVICE_LOCATION : HEADING.CREATE_SERVICE_LOCATION}
-                </Title>
-              </Col>
-            </Row>
             <Row gutter={8}>
               <Col
                 lg={{ span: 12 }}
@@ -662,6 +669,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     label={LABELS.UPLOAD_LOGO}
                     name={"image"}
                     fileListArr={fileList}
+                    setImageUrl={setImageUrl}
                   />
                 </Form.Item>
               </Col>

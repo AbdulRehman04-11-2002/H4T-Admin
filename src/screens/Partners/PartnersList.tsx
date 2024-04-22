@@ -41,6 +41,7 @@ function PartnersList() {
             const response = await getPartners(page, limit, search, partnerState.toUpperCase());
             setPartners(response?.data?.response?.results);
             setTotalRecord(response?.data?.response?.count);
+            Storage.setFixedFee(response?.data?.response?.results[0]?.services[0]?.feeValue)
         } catch (error) {
             const _error = error as ApiError;
             const { errorMessage } = handleErrorResponse(_error);
