@@ -4,7 +4,7 @@ on:
     push:
         branches:
             - dev
-            - main
+            - prod
 
 jobs:
     build-and-deploy:
@@ -23,7 +23,7 @@ jobs:
               run: npm install
     
             - name: Build app production
-              if: github.ref == 'refs/heads/main'
+              if: github.ref == 'refs/heads/prod'
               run: npm run build:prod
             
             - name: Build app development
