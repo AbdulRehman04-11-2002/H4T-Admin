@@ -41,15 +41,6 @@ const getTab = () => {
     return localStorage.getItem("tab");
 };
 
-const setMEData = (data: any) => {
-    localStorage.setItem("me", JSON.stringify(data));
-}
-
-const getMEData = () => {
-    const data = localStorage.getItem("me");
-    return JSON.parse(data || "{}");
-}
-
 const setFixedFee = (data: number) => {
     localStorage.setItem("fixedFee", JSON.stringify(data));
 }
@@ -69,8 +60,6 @@ export const Storage = {
     removeAccessAndRefreshToken,
     setTab,
     getTab,
-    setMEData,
-    getMEData,
     setFixedFee,
     getFixedFee
 };

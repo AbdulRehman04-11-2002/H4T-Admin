@@ -1,5 +1,4 @@
 import { InputOTP } from "antd-input-otp";
-// import { theme } from "../../assets/theme";
 import Loader from "../../components/Loader";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
@@ -48,7 +47,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
     email: "",
   });
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext)!;
-  const { userDetails, setSuccess, setUserDetails, setME } = useContext(GlobalContext) as GlobalContextProps;
+  const { setSuccess, setUserDetails, setME } = useContext(GlobalContext) as GlobalContextProps;
 
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -88,6 +87,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
     };
     showLoader()
     try {
+      // call login api for resending OTP code
       const response = await login(request);
       if (response?.data?.session && response?.data?.user_id) {
         setResponse((prev: any) => ({
@@ -157,15 +157,8 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
         error.errors[0],
         "notifications toast-notification-error"
       );
-      inputEmailRef?.current?.focus();
+      // inputEmailRef?.current?.focus();
     }
-  };
-
-  const handleValuesChange = (changedValues: string) => {
-    const name = Object.keys(changedValues)?.[0];
-    const errors = form.getFieldError(name);
-    if (errors.length < 1) return;
-    form.setFields([{ name, errors: [] }]);
   };
 
   const handleFinish = async (values: SubmitOtpProps) => {
@@ -184,7 +177,6 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
       ]);
     }
 
-    
     const request: VerifyRequest = {
       session: response?.session || "",
       code: otp && otp.toString().replaceAll(",", ""),
@@ -326,7 +318,6 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
               wrapperCol={{ span: 24 }}
               className='login-form'
               style={{ display: isEmailEntered ? "block" : "none" }}
-              onValuesChange={handleValuesChange}
               form={form}
 
             >

@@ -33,8 +33,6 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log("error in interceptors", error);
-    // debugger
     const configError = error?.config;
     let message = ERRORS.SOME_THING_WENT_WRONG;
     let statusCode = 500;
@@ -86,6 +84,6 @@ export class ApiError {
 }
 
 const reload = () => {
-  // Storage.removeAccessAndRefreshToken();
-  // window.location.reload();
+  Storage.removeAccessAndRefreshToken();
+  window.location.reload();
 };

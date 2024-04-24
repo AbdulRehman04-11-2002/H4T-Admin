@@ -1,16 +1,10 @@
-import React from 'react';
 import './App.css';
-import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom';
-import Routing from './routes/Routing';
-import AppHeader from './components/Header/Index';
+import { BrowserRouter } from 'react-router-dom';
 import { ConfigProvider, Layout } from 'antd';
 import { LoaderProvider } from './context/LoaderContext';
 import { GlobalProvider } from './context/GlobalContext';
 import './utils/i18n';
-import { Content, Footer } from 'antd/es/layout/layout';
-import Loader from './components/Loader';
-import { useTranslation } from 'react-i18next';
-import AppLayout from './components/AppLayout/Index';
+import AppLayout from './hoc/AppLayout/Index';
 
 function App() {
 

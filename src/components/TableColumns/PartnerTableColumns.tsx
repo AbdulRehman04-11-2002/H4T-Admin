@@ -65,7 +65,6 @@ export const PartnerTableColumns = ({ LABELS, showLoader }: TableColumnProps) =>
             ),
             dataIndex: "SERVICES",
             showSorterTooltip: false,
-            // sorter: (a: any, b: any) => a.SERVICES.localeCompare(b.SERVICES),
             render: (_: any, record: any) => (
                 <div className='fontWeight-semiBold'>{
                     record?.services?.map((service: any, index: number) => {

@@ -51,7 +51,7 @@ function ManageAccount() {
         setCurrentTab(currentTab);
         Storage.setTab(currentTab);
         if (currentTab === TABS_LABEL.PROFILE) {
-            navigate(`/Partner/${partnerID}/ManageAccount`);
+            navigate(`/partner/${partnerID}/ManageAccount`);
         } else {
             showLoader();
             setCurrentTableTab("enabled")
@@ -70,7 +70,7 @@ function ManageAccount() {
     const getPartnerDetails = async (currentTab: string, tableTab?: string) => {
         switch (currentTab) {
             case TABS_LABEL.PROFILE:
-                navigate(`/Partner/${partnerID}/ManageAccount`);
+                navigate(`/partner/${partnerID}/ManageAccount`);
                 return null;
             case TABS_LABEL.LOCATIONS:
                 const location = await fetchPartnerDetails(getPartnerLocations, tableTab || "Enabled");
@@ -157,7 +157,7 @@ function ManageAccount() {
                                 loading={isLoading}
                                 noRecordText={TABLE_NO_RECORDS_TEXT.LOCATIONS}
                                 columns={LocationColumns({ partnerID: partnerID })}
-                                createPath={`/Partner/${partnerID}/ManageAccount/createLocation`}
+                                createPath={`/partner/${partnerID}/ManageAccount/createLocation`}
                                 pageSize={pageSize}
                                 totalRecord={totalRecord}
                                 getRecords={() => null}
@@ -184,7 +184,7 @@ function ManageAccount() {
                             loading={isLoading}
                             noRecordText={TABLE_NO_RECORDS_TEXT.PRODUCTS}
                             columns={ProductsColumns({ partnerID: partnerID, ME: ME })}
-                            createPath={`/Partner/${partnerID}/ManageAccount/createProduct`}
+                            createPath={`/partner/${partnerID}/ManageAccount/createProduct`}
                             pageSize={pageSize}
                             totalRecord={totalRecord}
                             getRecords={() => null}
@@ -210,7 +210,7 @@ function ManageAccount() {
                             loading={false}
                             noRecordText={TABLE_NO_RECORDS_TEXT.USERS}
                             columns={UsersColumns({ partnerID: partnerID })}
-                            createPath={`/Partner/${partnerID}/ManageAccount/createUser`}
+                            createPath={`/partner/${partnerID}/ManageAccount/createUser`}
                             pageSize={pageSize}
                             totalRecord={totalRecord}
                             getRecords={() => null}

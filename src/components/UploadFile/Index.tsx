@@ -105,7 +105,6 @@ const UploadFile: React.FC<Props> = ({
                 <Upload
                     accept={fileType}
                     listType='picture-card'
-                    // className='w-100'
                     maxCount={1}
                     onPreview={handlePreview}
                     {...uploadProps}

@@ -1,9 +1,9 @@
 import { Layout } from 'antd';
 import { useContext, useEffect, useState } from 'react';
-import AppHeader from '../Header/Index';
+import AppHeader from '../../components/Header/Index';
 import { Content, Footer } from 'antd/es/layout/layout';
 import Routing from '../../routes/Routing';
-import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
 import { Storage } from '../../services/storage';
@@ -11,18 +11,22 @@ import { RefreshTokenRequest } from '../../interface/Request';
 import { refreshToken } from '../../services/api/auth';
 import Login from '../../screens/Login/Index';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
-import Loader from '../Loader';
+import Loader from '../../components/Loader';
+import { getME } from '../../services/api/global';
+import { handleErrorResponse, openToastNotification } from '../../helpers/globalFunctions';
+import { ApiError } from '../../services/api/Index';
 
 function AppLayout() {
     const { t } = useTranslation();
     const LABELS: any = t("LABELS", { returnObjects: true });
-    const { setME, ME } = useContext(GlobalContext) as GlobalContextProps;
+    const { setME, ME, setUserDetails } = useContext(GlobalContext) as GlobalContextProps;
     const navigate = useNavigate();
     const [token, setToken] = useState<boolean>(
         Storage.getAccessToken() ? true : false
     );
-    const { isLoading } = useContext(LoaderContext) as LoaderContextValue;
-
+    const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
+    const location = useLocation();
+    const [prevLocation, setPrevLocation] = useState<any>(null);
     const MINUTES = 50;
 
     const tokenIsActive = async () => {
@@ -48,6 +52,42 @@ function AppLayout() {
         setME({});
         navigate("/login");
     }
+
+    const getMEData = async () => {
+        showLoader();
+        try {
+            const result = await getME("ENABLED");
+            setUserDetails(
+                {
+                    name: result.name,
+                    imageUrl: result.imageUrl,
+                    phoneNumber: result.phoneNumber,
+                    email: result.email,
+                    role: result.role,
+                }
+            )
+            setME(result);
+
+        } catch (error) {
+            const _error = error as ApiError;
+            const { errorMessage } = handleErrorResponse(_error);
+            openToastNotification(
+                errorMessage,
+                "notifications toast-notification-error"
+            );
+            console.log("error", _error);
+        } finally {
+            hideLoader();
+        }
+    }
+
+    useEffect(() => {
+        setPrevLocation(location);
+    }, [location]);
+
+    useEffect(() => {
+        token && !prevLocation?.pathname?.includes("auth") && getMEData();
+    }, [])
 
     useEffect(() => {
         if (token) {

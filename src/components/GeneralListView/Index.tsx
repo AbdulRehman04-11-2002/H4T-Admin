@@ -41,7 +41,6 @@ const ListView: React.FC<ListViewProps> = ({ columns, totalRecord, tabOnChange, 
     const onSearch = (value: string) => {
         setSearch(value);
         setSearchValue(value);
-
     };
 
     const handlePageSizeChange = (current: number = 1, pageSize: number) => {

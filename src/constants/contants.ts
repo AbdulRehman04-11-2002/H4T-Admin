@@ -12,8 +12,6 @@ export const ERRORS = {
     STATUS: "Please enter status",
     UPLOAD_LOGO: "Please upload logo",
     CONTACT_NUMBER: "Please enter contact number",
-    // create a dynamic error message for valid input
-    VALID_INPUT: (input: string) => `Please enter valid ${input}`,
     SEARCH_AND_SELECT_CITY: "Please search and select city",
     STREET_ADDRESS: "Please enter street address",
     POSTAL_CODE: "Please enter postal code",

@@ -13,9 +13,9 @@ const Avatar: React.FC<Props> = ({ avatarClickHandler, ME }) => {
         <CustomPopover
             trigger="hover"
             content={<div>
-                {ME?.user?.name ? <p style={{ height: "40px", display: "flex", alignItems: "center" }} className="m-0">Name : {ME?.user?.name}</p> : ""}
-                {ME?.user?.email ? <p style={{ height: "40px", display: "flex", alignItems: "center" }} className="m-0">Email : {ME?.user?.email}</p> : ""}
-                {ME?.user?.role ? <p style={{ height: "40px", display: "flex", alignItems: "center" }} className="m-0">Role : {ME?.user?.role}</p> : ""}
+                {ME?.user?.name ? <p className="m-0 user-info-header">Name : {ME?.user?.name}</p> : ""}
+                {ME?.user?.email ? <p className="m-0 user-info-header">Email : {ME?.user?.email}</p> : ""}
+                {ME?.user?.role ? <p className="m-0 user-info-header">Role : {ME?.user?.role}</p> : ""}
             </div>}
         >
             <AntAvatar

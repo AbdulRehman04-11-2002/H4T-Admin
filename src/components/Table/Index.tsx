@@ -1,8 +1,6 @@
 import React from "react";
 import { Col, Row, Table as AntTable, Typography, Empty } from "antd";
 
-
-
 const { Text } = Typography;
 interface TablePropsInterface<T> {
     columns: any[];

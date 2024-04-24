@@ -1,6 +1,4 @@
 import React, { createContext, useState } from 'react';
-import { Storage } from '../services/storage';
-
 interface GlobalContextState {
     success: string;
     userDetails: {
@@ -32,8 +30,6 @@ export interface GlobalContextProps extends GlobalContextState {
         email: string;
         role: string;
     };
-
-
 }
 
 interface GlobalProviderProps {
@@ -43,7 +39,6 @@ interface GlobalProviderProps {
 export const GlobalContext = createContext<GlobalContextProps | undefined>(undefined);
 
 export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
-    const ME = Storage.getMEData();
     const [state, setState] = useState<GlobalContextState>({
         success: '',
         userDetails: {
@@ -53,7 +48,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
             email: '',
             role: '',
         },
-        ME: ME ? ME : {},
+        ME: {},
     });
 
     const setSuccess = (success: string) => {
@@ -66,7 +61,6 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
 
     const setME = (ME: any) => {
         setState((prevState) => ({ ...prevState, ME }));
-        Storage.setMEData(ME);
     };
 
     const setUserDetails = (userDetails: {

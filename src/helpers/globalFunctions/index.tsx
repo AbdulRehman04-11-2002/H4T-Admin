@@ -31,15 +31,6 @@ export const validateFileType = (
     return false;
 };
 
-
-export const randomLightColorCode = () => {
-    return `hsla(${~~(360 * Math.random())}, 70%,  80%, 0.8)`;
-};
-
-export const randomDarkColorCode = () => {
-    return `hsla(${~~(360 * Math.random())}, 70%,  32%, 0.8)`;
-};
-
 export const errorsMessageFocus = (
     errorMsg: { errors: { path: string; msg: string }[] },
     inputRefs: any
@@ -106,11 +97,11 @@ export const handleErrorResponse = (
         return { statusCode, errorMessage: API_ERRORS.PAYLOAD_TOO_LARGE, obj: {} };
     } else if (statusCode === 500) {
         return { statusCode, errorMessage: API_ERRORS.INTERNAL_SERVER_ERROR, obj: {} };
-    }else if (statusCode === 502) {
+    } else if (statusCode === 502) {
         return { statusCode, errorMessage: API_ERRORS.INTERNAL_SERVER_ERROR, obj: {} };
-    }else{
+    } else {
         return { statusCode, errorMessage: API_ERRORS.SOME_THING_WENT_WRONG, obj: {} };
-    
+
     }
 
     return {

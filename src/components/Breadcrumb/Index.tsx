@@ -3,9 +3,6 @@ import { Breadcrumb } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
-
-const { Item } = Breadcrumb;
-
 interface BreadcrumbItem {
     title: string;
     path?: string;
@@ -22,7 +19,7 @@ const DynamicBreadcrumb: React.FC = () => {
     const getBreadcrumbItems = (): BreadcrumbItem[] => {
         const breadcrumbItems: BreadcrumbItem[] = [];
 
-        if (!pathSnippets?.includes('partner') && !pathSnippets?.includes('Partner')) {
+        if (!pathSnippets?.includes('partner')) {
             breadcrumbItems.push({ title: MENULABEL.PARTNER, path: '/' });
         }
 
@@ -30,10 +27,7 @@ const DynamicBreadcrumb: React.FC = () => {
             if (!isNaN(Number(snippet))) return;
 
             const path = `/${pathSnippets.slice(0, index + 1).join('/')}`;
-            const title =
-                snippet === 'transmission-managment'
-                    ? 'Manage transmission'
-                    : capitaize(snippet);
+            const title = capitaize(snippet);
 
             breadcrumbItems.push({ title, path });
         });

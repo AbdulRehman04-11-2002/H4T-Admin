@@ -57,7 +57,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputRoleRef = useRef<null | HTMLElement>(null);
   const inputStatusRef = useRef<null | HTMLElement>(null);
 
-  const cityOnchange: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
+  const locationOnchange: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
     setselectedLocations(checkedValues)
   };
 
@@ -95,12 +95,10 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     }
   }
 
-
   const fetchPartnerLocations = async () => {
     showLoader();
     try {
       const response = await getPartnerLocations(1, 100, "", "ALL", partnerID || "");
-      console.log('response', response);
       setlocationOptions(response?.data?.response?.results.map((location: any) => { return { label: `${location?.name} (${location?.city?.name})`, value: location.id } }) || [])
 
     } catch (error) {
@@ -204,7 +202,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   const handleOnChange = () => {
-    console.log('handleOnChange')
     setIsDataChange(true)
   }
 
@@ -423,9 +420,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
             </Row>
 
-
-
-
             <Row gutter={8}>
               <Col
                 lg={{ span: 24 }}
@@ -446,8 +440,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 xs={{ span: 23 }}
               >
                 <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
-                  <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={cityOnchange} />
-
+                  <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={locationOnchange} />
                 </Form.Item>
                 {!locationOptions.length && <Title level={5} >
                   {TABLE_NO_RECORDS_TEXT.LOCATION_AVAILABLE}
@@ -456,10 +449,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
 
             </Row>
-
-
-
-
 
           </Col>
 
