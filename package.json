@@ -13,6 +13,7 @@
     "antd": "^5.15.2",
     "antd-input-otp": "^2.1.0",
     "axios": "^1.6.8",
+    "env-cmd": "^10.1.0",
     "i18next": "^23.10.1",
     "moment": "^2.30.1",
     "react": "^18.2.0",
@@ -25,8 +26,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:dev": "env-cmd -f dev.env npm start",
+    "start:prod": "env-cmd -f prod.env npm start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "build:dev": "env-cmd -f dev.env npm run build",
+    "build:prod": "env-cmd -f prod.env npm run build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

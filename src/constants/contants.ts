@@ -43,8 +43,7 @@ export const API_ERRORS = {
     SOME_THING_WENT_WRONG: "Something went wrong",
 }
 
-// export const baseURL = process.env.REACT_APP_BASE_URL;
-export const baseURL = "https://eanfbf9tqa.execute-api.eu-west-3.amazonaws.com/prod/";
+export const baseURL = process.env.REACT_APP_BASE_URL;
 export const REFRESH_TOKEN_KEY = "refreshToken";
 export const DELAY_COUNT = 30;
 export const timeFormat = 'HH:mm';

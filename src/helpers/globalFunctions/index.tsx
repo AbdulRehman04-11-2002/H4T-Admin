@@ -103,16 +103,13 @@ export const handleErrorResponse = (
         return { statusCode, errorMessage: API_ERRORS.SOME_THING_WENT_WRONG, obj: {} };
 
     }
-
-    return {
-        statusCode,
-        errorMessage: API_ERRORS.SOME_THING_WENT_WRONG,
-        obj: {},
-    };
 };
 
 
 export const showError = (errorMessage: string) => {
+    message.config({
+        maxCount: 1,
+    });
     message.open({
         content: errorMessage,
     });
