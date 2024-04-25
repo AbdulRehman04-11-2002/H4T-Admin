@@ -12,7 +12,8 @@ import { ApiError } from '../../services/api/Index';
 import { createPartnerProduct, getProducts, updatePartnerProduct } from '../../services/api/partnerProduct';
 import { PartnerProduct } from '../../interface/PartnerProduct';
 import { getPartnerLocations } from '../../services/api/partnerLocation';
-import { Storage } from '../../services/storage';
+import { getPartner } from '../../services/api/partner';
+import { Partner } from '../../interface/Partner';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -26,8 +27,9 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [locationOptions, setlocationOptions] = useState<{ label: string; value: number }[]>([])
   const [selectedLocations, setselectedLocations] = useState<number[]>([])
   const [price, setPrice] = useState<number>()
-  const [customerSeesPrice, setCustomerSeesPrice] = useState<number>(Storage.getFixedFee() || 0)
   const [imageUrl, setImageUrl] = useState<string>('')
+  const [partnerSeerviceFee, setPartnerServiceFee] = useState<number>(0)
+  const [selectedPartner, setselectedPartner] = useState<Partner | null>(null)
   const [errors, setErrors] = useState({
     name: "",
     code: "",
@@ -90,13 +92,30 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     }
   };
 
+  const getPartnerDetail = async () => {
+    try {
+      showLoader();
+      const response = await getPartner(partnerID || "");
+      setPartnerServiceFee(response?.data?.partner?.services[0]?.feeValue || 0)
+      setselectedPartner(response?.data?.partner)
+    } catch (error) {
+      const _error = error as ApiError;
+      const { errorMessage } = handleErrorResponse(_error);
+      openToastNotification(
+        errorMessage,
+        "notifications toast-notification-error"
+      );
+      console.log("error", _error);
+    } finally {
+      hideLoader();
+    }
+  }
 
   const getPartnerProductsDetails = async () => {
     showLoader();
     try {
       const response = await getProducts(productID || "");
       setFormValues(response?.data?.partnerProduct)
-
     } catch (error) {
       const _error = error as ApiError;
       const { errorMessage } = handleErrorResponse(_error);
@@ -114,7 +133,6 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     showLoader();
     try {
       const response = await getPartnerLocations(1, 100, "", "ALL", partnerID || "");
-      console.log('response', response);
       setlocationOptions(response?.data?.response?.results.map((location: any) => { return { label: `${location?.name} (${location?.city?.name})`, value: location.id } }) || [])
 
     } catch (error) {
@@ -138,7 +156,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       description: form.getFieldValue("description"),
       guidelines: form.getFieldValue("customerGuidelines"),
       status: form.getFieldValue("status").toUpperCase(),
-      partnerServiceId: selectedServiceType[0],
+      partnerServiceId: selectedPartner?.services[0]?.id,
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
       locationIds: JSON.stringify(selectedLocations),
@@ -226,6 +244,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   useEffect(() => {
     ME?.systemServices && setServiceOptions(ME?.systemServices.map((service: any) => { return { label: service.name, value: service.id } }) || [])
     productID && getPartnerProductsDetails()
+    getPartnerDetail()
     fetchPartnerLocations()
   }, [])
 
@@ -453,7 +472,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       value={price}
                     />
                   </Form.Item>
-                  <Text style={{ fontSize: 11, color: "#1677ff", position: "absolute", bottom: -20 }} >{`${LABELS.CUSTOMER_SEES} : ${(price || 0) + customerSeesPrice}`}</Text>
+                  <Text style={{ fontSize: 11, color: "#1677ff", position: "absolute", bottom: -20 }} >{`${LABELS.CUSTOMER_SEES} : ${(price || 0) + partnerSeerviceFee}`}</Text>
 
                 </div>
 
