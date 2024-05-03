@@ -206,10 +206,13 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   useEffect(() => {
-    ME?.systemRoles && setUserRolesOptions(ME?.systemRoles.map((role: any) => { return { label: role.name, value: role.id } }) || [])
     userID && getPartnerUserDetails()
     fetchPartnerLocations()
   }, [])
+
+  useEffect(() => {
+    ME?.systemRoles && setUserRolesOptions(ME?.systemRoles.map((role: any) => { return { label: role.name, value: role.id } }) || [])
+  }, [ME])
 
   return (
     <div className='create-partner-content'>

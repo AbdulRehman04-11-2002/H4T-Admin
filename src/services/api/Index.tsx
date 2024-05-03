@@ -1,7 +1,7 @@
 import axios from "axios";
 import { refreshToken } from "./auth";
 import { Storage } from "../storage";
-import { ERRORS, REFRESH_TOKEN_KEY, baseURL } from "../../constants/contants";
+import { ERRORS, REFRESH_TOKEN_KEY, baseURL, API_ERRORS } from "../../constants/contants";
 import { RefreshTokenRequest } from "../../interface/Request";
 
 export const api = axios.create({
@@ -36,6 +36,7 @@ api.interceptors.response.use(
     const configError = error?.config;
     let message = ERRORS.SOME_THING_WENT_WRONG;
     let statusCode = 500;
+    let errorData = [];
     if (axios.isAxiosError(error)) {
       if (
         !error.response?.data.message &&
@@ -44,6 +45,7 @@ api.interceptors.response.use(
         message = JSON.stringify(error.response?.data);
       } else {
         message = error.response?.data?.message;
+        if (message === API_ERRORS.VALIDATION_ERROR) errorData = error.response?.data?.error
       }
       statusCode = error.response?.status || 500;
       if (
@@ -71,15 +73,17 @@ api.interceptors.response.use(
         reload();
       }
     }
-    return Promise.reject(new ApiError(statusCode, message));
+    return Promise.reject(new ApiError(statusCode, message, errorData));
   }
 );
 export class ApiError {
   statusCode: number;
   message: string;
-  constructor(code: number, message: string) {
+  constructor(code: number, message: string, errorData: any[] | null = null) {
     this.statusCode = code;
-    this.message = message;
+    this.message = errorData && errorData.length
+      ? errorData[0].msg //display first msg only
+      : message;
   }
 }
 

@@ -41,6 +41,7 @@ export const API_ERRORS = {
     PAYLOAD_TOO_LARGE: "Payload Too Large",
     INTERNAL_SERVER_ERROR: "Internal Server Error",
     SOME_THING_WENT_WRONG: "Something went wrong",
+    VALIDATION_ERROR: "Validation error"
 }
 
 export const baseURL = process.env.REACT_APP_BASE_URL;
