@@ -307,12 +307,15 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   useEffect(() => {
     locationID && getPartnerLocation();
     !locationID && createOperatingHours();
+  }, [])
+
+  useEffect(() => {
     let cityOptionsArr: any = []
     ME?.systemLocations && ME?.systemLocations.map((location: any) => {
       if (location.type === "CITY" && location.status === "ENABLED") cityOptionsArr.push({ label: location.name, value: location.id })
     })
     setCityOptions(cityOptionsArr)
-  }, [])
+  }, [ME])
 
   return (
     <div className='create-partner-content'>

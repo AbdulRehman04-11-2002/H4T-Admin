@@ -275,13 +275,16 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   useEffect(() => {
     partnerID && getPartnerDetail();
+  }, [])
+
+  useEffect(() => {
     let cityOptionsArr: any = []
     ME?.systemLocations && ME?.systemLocations.map((location: any) => {
       if (location.type === "CITY" && location.status === "ENABLED") cityOptionsArr.push({ label: location.name, value: location.id })
     })
     setCityOptions(cityOptionsArr)
     // ME.systemServices && setServices(ME.systemServices.map((service: any) => { return { id: service.id, name: service.name, fee: 0, feeType: 'FIXED_FEE', checked: false } }) || [])
-  }, [])
+  }, [ME])
 
 
   return (
