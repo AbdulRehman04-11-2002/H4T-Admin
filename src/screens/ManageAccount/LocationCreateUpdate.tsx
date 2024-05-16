@@ -549,7 +549,9 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.LONGITUDE}
                     </label>
                   }
-                  rules={[{ required: true, message: ERRORS.LONGITUDE }, { pattern: new RegExp(/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,25}$/), message: t("ERRORS.VALID_INPUT", { type: "Longitude" }) }]}
+                  rules={[{ required: true, message: ERRORS.LONGITUDE }, {
+                    pattern: new RegExp(/^(-?(?:1[0-7]\d(\.\d{1,25})?|180(\.0{1,25})?)|(-?\d{1,2}(\.\d{1,25})?))$/),                   message: t("ERRORS.VALID_INPUT", { type: "Longitude" })
+                  }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Input
