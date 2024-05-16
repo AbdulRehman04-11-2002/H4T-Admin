@@ -340,8 +340,9 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
             {LONGITUDE_LATITUDE.text}
           </p>
           <ol>
-            <li>{LONGITUDE_LATITUDE?.list[0]}.</li>
-            <li>{LONGITUDE_LATITUDE?.list[1]}.</li>
+            <li>{LONGITUDE_LATITUDE?.list[0]}<a href="https://www.latlong.net/convert-address-to-lat-long.html">https://www.latlong.net/convert-address-to-lat-long.html</a>.</li>
+            <li>{LONGITUDE_LATITUDE?.list[1]}</li>
+            <li>{LONGITUDE_LATITUDE?.list[2]}</li>
           </ol>
         </Modal>
         <Row justify={"space-between"} className='mb-2'>
@@ -550,7 +551,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     </label>
                   }
                   rules={[{ required: true, message: ERRORS.LONGITUDE }, {
-                    pattern: new RegExp(/^(-?(?:1[0-7]\d(\.\d{1,25})?|180(\.0{1,25})?)|(-?\d{1,2}(\.\d{1,25})?))$/),                   message: t("ERRORS.VALID_INPUT", { type: "Longitude" })
+                    pattern: new RegExp(/^(-?(?:1[0-7]\d(\.\d{1,25})?|180(\.0{1,25})?)|(-?\d{1,2}(\.\d{1,25})?))$/), message: t("ERRORS.VALID_INPUT", { type: "Longitude" })
                   }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >

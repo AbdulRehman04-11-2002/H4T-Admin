@@ -261,8 +261,9 @@
         "title": "How to find Longitude and Latitude",
         "text": "To find the longitude and latitude of a location, you can use various methods:",
         "list": [
-            "Using online maps: Websites like Google Maps allow you copy coordinates.",
-            "Search for a location and then right-click on a location get its coordinates"
+            "Visit ",
+            "Copy and paste the first number into the “Latitude” box.",
+            "Copy and paste the second number into the “Longitude” box."
         ]
     },
     "REFRESH_TOKEN_KEY": "refreshToken",
