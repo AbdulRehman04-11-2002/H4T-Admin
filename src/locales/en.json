@@ -33,7 +33,7 @@
         "WELCOME": "Welcome to Health4Travel Admin",
         "EMAIL": "Email",
         "VERIFY_EMAIL": "Verify Email",
-        "FOUR_DIGIT_CODE": "Enter the 4-digit code sent to your email",
+        "FOUR_DIGIT_CODE": "Enter the 6-digit code sent to your email",
         "OTP_RESEND_COUNTER": "Resend code in {counter} seconds",
         "SERVICE_TYPE": "Service Type",
         "LAST_MODIFIED": "Last Modified",
