@@ -10,11 +10,10 @@ interface TableColumnProps {
         CONTACT_PERSON: string;
         CITY: string;
     };
-    showLoader: () => void;
 
 }
 
-export const PartnerTableColumns = ({ LABELS, showLoader }: TableColumnProps) => {
+export const PartnerTableColumns = ({ LABELS }: TableColumnProps) => {
     return [
         {
             title: (
@@ -52,7 +51,7 @@ export const PartnerTableColumns = ({ LABELS, showLoader }: TableColumnProps) =>
             render: (_: any, record: any) => (
                 <div className='fontWeight-semiBold'>
                     {
-                        <Link onClick={showLoader} to={`/partner/${record?.id}/manageaccount`}>{record?.name}</Link>
+                        <Link to={`/partner/${record?.id}/manageaccount`}>{record?.name}</Link>
                     }
                 </div>
             ),
