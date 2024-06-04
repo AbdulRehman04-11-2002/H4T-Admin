@@ -86,7 +86,7 @@ function PartnersList() {
                 <Loader />
             ) : (
                 <ListView
-                    columns={PartnerTableColumns({ LABELS: LABELS, showLoader: showLoader })}
+                    columns={PartnerTableColumns({ LABELS: LABELS })}
                     tabOnChange={tabOnChange}
                     totalRecord={totalRecord}
                     data={partners}
