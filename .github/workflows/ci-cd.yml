@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - main
+      - stage
 
 jobs:
   build-and-deploy:
@@ -29,6 +30,10 @@ jobs:
       - name: Build app development
         if: github.ref == 'refs/heads/develop'
         run: npm run build:dev
+
+      - name: Build app staging
+        if: github.ref == 'refs/heads/stage'
+        run: npm run build:stage
 
       # upload to s3 bucket of prod
       - name: Upload to S3 Prod
@@ -73,5 +78,28 @@ jobs:
           DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_DEVELOPMENT }}
           PATHS: '/*'
           AWS_REGION: 'us-east-1'
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+ 
+      # upload to s3 bucket of stage
+      - name: Upload to S3 stage
+        if: github.ref == 'refs/heads/stage'
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read
+        env:
+          SOURCE_DIR: build/
+          AWS_S3_BUCKET: admin.stage.health4travel.com
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # invalidate outdated cache
+      - name: Cloudfront Cache Invalidation Stage
+        if: github.ref == 'refs/heads/stage'
+        uses: chetan/invalidate-cloudfront-action@master
+        env:
+          DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_STAGING }}
+          PATHS: '/*'
+          AWS_REGION: 'eu-north-1'
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
