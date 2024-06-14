@@ -166,11 +166,11 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     }
   }
 
-  const getPartnerDetail = async () => {
+  const getPartnerDetail = async (services?: Service[]) => {
     try {
       showLoader();
       const response = await getPartner(partnerID);
-      setFormValues(response?.data?.partner);
+      setFormValues(response?.data?.partner, services);
     } catch (error) {
       const _error = error as ApiError;
       const { errorMessage } = handleErrorResponse(_error);
@@ -184,7 +184,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     }
   }
 
-  const setFormValues = (currentPartner: Partner) => {
+  const setFormValues = (currentPartner: Partner, services?: Service[]) => {
     form.setFieldsValue({
       name: currentPartner?.name,
       businessId: currentPartner?.businessId,
@@ -197,17 +197,25 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       emailAddress: currentPartner?.emailAddress,
       phoneNumber: currentPartner?.phoneNumber,
       contactPerson: currentPartner?.contactPerson,
-      docConsFixedFee: currentPartner?.services && currentPartner?.services[0]?.feeValue,
+      ...currentPartner?.services?.reduce((acc: any, service: any) => {
+        acc[service.service.name] = service.feeValue;
+        return acc;
+      }, {})
     })
-    // setServices(services.map((service) => {
-    //   const serviceFee = currentPartner?.services?.find((partnerService) => partnerService.service.id === service.id);
 
-    //   return {
-    //     ...service,
-    //     checked: serviceFee ? true : false,
-    //     fee: serviceFee?.feeValue || 0,
-    //   }
-    // }))
+    services && setServices(services.map((service) => {
+      console.log("service", service);
+
+      const serviceFee = currentPartner?.services?.find((partnerService) => partnerService.service.id == service.id);
+      console.log("serviceFee", serviceFee);
+
+      return {
+        ...service,
+        checked: serviceFee ? true : false,
+        fee: serviceFee?.feeValue || 0,
+      }
+    }))
+
     currentPartner?.imageUrl ? setFileList([{ uid: '-1', name: 'image', status: 'done', url: currentPartner?.imageUrl }]) : setFileList([]);
     setImageUrl(currentPartner?.imageUrl || '');
   }
@@ -238,22 +246,22 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   const createServicepayload = () => {
-    // return services
-    //   .filter((service) => service.checked)
-    //   .map(({ id, fee, feeType }) => ({
-    //     serviceId: id,
-    //     feeValue: fee,
-    //     feeType,
-    //     status: 'ENABLED',
-    //   }));
-    return [
-      {
-        serviceId: 1,
-        feeValue: +form.getFieldValue('docConsFixedFee'),
-        feeType: 'FIXED_FEE',
+    return services
+      .filter((service) => service.checked)
+      .map(({ id, fee, feeType }) => ({
+        serviceId: id,
+        feeValue: fee,
+        feeType,
         status: 'ENABLED',
-      }
-    ]
+      }));
+    // return [
+    //   {
+    //     serviceId: 1,
+    //     feeValue: +form.getFieldValue('docConsFixedFee'),
+    //     feeType: 'FIXED_FEE',
+    //     status: 'ENABLED',
+    //   }
+    // ]
   };
 
   const handleCheckboxChange = (serviceId: number) => {
@@ -273,9 +281,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     setIsDataChange(true)
   };
 
-  useEffect(() => {
-    partnerID && getPartnerDetail();
-  }, [])
 
   useEffect(() => {
     let cityOptionsArr: any = []
@@ -283,9 +288,10 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       if (location.type === "CITY" && location.status === "ENABLED") cityOptionsArr.push({ label: location.name, value: location.id })
     })
     setCityOptions(cityOptionsArr)
-    // ME.systemServices && setServices(ME.systemServices.map((service: any) => { return { id: service.id, name: service.name, fee: 0, feeType: 'FIXED_FEE', checked: false } }) || [])
-  }, [ME])
+    const services = ME?.systemServices && ME.systemServices.map((service: any) => { return { id: service.id, name: service.name, fee: 0, feeType: 'FIXED_FEE', checked: false } }) || []
 
+    partnerID ? getPartnerDetail(services) : setServices(services)
+  }, [ME])
 
   return (
     <div className={isUpdateForm ? 'update-partner-content' : 'create-partner-content'}>
@@ -712,7 +718,9 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                         {LABELS.PHONE_NUMBER}
                       </label>
                     }
-                    rules={[{ required: true, message: ERRORS.PHONE_NUMBER }, { max: 16, message: t("ERRORS.MAX_LENGTH_16", { type: "Phone number" }) }, { pattern: new RegExp(/^(\+?\d{1,3}[\s-]?)?((\(\d{3}\)\s?)|(\d{3})[\s-]?)\d{3}[\s-]?\d{4}$/), message: t("ERRORS.VALID_INPUT", { type: "Phone number" }) }]}
+                    rules={[{ required: true, message: ERRORS.PHONE_NUMBER }, {
+                      pattern: /^\+?\d{7,17}$/, message: t("ERRORS.VALID_INPUT", { type: "Phone number" })
+                    }]}
                     validateTrigger={["handleFinish", "handleUpdate"]}
                   >
                     <Input
@@ -786,24 +794,26 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   {/* display the checkbox and the input in single row */}
                   <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
 
-                    {services.map((service) => (
+                    {services.map((service, index) => (
                       <div key={service.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
                         <Form.Item>
-                          <Checkbox className='d-none' checked={service.checked} onChange={() => handleCheckboxChange(service.id)}>
+                          <Checkbox className='' checked={service.checked} onChange={() => handleCheckboxChange(service.id)}>
                             {service.name}
                           </Checkbox>
-                          {service.name}
+                          {/* {service.name} */}
                         </Form.Item>
                         <Form.Item
                           validateStatus={errors.fixedFee ? "error" : ""}
-                          name={'docConsFixedFee'}
-                          rules={[{ required: true, message: ERRORS.FIXED_FEE }]}
+                          // key={'docConsFixedFeed' + index}
+                          name={service.name}
+                          rules={[{ required: service.checked, message: ERRORS.FIXED_FEE }]}
                           validateTrigger={["handleFinish", "handleUpdate"]}>
                           <Input
                             placeholder="Enter fee"
                             value={service.fee}
                             onChange={(e) => handleInputChange(service.id, Number(e.target.value))}
                             disabled={!service.checked}
+                          // key={'docConsFixedFeeg' + index}
                           />
                         </Form.Item>
                       </div>
