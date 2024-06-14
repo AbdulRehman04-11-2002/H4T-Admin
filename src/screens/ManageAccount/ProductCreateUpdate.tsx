@@ -23,7 +23,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [fileList, setFileList] = useState<AntUploadFile[]>([]);
   const [isDataChange, setIsDataChange] = useState(false)
   const [serviceOptions, setServiceOptions] = useState<{ label: string; value: number }[]>([])
-  const [selectedServiceType, setselectedServiceType] = useState<number[]>([1])
+  const [selectedServiceType, setselectedServiceType] = useState<number>()
   const [locationOptions, setlocationOptions] = useState<{ label: string; value: number }[]>([])
   const [selectedLocations, setselectedLocations] = useState<number[]>([])
   const [price, setPrice] = useState<number>()
@@ -63,13 +63,13 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputSlotDurationRef = useRef<null | HTMLElement>(null);
 
 
-  const serviceTypeOnChange = (checkedValues: number[]) => {
+  const serviceTypeOnChange = (SelectedID: number) => {
     setIsDataChange(true)
-    setselectedServiceType(checkedValues)
+    setselectedServiceType(SelectedID)
   };
 
-  const cityOnchange = (checkedValues: number[]) => {
-    setselectedLocations(checkedValues)
+  const cityOnchange = (SelectedID: number[]) => {
+    setselectedLocations(SelectedID)
     setIsDataChange(true)
   };
 
@@ -96,6 +96,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     try {
       showLoader();
       const response = await getPartner(partnerID || "");
+      setServiceOptions(response?.data?.partner?.services.map((service: any) => { return { label: service.service.name, value: service.id } }) || [])
       setPartnerServiceFee(response?.data?.partner?.services[0]?.feeValue || 0)
       setselectedPartner(response?.data?.partner)
     } catch (error) {
@@ -156,7 +157,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       description: form.getFieldValue("description"),
       guidelines: form.getFieldValue("customerGuidelines"),
       status: form.getFieldValue("status").toUpperCase(),
-      partnerServiceId: selectedPartner?.services[0]?.id,
+      partnerServiceId: selectedServiceType,
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
       locationIds: JSON.stringify(selectedLocations),
@@ -206,8 +207,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       status: data?.status,
       slotDuration: data?.slotDuration
     });
-    // setselectedServiceType([data?.partner_service.service.id])
-    setselectedServiceType([data.partner_service.id])
+    setselectedServiceType(data.partner_service.id)
     setselectedLocations(data?.partner_product_locations?.map((location: any) => location?.partner_location?.id) || [])
     setImageUrl(data?.imageUrl || "")
     data?.imageUrl ? setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: data?.imageUrl || "" }]) : setFileList([])
@@ -242,7 +242,6 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   useEffect(() => {
-    ME?.systemServices && setServiceOptions(ME?.systemServices.map((service: any) => { return { label: service.name, value: service.id } }) || [])
     productID && getPartnerProductsDetails()
     getPartnerDetail()
     fetchPartnerLocations()
@@ -322,10 +321,16 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     </label>
                   }
                 >
-                  <Checkbox.Group className='d-none' style={{ display: "flex", flexDirection: "column" }} value={selectedServiceType} options={serviceOptions} onChange={serviceTypeOnChange} />
-                  <label className='label '>
-                    {"Doctor Counsultation"}
-                  </label>
+                  <Select
+                    placeholder={LABELS.SERVICE_TYPE}
+                    ref={inputStatusRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                    value={selectedServiceType}
+                    onChange={serviceTypeOnChange}
+                  >
+                    {serviceOptions.map((service: any) => <Option key={service.value} value={service.value}>{service.label}</Option>)}
+                  </Select>
                 </Form.Item>
               </Col>
 
