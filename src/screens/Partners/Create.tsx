@@ -718,7 +718,9 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                         {LABELS.PHONE_NUMBER}
                       </label>
                     }
-                    rules={[{ required: true, message: ERRORS.PHONE_NUMBER }, { max: 16, message: t("ERRORS.MAX_LENGTH_16", { type: "Phone number" }) }, { pattern: new RegExp(/^(\+?\d{1,3}[\s-]?)?((\(\d{3}\)\s?)|(\d{3})[\s-]?)\d{3}[\s-]?\d{4}$/), message: t("ERRORS.VALID_INPUT", { type: "Phone number" }) }]}
+                    rules={[{ required: true, message: ERRORS.PHONE_NUMBER }, {
+                      pattern: /^\+?\d{7,17}$/, message: t("ERRORS.VALID_INPUT", { type: "Phone number" })
+                    }]}
                     validateTrigger={["handleFinish", "handleUpdate"]}
                   >
                     <Input
