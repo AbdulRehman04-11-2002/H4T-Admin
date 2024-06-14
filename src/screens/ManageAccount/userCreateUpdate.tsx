@@ -373,7 +373,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 sm={{ span: 23 }}
                 xs={{ span: 23 }}
               >
-                <Form.Item name="fileList" label="File Upload" valuePropName="fileList">
+                <Form.Item name="fileList" label={`${LABELS.UPLOAD_PHOTO} (${LABELS.OPTIONAL})`} valuePropName="fileList">
                   <UploadFile
                     setFileList={setFileList}
                     fileListArr={fileList}
@@ -431,7 +431,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 xs={{ span: 23 }}
               >
                 <Title level={3} className='remove-vertical-margin '>
-                  {HEADING.SELECT_LOCATIONS}
+                  {HEADING.SELECT_USER_LOCATIONS}
                 </Title>
               </Col>
             </Row>
