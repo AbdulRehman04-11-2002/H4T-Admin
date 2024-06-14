@@ -28,9 +28,11 @@
     "start": "react-scripts start",
     "start:dev": "env-cmd -f dev.env npm start",
     "start:prod": "env-cmd -f prod.env npm start",
+    "start:stage": "env-cmd -f stage.env npm start",
     "build": "react-scripts build",
     "build:dev": "env-cmd -f dev.env npm run build",
     "build:prod": "env-cmd -f prod.env npm run build",
+    "build:stage": "env-cmd -f stage.env npm run build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
