@@ -204,11 +204,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     })
 
     services && setServices(services.map((service) => {
-      console.log("service", service);
-
       const serviceFee = currentPartner?.services?.find((partnerService) => partnerService.service.id == service.id);
-      console.log("serviceFee", serviceFee);
-
       return {
         ...service,
         checked: serviceFee ? true : false,
@@ -254,14 +250,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         feeType,
         status: 'ENABLED',
       }));
-    // return [
-    //   {
-    //     serviceId: 1,
-    //     feeValue: +form.getFieldValue('docConsFixedFee'),
-    //     feeType: 'FIXED_FEE',
-    //     status: 'ENABLED',
-    //   }
-    // ]
   };
 
   const handleCheckboxChange = (serviceId: number) => {
@@ -791,7 +779,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   sm={{ span: 23 }}
                   xs={{ span: 23 }}
                 >
-                  {/* display the checkbox and the input in single row */}
                   <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
 
                     {services.map((service, index) => (
@@ -800,11 +787,9 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                           <Checkbox className='' checked={service.checked} onChange={() => handleCheckboxChange(service.id)}>
                             {service.name}
                           </Checkbox>
-                          {/* {service.name} */}
                         </Form.Item>
                         <Form.Item
                           validateStatus={errors.fixedFee ? "error" : ""}
-                          // key={'docConsFixedFeed' + index}
                           name={service.name}
                           rules={[{ required: service.checked, message: ERRORS.FIXED_FEE }]}
                           validateTrigger={["handleFinish", "handleUpdate"]}>
@@ -813,7 +798,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                             value={service.fee}
                             onChange={(e) => handleInputChange(service.id, Number(e.target.value))}
                             disabled={!service.checked}
-                          // key={'docConsFixedFeeg' + index}
                           />
                         </Form.Item>
                       </div>
