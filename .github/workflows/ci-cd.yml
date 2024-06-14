@@ -27,7 +27,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: npm run build:prod
 
-      - name: Build app enhancement/add-update-servicesment
+      - name: Build app development
         if: github.ref == 'refs/heads/enhancement/add-update-services'
         run: npm run build:dev
 
@@ -75,7 +75,7 @@ jobs:
         if: github.ref == 'refs/heads/enhancement/add-update-services'
         uses: chetan/invalidate-cloudfront-action@master
         env:
-          DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_enhancement/add-update-servicesMENT }}
+          DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_DEVELOPMENT }}
           PATHS: '/*'
           AWS_REGION: 'us-east-1'
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
