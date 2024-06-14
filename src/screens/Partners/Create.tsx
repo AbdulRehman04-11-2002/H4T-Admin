@@ -289,8 +289,8 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     })
     setCityOptions(cityOptionsArr)
     const services = ME?.systemServices && ME.systemServices.map((service: any) => { return { id: service.id, name: service.name, fee: 0, feeType: 'FIXED_FEE', checked: false } }) || []
-    // ME.systemServices && setServices(services)
-    partnerID && getPartnerDetail(services);
+
+    partnerID ? getPartnerDetail(services) : setServices(services)
   }, [ME])
 
   return (
