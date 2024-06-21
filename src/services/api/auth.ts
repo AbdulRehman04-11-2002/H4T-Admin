@@ -1,5 +1,5 @@
 import { LoginResponse, VerifyOTPResponse } from "../../interface/Login";
-import { RefreshTokenResponse } from "../../interface/Request";
+import { RefreshTokenResponse, LogoutResponse } from "../../interface/Request";
 import { api } from "./Index";
 
 export const login = async (data: any) => {
@@ -19,6 +19,11 @@ export const refreshToken = async (data: any) => {
 
 export const fetchCurrentUser = async () => {
     const response = await api.get<any>("/me");
+    return response.data;
+};
+
+export const logout = async (data: any) => {
+    const response = await api.post<LogoutResponse>("/auth/logout/", data);
     return response.data;
 };
 

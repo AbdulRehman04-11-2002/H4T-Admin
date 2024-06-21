@@ -49,7 +49,7 @@ api.interceptors.response.use(
       }
       statusCode = error.response?.status || 500;
       if (
-        statusCode === 500 &&
+        statusCode === 401 &&
         error?.response?.data.message.includes("expired")
       ) {
         const request: RefreshTokenRequest = {
@@ -68,7 +68,7 @@ api.interceptors.response.use(
         }
       } else if (
         statusCode === 401 &&
-        !error?.response?.data.message.includes("expired")
+        error?.response?.data.message.includes("Invalid Access Token")
       ) {
         reload();
       }
