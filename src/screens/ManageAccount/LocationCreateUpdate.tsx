@@ -464,7 +464,10 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.PHONE_NUMBER}
                     </label>
                   }
-                  // set phone num validation
+                  rules={[{
+                    pattern: /^\+?\d{7,17}$/
+                    , message: t("ERRORS.VALID_INPUT", { type: "Phone number" })
+                  }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Input

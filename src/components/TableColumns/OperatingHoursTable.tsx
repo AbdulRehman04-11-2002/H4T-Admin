@@ -67,6 +67,7 @@ export const OperatingHours = ({ handleOperatingHoursChange, onCheckBoxChange, E
                                 format={timeFormat}
                                 style={{ borderRadius: 0 }}
                                 key={record.index + "startTime"}
+                                needConfirm={false}
                             />
                         </Form.Item></div>
                 )
@@ -97,6 +98,7 @@ export const OperatingHours = ({ handleOperatingHoursChange, onCheckBoxChange, E
                                 style={{ borderRadius: 0 }}
                                 key={record.index + "endTime"}
                                 disabled={record.status === "ENABLED" ? false : true}
+                                needConfirm={false}
                             />
                         </Form.Item></div>
                 )
@@ -126,6 +128,7 @@ export const OperatingHours = ({ handleOperatingHoursChange, onCheckBoxChange, E
                             style={{ borderRadius: 0 }}
                             key={record.index + "breakStart"}
                             disabled={record.status === "ENABLED" ? false : true}
+                            needConfirm={false}
                         />
                     </Form.Item></div>
             ),
@@ -154,6 +157,7 @@ export const OperatingHours = ({ handleOperatingHoursChange, onCheckBoxChange, E
                             style={{ borderRadius: 0 }}
                             key={record.index + "breakEnd"}
                             disabled={record.status === "ENABLED" ? false : true}
+                            needConfirm={false}
                         />
                     </Form.Item></div>
             ),

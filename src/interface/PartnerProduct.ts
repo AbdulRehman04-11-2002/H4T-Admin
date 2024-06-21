@@ -7,6 +7,17 @@ interface PartnerService {
     status: string;
     partnerId: number;
     serviceId: number;
+    service: service
+}
+
+interface service {
+    id: number;
+    name: string;
+    status: string;
+    createdAt: string;
+    modifiedAt: string;
+    createdById: any;
+    modifiedById: any;
 }
 
 export interface PartnerProduct {
