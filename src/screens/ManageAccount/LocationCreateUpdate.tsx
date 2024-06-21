@@ -16,7 +16,7 @@ import {
   ExclamationCircleOutlined
 } from '@ant-design/icons';
 import { PartnerLocation } from '../../interface/PartnerLocation';
-
+import Tooltip from '../../components/Tooltip/Index';
 type operatingHoursType = {
   day: string;
   startTime: string;
@@ -488,6 +488,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   label={
                     <label className='label '>
                       {LABELS.CITY}
+                      <Tooltip title={LABELS.CITY_TOOLTIP} />
                     </label>
                   }
                   rules={[{ required: true, message: ERRORS.SEARCH_AND_SELECT_CITY }]}
@@ -641,6 +642,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   label={
                     <label className='label '>
                       {LABELS.CUSTOM_GUIDELINES}
+                      <Tooltip title={LABELS.GUIDELINE_TOOLTIP} />
                     </label>
                   }
                   validateTrigger={["handleFinish", "handleUpdate"]}
@@ -664,7 +666,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 sm={{ span: 23 }}
                 xs={{ span: 23 }}
               >
-                <Form.Item name="fileList" label="File Upload" valuePropName="fileList">
+                <Form.Item name="fileList" label={LABELS.LOCATION_IMAGE} valuePropName="fileList">
                   <UploadFile
                     setFileList={setFileList}
                     fileType={"image/png"}
@@ -743,6 +745,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
               >
                 <Title level={3} className='remove-vertical-margin '>
                   {HEADING.OPERATING_HOURS}
+                  <Tooltip title={HEADING.OPERATING_HOURS_TOOLTIP} />
                 </Title>
               </Col>
             </Row>

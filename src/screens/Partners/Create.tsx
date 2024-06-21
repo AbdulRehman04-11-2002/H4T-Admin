@@ -482,7 +482,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   sm={{ span: 23 }}
                   xs={{ span: 23 }}
                 >
-                  <Form.Item name="fileList" label="File Upload" valuePropName="fileList">
+                  <Form.Item name="fileList" label={`${LABELS.COMPANY_LOGO} (${LABELS.OPTIONAL})`} valuePropName="fileList">
                     <UploadFile
                       setFileList={setFileList}
                       fileListArr={fileList}
@@ -789,6 +789,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     {services.map((service) => (
                       <div key={service.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
                         <Form.Item>
+                          {LABELS.DIGITAL_SERVICES}
                           <Checkbox className='d-none' checked={service.checked} onChange={() => handleCheckboxChange(service.id)}>
                             {service.name}
                           </Checkbox>

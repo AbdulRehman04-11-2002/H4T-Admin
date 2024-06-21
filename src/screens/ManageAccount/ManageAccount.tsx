@@ -146,7 +146,8 @@ function ManageAccount() {
                         key: TABS_LABEL.PROFILE, children: <PartnerCreateUpdate isUpdateForm={true} />, icon: <BarsOutlined />
                     },
                     {
-                        label: "locations", key: TABS_LABEL.LOCATIONS, children:
+                        label: <span>{TABS_LABEL.LOCATIONS}</span>,
+                        key: TABS_LABEL.LOCATIONS, children:
 
                             <ListView
                                 tabOnChange={onTableTabChange}

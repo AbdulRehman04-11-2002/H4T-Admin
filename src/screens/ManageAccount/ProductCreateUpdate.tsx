@@ -14,6 +14,7 @@ import { PartnerProduct } from '../../interface/PartnerProduct';
 import { getPartnerLocations } from '../../services/api/partnerLocation';
 import { getPartner } from '../../services/api/partner';
 import { Partner } from '../../interface/Partner';
+import Tooltip from '../../components/Tooltip/Index';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -427,7 +428,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
               >
                 <div style={{ position: "relative" }}>
 
-                  <Form.Item name="fileList" label="File Upload" valuePropName="fileList">
+                  <Form.Item name="fileList" label={`${LABELS.SERVICE_PHOTO} (${LABELS.OPTIONAL})`} valuePropName="fileList">
                     <UploadFile
                       setFileList={setFileList}
                       fileListArr={fileList}
@@ -492,6 +493,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   label={
                     <label className='label '>
                       {LABELS.DESCRIPTION}
+                      <Tooltip title={LABELS.DESCRIPTION_TOOLTIP} />
                     </label>
                   }
                   validateTrigger={["handleFinish", "handleUpdate"]}
@@ -515,7 +517,8 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   name='customerGuidelines'
                   label={
                     <label className='label '>
-                      {LABELS.CUSTOM_GUIDELINES}
+                      {LABELS.CUSTOMER_GUIDELINES}
+                      <Tooltip title={LABELS.PRODUCT_GUIDELINE_TOOLTIP}/>
                     </label>
                   }
                   validateTrigger={["handleFinish", "handleUpdate"]}
