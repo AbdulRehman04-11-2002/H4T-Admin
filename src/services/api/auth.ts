@@ -3,7 +3,7 @@ import { RefreshTokenResponse, LogoutResponse } from "../../interface/Request";
 import { api } from "./Index";
 
 export const login = async (data: any) => {
-    const response = await api.post<LoginResponse>("/auth/login", data);
+    const response = await api.post<LoginResponse>("/auth/admin/login", data);
     return response.data;
 };
 
