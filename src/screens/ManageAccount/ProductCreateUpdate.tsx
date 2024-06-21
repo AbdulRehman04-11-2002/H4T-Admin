@@ -68,10 +68,11 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     setselectedServiceType(SelectedID)
     customerSeesPrice(SelectedID)
 
-  };
 
-  const cityOnchange = (checkedValues: number[]) => {
-    setselectedLocations(checkedValues)
+  }
+
+  const cityOnchange = (SelectedID: number[]) => {
+    setselectedLocations(SelectedID)
     setIsDataChange(true)
   };
 
@@ -167,7 +168,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       description: form.getFieldValue("description"),
       guidelines: form.getFieldValue("customerGuidelines"),
       status: form.getFieldValue("status").toUpperCase(),
-      partnerServiceId: selectedPartner?.services[0]?.id,
+      partnerServiceId: selectedServiceType,
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
       locationIds: JSON.stringify(selectedLocations),
@@ -251,7 +252,6 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   useEffect(() => {
-    ME?.systemServices && setServiceOptions(ME?.systemServices.map((service: any) => { return { label: service.name, value: service.id } }) || [])
     productID && getPartnerProductsDetails()
     getPartnerDetail()
     fetchPartnerLocations()
