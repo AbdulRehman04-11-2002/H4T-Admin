@@ -116,7 +116,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       status: form.getFieldValue('status'),
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
-      // ...(isUpdateForm && !(fileList[0] && fileList[0]?.thumbUrl) && { imageUrl: imageUrl }),
       contractNumber: form.getFieldValue('contractNumber'),
       registeredCityId: form.getFieldValue('searchAndSelectCity'),
       currencyId: 1,
@@ -134,6 +133,14 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   const handleFinish = async () => {
     showLoader();
+    if (createServicepayload().length === 0) {
+      openToastNotification(
+        ERRORS.SELECT_ATLEAST_ONE,
+        "notifications toast-notification-error"
+      );
+      hideLoader();
+      return;
+    }
     try {
       let response: any = {}
       if (!partnerID) response = await createPartner(partnerRequest());
@@ -794,7 +801,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                           rules={[{ required: service.checked, message: ERRORS.FIXED_FEE }]}
                           validateTrigger={["handleFinish", "handleUpdate"]}>
                           <Input
-                            placeholder="Enter fee"
+                            placeholder={PLACEHOLDERS.ENTER_FEE + (service.checked ? " *" : "")}
                             value={service.fee}
                             onChange={(e) => handleInputChange(service.id, Number(e.target.value))}
                             disabled={!service.checked}

@@ -143,7 +143,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       } else {
         setSuccess(SUCCESS.PARTNER_USER_CREATED)
       }
-      navigate(`/partner/${partnerID}/manageaccount`);
+      navigate(`/partner/${partnerID}/manageAccount`);
 
       form.resetFields();
       setFileList([]);
@@ -249,7 +249,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 <Button
                   type='default'
                   htmlType='button'
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate(`/partner/${partnerID}/manageAccount/`)}
                 >
                   {LABELS.CANCEL}
                 </Button>

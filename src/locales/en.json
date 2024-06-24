@@ -68,7 +68,8 @@
         "SEARCH": "Search",
         "STATUS": "Status*(enabled/disabled)",
         "FIXED_FEE": "Fixed Fee",
-        "EMAIL": "Please enter email"
+        "EMAIL": "Please enter email",
+        "ENTER_FEE": "Enter fee"
     },
     "ERRORS": {
         "NAME": "Please enter name",
@@ -106,8 +107,9 @@
         "SLOT_DURATION": "Please select slot duration",
         "START_TIME": "Please select start time",
         "END_TIME": "Please select end time",
-        "BREAK_START": "Please select break start",
-        "BREAK_END": "Please select break end"
+        "BREAK_START": "Please select break start time",
+        "BREAK_END": "Please select break end time",
+        "SELECT_ATLEAST_ONE": "Please select at least one service"
     },
     "BUTTONS": {
         "ADD": "Add",
@@ -157,7 +159,7 @@
         "UPDATE_PARTNER_LOCATION": "Update Location",
         "CREATE_PARTNER_PRODUCT": "Create Product",
         "UPDATE_PARTNER_PRODUCT": "Update Product",
-        "SELECT_USER_LOCATIONS":"Which locations can this user operate?"
+        "SELECT_USER_LOCATIONS": "Which locations can this user operate?"
     },
     "TABS_LABEL": {
         "CURRENT": "current",
