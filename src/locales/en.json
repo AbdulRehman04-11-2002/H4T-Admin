@@ -59,7 +59,7 @@
         "DESCRIPTION": "Description",
         "DESCRIPTION_TOOLTIP": "Describe the consultation in more detail. Is there a time limit? What other languages is service available in?",
         "EXPEXTED_DIMENSIONS_LXW": "Expected dimensions Lxw",
-        "CUSTOMER_SEES": "Customer sees",
+        "CUSTOMER_SEES": "Customer sees test",
         "SLOT_DURATION": "Time before next booking slot is available (minutes)",
         "TERMS_OF_USE": "Terms of Use",
         "UPLOAD_PHOTO": "Upload photo"
@@ -70,7 +70,7 @@
         "FIXED_FEE": "Fixed Fee",
         "EMAIL": "Please enter email",
         "ENTER_FEE": "Enter fee"
-    }, 
+    },
     "ERRORS": {
         "NAME": "Please enter name",
         "BUSINESS_ID": "Please enter business id",
