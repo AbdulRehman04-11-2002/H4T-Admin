@@ -774,7 +774,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   xs={{ span: 23 }}
                 >
                   <Title level={3} className='remove-vertical-margin '>
-                    {HEADING.CONFiGURATIONS}
+                    {HEADING.CONFIGURATIONS}
                   </Title>
                 </Col>
               </Row>

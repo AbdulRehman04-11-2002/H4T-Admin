@@ -258,7 +258,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   useEffect(() => {
     productID && getPartnerProductsDetails()
-  }, [ME])
+  }, [selectedPartner])
 
 
   return (
