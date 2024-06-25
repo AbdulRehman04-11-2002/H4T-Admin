@@ -70,7 +70,7 @@
         "FIXED_FEE": "Fixed Fee",
         "EMAIL": "Please enter email",
         "ENTER_FEE": "Enter fee"
-    },
+    }, 
     "ERRORS": {
         "NAME": "Please enter name",
         "BUSINESS_ID": "Please enter business id",
