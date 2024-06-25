@@ -145,7 +145,7 @@
         "BASIC_DETAILS": "Company Details",
         "REGISTERED_ADDRESS": "Registered Address",
         "CONTACT_DETAILS": "Contact Details",
-        "CONFiGURATIONS": "H4T Fee Configurations",
+        "CONFIGURATIONS": "H4T Fee Configurations *",
         "OPERATING_HOURS": "Available Booking Times",
         "OPERATING_HOURS_TOOLTIP": "For 24-hour availability, please set all start and end times to 00:00. If you have no breaks, please set the break start and end times to 00:00.",
         "SELECT_LOCATIONS": "Which locations is this service available in?",
