@@ -252,10 +252,14 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   useEffect(() => {
-    productID && getPartnerProductsDetails()
     getPartnerDetail()
     fetchPartnerLocations()
   }, [])
+
+  useEffect(() => {
+    productID && getPartnerProductsDetails()
+  }, [ME])
+
 
   return (
     <div className='create-partner-content'>
