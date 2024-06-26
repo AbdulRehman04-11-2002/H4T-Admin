@@ -56,7 +56,7 @@ export const LocationColumns = ({ partnerID }: TableColumnProps) => {
             showSorterTooltip: false,
             sorter: (a: any, b: any) => a.name.localeCompare(b.name),
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageaccount/${record?.id}/updatelocation`}>{record?.name}</Link> </div>
+                <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageAccount/${record?.id}/updateLocation`}>{record?.name}</Link> </div>
             ),
         },
         {

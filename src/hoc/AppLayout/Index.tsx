@@ -7,8 +7,8 @@ import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-r
 import { useTranslation } from 'react-i18next';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
 import { Storage } from '../../services/storage';
-import { RefreshTokenRequest } from '../../interface/Request';
-import { refreshToken } from '../../services/api/auth';
+import { LoginRequest, RefreshTokenRequest } from '../../interface/Request';
+import { logout, refreshToken } from '../../services/api/auth';
 import Login from '../../screens/Login/Index';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
 import Loader from '../../components/Loader';
@@ -19,7 +19,7 @@ import { ApiError } from '../../services/api/Index';
 function AppLayout() {
     const { t } = useTranslation();
     const LABELS: any = t("LABELS", { returnObjects: true });
-    const { setME, ME, setUserDetails } = useContext(GlobalContext) as GlobalContextProps;
+    const { setME, ME, userDetails, setUserDetails } = useContext(GlobalContext) as GlobalContextProps;
     const navigate = useNavigate();
     const [token, setToken] = useState<boolean>(
         Storage.getAccessToken() ? true : false
@@ -46,7 +46,11 @@ function AppLayout() {
         }
     };
 
-    const logOutClickHandler = () => {
+    const logOutClickHandler = async () => {
+        const request: LoginRequest = {
+            email: userDetails.email,
+        };
+        await logout(request);
         setToken(false);
         Storage.removeAccessAndRefreshToken();
         setME({});

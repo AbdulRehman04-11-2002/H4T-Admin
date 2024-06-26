@@ -42,7 +42,7 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
             render: (_: any, record: any) => {
 
                 return (
-                    <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageaccount/${record?.id}/updateuser`}>{record?.name}</Link></div>
+                    <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageAccount/${record?.id}/updateUser`}>{record?.name}</Link></div>
                 )
             },
         },
