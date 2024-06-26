@@ -59,7 +59,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       # upload to s3 bucket of dev
-      - name: Upload to S3 Dev develop
+      - name: Upload to S3 Dev Milestone-2.2.1
         if: github.ref == 'refs/heads/Milestone-2.2.1'
         uses: jakejarvis/s3-sync-action@master
         with:
