@@ -8,6 +8,7 @@ import UploadFile from '../../components/UploadFile/Index';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
 import { useTranslation } from 'react-i18next';
 import { ApiError } from '../../services/api/Index';
+import { ROLES } from '../../constants/contants'
 import { createPartnerUser, getPartnerUser, updatePartnerUser } from '../../services/api/partnerUser';
 import Loader from '../../components/Loader';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
@@ -48,7 +49,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const { ME, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
   let params = useParams();
   const { partnerID, userID } = params;
-
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -56,6 +56,12 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputEmailRef = useRef<null | HTMLElement>(null);
   const inputRoleRef = useRef<null | HTMLElement>(null);
   const inputStatusRef = useRef<null | HTMLElement>(null);
+
+  //
+  const getRoleLabelById = (roleObj: any) => {
+    const role = ROLES.find(role => role.id === roleObj.id);
+    return role ? t(`LABELS.${role.label}`) : roleObj.name;
+  };
 
   const locationOnchange: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
     setselectedLocations(checkedValues)
@@ -211,7 +217,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }, [])
 
   useEffect(() => {
-    ME?.systemRoles && setUserRolesOptions(ME?.systemRoles.map((role: any) => { return { label: role.name, value: role.id } }) || [])
+    ME?.systemRoles && setUserRolesOptions(ME?.systemRoles.map((role: any) => { return { label: getRoleLabelById(role), value: role.id } }) || [])
   }, [ME])
 
   return (

@@ -62,7 +62,12 @@
         "CUSTOMER_SEES": "Customer sees",
         "SLOT_DURATION": "Time before next booking slot is available (minutes)",
         "TERMS_OF_USE": "Terms of Use",
-        "UPLOAD_PHOTO": "Upload photo"
+        "UPLOAD_PHOTO": "Upload photo",
+        "ROLE_ADMIN":"Clinic Admin",
+        "ROLE_CUSTOMER":"Customer",
+        "ROLE_H4TADMIN":"H4T Admin",
+        "ROLE_MANAGER":"Clinic Manager",
+        "ROLE_FRONTDESK":"Clinic Frontdesk"
     },
     "PLACEHOLDERS": {
         "SEARCH": "Search",
