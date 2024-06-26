@@ -2,6 +2,7 @@ import { DatabaseOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Image } from "antd";
+import { ROLES } from "../../constants/contants";
 
 interface TableColumnProps {
     partnerID: string;
@@ -10,6 +11,11 @@ interface TableColumnProps {
 export const UsersColumns = ({ partnerID }: TableColumnProps) => {
     const { t } = useTranslation();
     const LABELS: any = t("LABELS", { returnObjects: true });
+    //
+    const getRoleLabelById = (roleObj: any) => {
+        const role = ROLES.find(role => role.id === roleObj.id);
+        return role ? t(`LABELS.${role.label}`) : roleObj.name;
+    };
 
     return [
 
@@ -71,7 +77,7 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
                 <div className='fontWeight-semiBold'>{
                     record?.user_roles?.map((role: any, index: number) => {
                         return (
-                            role?.role?.name + (index === record?.user_roles?.length - 1 ? '' : ',')
+                            getRoleLabelById(role?.role) + (index === record?.user_roles?.length - 1 ? '' : ',')
                         )
 
                     })
