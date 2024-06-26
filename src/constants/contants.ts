@@ -49,5 +49,12 @@ export const REFRESH_TOKEN_KEY = "refreshToken";
 export const DELAY_COUNT = 30;
 export const timeFormat = 'HH:mm';
 
+export const ROLES = [
+    { id: 1, label: "ROLE_ADMIN" },
+    { id: 2, label: "ROLE_CUSTOMER" },
+    { id: 3, label: "ROLE_H4TADMIN" },
+    { id: 5, label: "ROLE_MANAGER" },
+    { id: 5, label: "ROLE_FRONTDESK" }
+]
 
 export const ACCESS_TOKEN_KEY = "accessToken";
