@@ -54,7 +54,7 @@ export const ROLES = [
     { id: 2, label: "ROLE_CUSTOMER" },
     { id: 3, label: "ROLE_H4TADMIN" },
     { id: 5, label: "ROLE_MANAGER" },
-    { id: 5, label: "ROLE_FRONTDESK" }
+    { id: 6, label: "ROLE_FRONTDESK" }
 ]
 
 export const ACCESS_TOKEN_KEY = "accessToken";
