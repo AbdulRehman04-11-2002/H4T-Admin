@@ -51,7 +51,7 @@ export const PartnerTableColumns = ({ LABELS }: TableColumnProps) => {
             render: (_: any, record: any) => (
                 <div className='fontWeight-semiBold'>
                     {
-                        <Link to={`/partner/${record?.id}/manageaccount`}>{record?.name}</Link>
+                        <Link to={`/partner/${record?.id}/manageAccount`}>{record?.name}</Link>
                     }
                 </div>
             ),

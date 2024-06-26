@@ -24,3 +24,9 @@ export interface RefreshTokenRequest {
   refreshToken: string;
 }
 
+export interface LogoutResponse {
+  success: boolean;
+  data: {};
+  message: string[];
+  error: null;
+}
