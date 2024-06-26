@@ -14,6 +14,7 @@ import { PartnerProduct } from '../../interface/PartnerProduct';
 import { getPartnerLocations } from '../../services/api/partnerLocation';
 import { getPartner } from '../../services/api/partner';
 import { Partner } from '../../interface/Partner';
+import Tooltip from '../../components/Tooltip/Index';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -62,11 +63,13 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputCustomerGuidelinesRef = useRef<null | HTMLElement>(null);
   const inputSlotDurationRef = useRef<null | HTMLElement>(null);
 
-
   const serviceTypeOnChange = (SelectedID: number) => {
     setIsDataChange(true)
     setselectedServiceType(SelectedID)
-  };
+    customerSeesPrice(SelectedID)
+
+
+  }
 
   const cityOnchange = (SelectedID: number[]) => {
     setselectedLocations(SelectedID)
@@ -97,7 +100,6 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       showLoader();
       const response = await getPartner(partnerID || "");
       setServiceOptions(response?.data?.partner?.services.map((service: any) => { return { label: service.service.name, value: service.id } }) || [])
-      setPartnerServiceFee(response?.data?.partner?.services[0]?.feeValue || 0)
       setselectedPartner(response?.data?.partner)
     } catch (error) {
       const _error = error as ApiError;
@@ -116,6 +118,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     showLoader();
     try {
       const response = await getProducts(productID || "");
+      customerSeesPrice(response?.data?.partnerProduct.partner_service.id, response?.data?.partnerProduct.partner_service)
       setFormValues(response?.data?.partnerProduct)
     } catch (error) {
       const _error = error as ApiError;
@@ -128,6 +131,14 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     } finally {
       hideLoader();
     }
+  }
+  const customerSeesPrice = (serviceID: number, partnerService?: any) => {
+    let feeValue = partnerService?.feeValue || selectedPartner?.services.find((service: any) => service.id === serviceID)?.feeValue
+
+    let price = form.getFieldValue("price")
+    setPrice(price)
+    setPartnerServiceFee(+feeValue || 0)
+
   }
 
   const fetchPartnerLocations = async () => {
@@ -180,7 +191,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       } else {
         setSuccess(SUCCESS.PARTNER_PRODUCT_CREATED)
       }
-      navigate(`/partner/${partnerID}/manageaccount`);
+      navigate(`/partner/${partnerID}/manageAccount`);
       form.resetFields();
       setFileList([]);
 
@@ -211,7 +222,6 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     setselectedLocations(data?.partner_product_locations?.map((location: any) => location?.partner_location?.id) || [])
     setImageUrl(data?.imageUrl || "")
     data?.imageUrl ? setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: data?.imageUrl || "" }]) : setFileList([])
-    setPrice(data?.price)
   }
 
   const submitFailed = (errorInfo: any) => {
@@ -242,10 +252,14 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   useEffect(() => {
-    productID && getPartnerProductsDetails()
     getPartnerDetail()
     fetchPartnerLocations()
   }, [])
+
+  useEffect(() => {
+    productID && getPartnerProductsDetails()
+  }, [selectedPartner])
+
 
   return (
     <div className='create-partner-content'>
@@ -282,7 +296,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 <Button
                   type='default'
                   htmlType='button'
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate(`/partner/${partnerID}/manageAccount/`)}
                 >
                   {LABELS.CANCEL}
                 </Button>
@@ -432,7 +446,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
               >
                 <div style={{ position: "relative" }}>
 
-                  <Form.Item name="fileList" label="File Upload" valuePropName="fileList">
+                  <Form.Item name="fileList" label={`${LABELS.SERVICE_PHOTO} (${LABELS.OPTIONAL})`} valuePropName="fileList">
                     <UploadFile
                       setFileList={setFileList}
                       fileListArr={fileList}
@@ -477,7 +491,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       value={price}
                     />
                   </Form.Item>
-                  <Text style={{ fontSize: 11, color: "#1677ff", position: "absolute", bottom: -20 }} >{`${LABELS.CUSTOMER_SEES} : ${(price || 0) + partnerSeerviceFee}`}</Text>
+                  <Text style={{ fontSize: 11, color: "#1677ff", position: "absolute", bottom: -20 }} >{`${LABELS.CUSTOMER_SEES} : ${+(price || 0) + partnerSeerviceFee}`}</Text>
 
                 </div>
 
@@ -497,6 +511,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   label={
                     <label className='label '>
                       {LABELS.DESCRIPTION}
+                      <Tooltip title={LABELS.DESCRIPTION_TOOLTIP} />
                     </label>
                   }
                   validateTrigger={["handleFinish", "handleUpdate"]}
@@ -520,7 +535,8 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   name='customerGuidelines'
                   label={
                     <label className='label '>
-                      {LABELS.CUSTOM_GUIDELINES}
+                      {LABELS.CUSTOMER_GUIDELINES}
+                      <Tooltip title={LABELS.PRODUCT_GUIDELINE_TOOLTIP} />
                     </label>
                   }
                   validateTrigger={["handleFinish", "handleUpdate"]}

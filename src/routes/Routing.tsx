@@ -18,14 +18,14 @@ const Routing = () => {
                 <Route path='Partner'>
                     <Route path='' element={<PartnersList />} />
                     <Route path='Create' element={<PartnerCreate />} />
-                    <Route path=':partnerID/ManageAccount'>
+                    <Route path=':partnerID/manageAccount'>
                         <Route path='' element={<ManageAccount />} />
                         <Route path='createLocation' element={<LocationCreateUpdate />} />
-                        <Route path=':locationID/updatelocation' element={<LocationCreateUpdate isUpdateForm={true} />} />
+                        <Route path=':locationID/updateLocation' element={<LocationCreateUpdate isUpdateForm={true} />} />
                         <Route path='createProduct' element={<ProductCreateUpdate />} />
-                        <Route path=':productID/updateproduct' element={<ProductCreateUpdate isUpdateForm={true} />} />
+                        <Route path=':productID/updateProduct' element={<ProductCreateUpdate isUpdateForm={true} />} />
                         <Route path='createuser' element={<UserCreateUpdate />} />
-                        <Route path=':userID/updateuser' element={<UserCreateUpdate isUpdateForm={true} />} />
+                        <Route path=':userID/updateUser' element={<UserCreateUpdate isUpdateForm={true} />} />
                     </Route>
                 </Route>
                 <Route path='/terms-of-use' element={<TermsOfUse />} />
