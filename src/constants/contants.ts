@@ -41,7 +41,23 @@ export const API_ERRORS = {
     PAYLOAD_TOO_LARGE: "Payload Too Large",
     INTERNAL_SERVER_ERROR: "Internal Server Error",
     SOME_THING_WENT_WRONG: "Something went wrong",
-    VALIDATION_ERROR: "Validation error"
+    VALIDATION_ERROR: "Validation error",
+    REFRESH_TOKEN_ERROR: "Error refreshing Access Token",
+    INVALID_ACCESS_TOKEN: "Invalid Access Token",
+    TOKEN_NOT_FOUND: "Token not found",
+    TOKEN_EXPIRED: "NotAuthorizedException: Access Token has expired",
+    TOKEN_REVOKED: "NotAuthorizedException: Access Token has been revoked"
+}
+
+export const API_STATUS = {
+    BAD_REQUEST: 400,
+    UNAUTHORIZED: 401,
+    NOT_FOUND2: 403,
+    NOT_FOUND: 404,
+    REFRESH_TOKEN_ERROR: 405,
+    PAYLOAD_TOO_LARGE: 413,
+    INTERNAL_SERVER_ERROR: 500,
+    INTERNAL_SERVER_ERROR2: 502
 }
 
 export const baseURL = process.env.REACT_APP_BASE_URL;

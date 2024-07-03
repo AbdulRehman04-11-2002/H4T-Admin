@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { UploadFile, message, notification } from "antd";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { API_ERRORS } from "../../constants/contants";
+import { API_ERRORS, API_STATUS } from "../../constants/contants";
 
 dayjs.extend(customParseFormat);
 
@@ -59,13 +59,15 @@ export const openToastNotification = (
     description: string,
     className: string
 ) => {
-    notification.open({
-        message: false,
-        description: description,
-        className: className,
-        icon: false,
-        closeIcon: false,
-    });
+    if (description) {
+        notification.open({
+            message: false,
+            description: description,
+            className: className,
+            icon: false,
+            closeIcon: false,
+        });
+    }
 };
 
 const isJSONString = (inputString: any) => {
@@ -82,22 +84,24 @@ export const handleErrorResponse = (
     inputRefs?: any) => {
     const { statusCode, message } = error;
 
-    if (statusCode === 400) {
+    if (statusCode === API_STATUS.BAD_REQUEST) {
         if (!isJSONString(message)) {
             return { statusCode, errorMessage: error?.message, obj: {} };
         } else {
             const { obj, errorMessage } = errorsMessageFocus(JSON.parse(message), inputRefs);
             return { statusCode, errorMessage, obj };
         }
-    } else if (statusCode === 401) {
+    } else if (statusCode === API_STATUS.UNAUTHORIZED) {
         return { statusCode, errorMessage: API_ERRORS.UNAUTHORIZED, obj: {} };
-    } else if (statusCode === 403 || statusCode === 404) {
+    } else if (statusCode === API_STATUS.NOT_FOUND2 || statusCode === API_STATUS.NOT_FOUND) {
         return { statusCode, errorMessage: API_ERRORS.NOT_FOUND, obj: {} };
-    } else if (statusCode === 413) {
+    } else if (statusCode === API_STATUS.PAYLOAD_TOO_LARGE) {
         return { statusCode, errorMessage: API_ERRORS.PAYLOAD_TOO_LARGE, obj: {} };
-    } else if (statusCode === 500) {
+    } else if (statusCode === API_STATUS.REFRESH_TOKEN_ERROR) {
+        return { statusCode, errorMessage: "", obj: {} };
+    } else if (statusCode === API_STATUS.INTERNAL_SERVER_ERROR) {
         return { statusCode, errorMessage: API_ERRORS.INTERNAL_SERVER_ERROR, obj: {} };
-    } else if (statusCode === 502) {
+    } else if (statusCode === API_STATUS.INTERNAL_SERVER_ERROR2) {
         return { statusCode, errorMessage: API_ERRORS.INTERNAL_SERVER_ERROR, obj: {} };
     } else {
         return { statusCode, errorMessage: API_ERRORS.SOME_THING_WENT_WRONG, obj: {} };

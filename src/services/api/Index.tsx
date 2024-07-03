@@ -1,7 +1,7 @@
 import axios from "axios";
 import { refreshToken } from "./auth";
 import { Storage } from "../storage";
-import { ERRORS, REFRESH_TOKEN_KEY, baseURL, API_ERRORS } from "../../constants/contants";
+import { ERRORS, REFRESH_TOKEN_KEY, baseURL, API_ERRORS, API_STATUS } from "../../constants/contants";
 import { RefreshTokenRequest } from "../../interface/Request";
 
 export const api = axios.create({
@@ -35,7 +35,7 @@ api.interceptors.response.use(
   async (error) => {
     const configError = error?.config;
     let message = ERRORS.SOME_THING_WENT_WRONG;
-    let statusCode = 500;
+    let statusCode = API_STATUS.INTERNAL_SERVER_ERROR;
     let errorData = [];
     if (axios.isAxiosError(error)) {
       if (
@@ -47,10 +47,12 @@ api.interceptors.response.use(
         message = error.response?.data?.message;
         if (message === API_ERRORS.VALIDATION_ERROR) errorData = error.response?.data?.error
       }
-      statusCode = error.response?.status || 500;
+      statusCode = error.response?.status || API_STATUS.INTERNAL_SERVER_ERROR;
       if (
-        statusCode === 401 &&
-        error?.response?.data.message.includes("expired")
+        statusCode === API_STATUS.UNAUTHORIZED &&
+        (error?.response?.data.message.includes(API_ERRORS.TOKEN_EXPIRED) ||
+          error?.response?.data.message.includes(API_ERRORS.TOKEN_REVOKED)
+        )
       ) {
         const request: RefreshTokenRequest = {
           refreshToken: localStorage.getItem(REFRESH_TOKEN_KEY) || "",
@@ -64,12 +66,15 @@ api.interceptors.response.use(
             return axios(configError);
           }
         } catch {
+          statusCode = API_STATUS.REFRESH_TOKEN_ERROR;
           reload();
         }
-      } else if (
-        statusCode === 401 &&
-        error?.response?.data.message.includes("Invalid Access Token")
+      }
+      else if (
+        statusCode === API_STATUS.UNAUTHORIZED &&
+        (error?.response?.data.message.includes(API_ERRORS.INVALID_ACCESS_TOKEN) || error?.response?.data.message.includes(API_ERRORS.TOKEN_NOT_FOUND))
       ) {
+        statusCode = API_STATUS.REFRESH_TOKEN_ERROR;
         reload();
       }
     }
