@@ -8,7 +8,7 @@ import UploadFile from '../../components/UploadFile/Index';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
 import { useTranslation } from 'react-i18next';
 import { ApiError } from '../../services/api/Index';
-import { ROLES } from '../../constants/contants'
+import { ROLES } from '../../constants/constants'
 import { createPartnerUser, getPartnerUser, updatePartnerUser } from '../../services/api/partnerUser';
 import Loader from '../../components/Loader';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';

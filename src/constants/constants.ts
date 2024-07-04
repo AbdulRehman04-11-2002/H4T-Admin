@@ -1,10 +1,4 @@
 
-export const MENULABEL = {
-    PARTNER: "partner",
-    DASHBOARD: "dashboard",
-
-};
-
 export enum ORDER_BACKEND_STATUS {
     CONFIRMED = "CONFIRMED",
     PAID = "PAID",

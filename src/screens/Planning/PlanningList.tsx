@@ -9,7 +9,7 @@ import Loader from '../../components/Loader';
 import { Order } from '../../interface/Order';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
-import { defaultPlannerSortBy } from '../../constants/contants'
+import { defaultPlannerSortBy } from '../../constants/constants'
 import PlanningFilters from '../Planning/Filters';
 import { Moment } from 'moment';
 

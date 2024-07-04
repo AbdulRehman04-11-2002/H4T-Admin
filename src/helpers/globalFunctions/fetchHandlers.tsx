@@ -1,6 +1,6 @@
 
 import { OrderItem } from "../../interface/Order";
-import { ORDER_STATUS, ORDER_STATUS_COLORS, ORDER_BACKEND_STATUS, defaultTimezone } from "../../constants/contants";
+import { ORDER_STATUS, ORDER_STATUS_COLORS, ORDER_BACKEND_STATUS, defaultTimezone } from "../../constants/constants";
 const moment = require('moment-timezone');
 
 
