@@ -1,0 +1,29 @@
+import { GetOrderItemsApiResponse } from "../../interface/Order";
+import { api } from "./Index";
+
+export const getOrderItems = async (
+    page: number,
+    pageSize: number,
+    status: string,
+    searchString: string,
+    partnerLocationId: number | undefined,
+    startDate: string | null,
+    endDate: string | null,
+    orderBy: string
+) => {
+    const params = {
+        ...(page ? { page: page } : {}),
+        ...(pageSize ? { pageSize: pageSize } : {}),
+        ...(status ? { status: status } : {}),
+        ...(searchString ? { searchString: searchString } : {}),
+        ...(partnerLocationId ? { partnerLocationId: partnerLocationId } : {}),
+        ...(startDate ? { startDate: startDate } : {}),
+        ...(endDate ? { endDate: endDate } : {}),
+        ...(orderBy ? { orderBy: orderBy } : {}),
+        ...({ now: new Date().toISOString()?.split('T')[0] })
+    };
+    const response = await api.get<GetOrderItemsApiResponse>("/order/orderItems", {
+        params,
+    });
+    return response.data;
+};

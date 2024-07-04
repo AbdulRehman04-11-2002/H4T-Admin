@@ -5,6 +5,36 @@ export const MENULABEL = {
 
 };
 
+export enum ORDER_BACKEND_STATUS {
+    CONFIRMED = "CONFIRMED",
+    PAID = "PAID",
+    IN_PROGRESS = "INPROGRESS",
+    PENDING = "PENDING",
+    NO_SHOW = "NO_SHOW",
+    PAYMENT_PENDING = "PAYMENT_PENDING",
+    COMPLETED = "COMPLETE",
+    DRAFT = "DRAFT"
+}
+
+export enum ORDER_STATUS {
+    DRAFT = "Payment pending",
+    PENDING = "Confirmed",
+    CONFIRMED = "Confirmed",
+    PAID = "Paid",
+    INPROGRESS = "Checked - in",
+    COMPLETE = "Completed",
+    PAYMENT_PENDING = "Payment pending",
+    NO_SHOW = "No show"
+}
+
+export enum ORDER_STATUS_COLORS {
+    RED = "red",
+    GREEN = "green",
+    BLUE = "blue",
+    ORANGE = "orange",
+    DARK_GREEN = "darkgreen"
+}
+
 export const ERRORS = {
     NAME: "Please enter name",
     BUSINESS_ID: "Please enter business id",
@@ -59,7 +89,8 @@ export const API_STATUS = {
     INTERNAL_SERVER_ERROR: 500,
     INTERNAL_SERVER_ERROR2: 502
 }
-
+export const defaultPlannerSortBy = "serviceDateTime";
+export const defaultTimezone = "Europe/Amsterdam";
 export const baseURL = process.env.REACT_APP_BASE_URL;
 export const REFRESH_TOKEN_KEY = "refreshToken";
 export const DELAY_COUNT = 30;

@@ -23,7 +23,7 @@ function PartnersList() {
     const [search, setSearch] = useState<string>("");
     const [searchValue, setSearchValue] = useState<string>("");
     const [totalRecord, setTotalRecord] = useState<number>(0);
-    const [currentTab, setCurrentTab] = useState<string>("enabled");
+    const [currentTab, setCurrentTab] = useState<string>("ENABLED");
     const [partners, setPartners] = useState<Partner[]>([]);
     const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
     const { success, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
@@ -56,8 +56,7 @@ function PartnersList() {
     };
 
     const tabOnChange = (currentTab: string) => {
-        getAllPartners(1, pageSize, search, currentTab);
-        setCurrentTab(currentTab.toLowerCase());
+        setCurrentTab(currentTab);
         setPage(1);
     };
 
@@ -105,6 +104,7 @@ function PartnersList() {
                     setSearchValue={setSearchValue}
                     setPageSize={setPageSize}
                     setSearch={setSearch}
+                    tabs={["ENABLED", "DISABLED", "ALL"]}
                 />
             )}
         </div>
