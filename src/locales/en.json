@@ -71,6 +71,7 @@
         "ROLE_MANAGER": "Clinic Manager",
         "ROLE_FRONTDESK": "Clinic Frontdesk",
         "DATE": "Date",
+        "PARTNER_NAME": "Partner Name",
         "BOOKING_NUMBER": "Booking Number",
         "ORDER_NUMBER": "Order Number",
         "SERVICE": "Service",

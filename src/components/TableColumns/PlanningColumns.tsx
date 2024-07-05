@@ -6,6 +6,7 @@ import { getFormattedDateTime, getOrderStatusColor, getOrderStatus } from '../..
 interface TableColumnProps {
     LABELS: {
         DATE: string;
+        PARTNER_NAME: string;
         BOOKING_NUMBER: string;
         NAME: string;
         ORDER_NUMBER: string;
@@ -29,6 +30,20 @@ export const PlanningColumns = ({ LABELS }: TableColumnProps) => {
             sorter: true,
             render: (_: any, record: any) => (
                 <div className='fontWeight-semiBold'>{getFormattedDateTime(record)}</div>
+            ),
+        },
+        {
+            title: (
+                <strong className='text-center sp-color-table-header text-capitalize'>
+                    {LABELS.PARTNER_NAME}
+                </strong>
+            ),
+            dataIndex: "order.partner.name",
+            sorter: true,
+            render: (_: any, record: any) => (
+                <div className='fontWeight-semiBold'>
+                    {record?.order?.partner?.name}
+                </div>
             ),
         },
         {
