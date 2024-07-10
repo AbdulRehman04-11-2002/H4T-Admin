@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import Breadcrumb from '../components/Breadcrumb/Index';
 import PartnersList from '../screens/Partners/PartnersList';
 import PartnerCreate from '../screens/Partners/Create';
 import ManageAccount from '../screens/ManageAccount/ManageAccount';
@@ -8,6 +7,7 @@ import ProductCreateUpdate from '../screens/ManageAccount/ProductCreateUpdate';
 import TermsOfUse from '../screens/TermsOfUse/Index';
 import DynamicBreadcrumb from '../components/Breadcrumb/Index';
 import UserCreateUpdate from '../screens/ManageAccount/userCreateUpdate';
+import PlanningList from '../screens/Planning/PlanningList'
 
 const Routing = () => {
     return (
@@ -28,6 +28,7 @@ const Routing = () => {
                         <Route path=':userID/updateUser' element={<UserCreateUpdate isUpdateForm={true} />} />
                     </Route>
                 </Route>
+                <Route path='/planning' element={<PlanningList />} />
                 <Route path='/terms-of-use' element={<TermsOfUse />} />
             </Routes >
         </>

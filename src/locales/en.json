@@ -1,7 +1,9 @@
 {
     "MENULABEL": {
         "PARTNER": "Partner",
-        "DASHBOARD": "dashboard"
+        "DASHBOARD": "dashboard",
+        "MANAGE_ACCOUNT": "Manage Account",
+        "PLANNING": "Planning"
     },
     "LABELS": {
         "COMPANY_LOGO": "Company Logo",
@@ -48,6 +50,9 @@
         "LOCATION_IMAGE": "Location Image",
         "CUSTOM_GUIDELINES": "Arrival Instructions",
         "CUSTOMER_GUIDELINES": "Customer Guidelines",
+        "ENABLE_WALK_IN":"Enable Walk-in",
+        "DISABLE_WALK_IN":"Disable Walk-in",
+        "WALK_IN_TXT":"Walk-in",
         "GUIDELINE_TOOLTIP": "Guide the patient to your doorstep. Which modes of public transport lead here? If your clinic is inside a building, what is the name of the building? Which floor are you on if it is not visible from the street? Any parking instructions? Do they need to ring a doorbell?",
         "PRODUCT_GUIDELINE_TOOLTIP": "Let the patient know if they need to bring any documents, fast, or otherwise prepare for this consultation",
         "DAY": "Day",
@@ -63,18 +68,25 @@
         "SLOT_DURATION": "Time before next booking slot is available (minutes)",
         "TERMS_OF_USE": "Terms of Use",
         "UPLOAD_PHOTO": "Upload photo",
-        "ROLE_ADMIN":"Clinic Admin",
-        "ROLE_CUSTOMER":"Customer",
-        "ROLE_H4TADMIN":"H4T Admin",
-        "ROLE_MANAGER":"Clinic Manager",
-        "ROLE_FRONTDESK":"Clinic Frontdesk"
+        "ROLE_ADMIN": "Clinic Admin",
+        "ROLE_CUSTOMER": "Customer",
+        "ROLE_H4TADMIN": "H4T Admin",
+        "ROLE_MANAGER": "Clinic Manager",
+        "ROLE_FRONTDESK": "Clinic Frontdesk",
+        "DATE": "Date",
+        "PARTNER_NAME": "Partner Name",
+        "BOOKING_NUMBER": "Booking Number",
+        "ORDER_NUMBER": "Order Number",
+        "SERVICE": "Service",
+        "LOCATION": "Location"
     },
     "PLACEHOLDERS": {
         "SEARCH": "Search",
         "STATUS": "Status*(enabled/disabled)",
         "FIXED_FEE": "Fixed Fee",
         "EMAIL": "Please enter email",
-        "ENTER_FEE": "Enter fee"
+        "ENTER_FEE": "Enter fee",
+        "LOCATION": "Location"
     },
     "ERRORS": {
         "NAME": "Please enter name",
@@ -141,6 +153,8 @@
         "SOME_THING_WENT_WRONG": "Something went wrong"
     },
     "TABS_KEY": {
+        "current": "Current",
+        "history": "History",
         "ENABLED": "Enabled",
         "DISABLED": "Disabled",
         "ALL": "All"
@@ -176,6 +190,7 @@
     },
     "TABLE_NO_RECORDS_TEXT": {
         "PARTNERS": "No partners found.",
+        "ORDERS": "No orders found.",
         "LOCATIONS": "No locations found.",
         "PRODUCTS": "No products found.",
         "USERS": "No users found.",

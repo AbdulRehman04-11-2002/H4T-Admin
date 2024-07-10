@@ -23,6 +23,11 @@ interface TablePropsInterface<T> {
     pagination?: boolean;
     scroll?: number;
     noRecordText?: string;
+    handleSorting?: (
+        pagination: any,
+        filters: any,
+        sorter: any
+    ) => void;
 }
 
 const Table: (
@@ -40,6 +45,7 @@ const Table: (
     pageSize,
     scroll = 1300,
     noRecordText,
+    handleSorting
 }) => {
 
         return (
@@ -81,6 +87,7 @@ const Table: (
                                     }
                                     : pagination
                             }
+                            onChange={handleSorting}
                             locale={{
                                 emptyText: (
                                     <Empty

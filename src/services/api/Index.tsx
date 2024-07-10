@@ -1,7 +1,7 @@
 import axios from "axios";
 import { refreshToken } from "./auth";
 import { Storage } from "../storage";
-import { ERRORS, REFRESH_TOKEN_KEY, baseURL, API_ERRORS, API_STATUS } from "../../constants/contants";
+import { ERRORS, REFRESH_TOKEN_KEY, baseURL, API_ERRORS, API_STATUS } from "../../constants/constants";
 import { RefreshTokenRequest } from "../../interface/Request";
 
 export const api = axios.create({

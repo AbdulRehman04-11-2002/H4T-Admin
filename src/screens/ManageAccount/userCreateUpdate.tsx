@@ -8,7 +8,7 @@ import UploadFile from '../../components/UploadFile/Index';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
 import { useTranslation } from 'react-i18next';
 import { ApiError } from '../../services/api/Index';
-import { ROLES } from '../../constants/contants'
+import { ROLES } from '../../constants/constants'
 import { createPartnerUser, getPartnerUser, updatePartnerUser } from '../../services/api/partnerUser';
 import Loader from '../../components/Loader';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
@@ -24,8 +24,8 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [fileList, setFileList] = useState<AntUploadFile[]>([]);
   const [locationOptions, setlocationOptions] = useState<{ label: string; value: string }[]>([
   ])
-  const [userRolesOptions, setUserRolesOptions] = useState<{ label: string; value: string }[]>([
-  ])
+  const [userRolesOptions, setUserRolesOptions] = useState<{ label: string; value: string }[]>([]);
+  const [selectedRole, setSelectedRole] = useState<number>();
   const [selectedLocations, setselectedLocations] = useState<cityValType[]>([])
   const [imageUrl, setImageUrl] = useState<string>("")
   const [errors, setErrors] = useState({
@@ -35,7 +35,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     uploadLogo: "",
     status: "",
   });
-  const [userRoles, setUserRoles] = useState<{ label: string; value: string }[]>([]);
+  const [userRoles, setUserRoles] = useState<{ label: number; value: number }[]>([]);
   const [isDataChange, setIsDataChange] = useState(false)
   const { t } = useTranslation();
   const BUTTONS: any = t("BUTTONS", { returnObjects: true });
@@ -86,7 +86,8 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     showLoader();
     try {
       const response = await getPartnerUser(userID || "");
-      setFormValues(response?.data?.user)
+      const partnerUserDetail = response?.data?.user;
+      setFormValues(partnerUserDetail)
 
     } catch (error) {
       const _error = error as ApiError;
@@ -125,7 +126,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     const request = {
       name: form.getFieldValue("name"),
       email: form.getFieldValue("email"),
-      roleId: userRoles[0]?.value,
+      roleId: selectedRole,
       status: form.getFieldValue("status").toUpperCase(),
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
@@ -173,15 +174,16 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       status: data.status,
     })
     setselectedLocations(data?.user_partner_locations?.map((location: UserPartnerLocation) => location?.partner_location?.id) || [])
-    setUserRoles(data?.user_roles?.map((role: any) => ({ label: '', value: role?.roleId })) || [])
+    setSelectedRole(data?.user_roles[0].roleId)
+    //setUserRoles(data?.user_roles?.map((role: any) => ({ label: '', value: role?.roleId })) || [])
     data?.imageUrl ? setFileList([{ uid: '-1', name: 'image', status: 'done', url: data?.imageUrl ?? "" }]) : setFileList([])
 
     setImageUrl(data?.imageUrl || "")
   }
 
-  const handleRoleChange = (value: string[]) => {
-    setUserRoles(value.join(',').split(',').map((role) => ({ label: role, value: role })))
-
+  const handleRoleChange = (value: number) => {
+    setSelectedRole(value);
+    setUserRoles([{ label: value, value }]);
   };
 
   const submitFailed = (errorInfo: any) => {
@@ -217,7 +219,13 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }, [])
 
   useEffect(() => {
-    ME?.systemRoles && setUserRolesOptions(ME?.systemRoles.map((role: any) => { return { label: getRoleLabelById(role), value: role.id } }) || [])
+    ME?.systemRoles &&
+      setUserRolesOptions(
+        ME?.systemRoles.map((role: any) => ({
+          label: getRoleLabelById(role),
+          value: role.id,
+        })) || []
+      );
   }, [ME])
 
   return (
@@ -356,11 +364,10 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Select
-                    mode="multiple"
                     allowClear
                     style={{ width: '100%' }}
                     placeholder="Please select"
-                    defaultValue={userRoles.map((role) => role.value) || []}
+                    defaultValue={selectedRole}
                     optionLabelProp='label'
                     onChange={handleRoleChange}
                     options={userRolesOptions}

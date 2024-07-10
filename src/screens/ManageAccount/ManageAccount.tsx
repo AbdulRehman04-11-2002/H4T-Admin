@@ -35,7 +35,7 @@ function ManageAccount() {
     const [totalRecord, setTotalRecord] = useState<number>(0);
     const [currentTab, setCurrentTab] = useState<string>("Profile");
     const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
-    const [currentTableTab, setCurrentTableTab] = useState("enabled")
+    const [currentTableTab, setCurrentTableTab] = useState("ENABLED")
     const [users, setUsers] = useState<User[]>([]); // chnage name  from user to partner user, also for products and locations
     const [locations, setLocations] = useState<PartnerLocation[]>([]);
     const [products, setProducts] = useState<PartnerProduct[]>([]);
@@ -54,7 +54,7 @@ function ManageAccount() {
             navigate(`/partner/${partnerID}/manageAccount`);
         } else {
             showLoader();
-            setCurrentTableTab("enabled")
+            setCurrentTableTab("ENABLED")
             setSearchValue("");
             setPage(1);
         }
@@ -73,17 +73,17 @@ function ManageAccount() {
                 navigate(`/partner/${partnerID}/manageAccount`);
                 return null;
             case TABS_LABEL.LOCATIONS:
-                const location = await fetchPartnerDetails(getPartnerLocations, tableTab || "Enabled");
+                const location = await fetchPartnerDetails(getPartnerLocations, tableTab || "ENABLED");
                 setLocations(location?.data?.response?.results);
                 setTotalRecord(location?.data?.response?.count);
                 return null;
             case TABS_LABEL.PRODUCTS:
-                const product = await fetchPartnerDetails(getPartnerProducts, tableTab || "Enabled");
+                const product = await fetchPartnerDetails(getPartnerProducts, tableTab || "ENABLED");
                 setProducts(product?.data?.partnerProducts?.results);
                 setTotalRecord(product?.data?.partnerProducts?.count);
                 return null;
             case TABS_LABEL.USER_ACCESS:
-                const user = await fetchPartnerDetails(getPartnerUsers, tableTab || "Enabled");
+                const user = await fetchPartnerDetails(getPartnerUsers, tableTab || "ENABLED");
                 setUsers(user?.data?.response?.results);
                 setTotalRecord(user?.data?.response?.count);
                 return null;
@@ -162,6 +162,7 @@ function ManageAccount() {
                                 pageSize={pageSize}
                                 totalRecord={totalRecord}
                                 getRecords={() => null}
+                                tabs={["ENABLED", "DISABLED", "ALL"]}
                                 currentTab={currentTableTab}
                                 scroll={500}
                                 isLoading={isLoading}
@@ -189,6 +190,7 @@ function ManageAccount() {
                             pageSize={pageSize}
                             totalRecord={totalRecord}
                             getRecords={() => null}
+                            tabs={["ENABLED", "DISABLED", "ALL"]}
                             currentTab={currentTableTab}
                             scroll={500}
                             isLoading={isLoading}
@@ -215,6 +217,7 @@ function ManageAccount() {
                             pageSize={pageSize}
                             totalRecord={totalRecord}
                             getRecords={() => null}
+                            tabs={["ENABLED", "DISABLED", "ALL"]}
                             currentTab={currentTableTab}
                             scroll={500}
                             isLoading={isLoading}

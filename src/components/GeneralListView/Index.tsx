@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Table from '../Table/Index';
 import { useTranslation } from 'react-i18next';
 import Loader from '../Loader';
+import React, { ReactNode } from "react";
 
 interface ListViewProps {
     columns: any[];
@@ -29,10 +30,16 @@ interface ListViewProps {
     setPageSize: (pageSize: number) => void;
     page: number;
     setSearch: (value: string) => void;
-
+    tabs: string[],
+    handleSorting?: (pagination: any, filters: any, sorter: any) => void;
+    filters?: ReactNode;
 }
 
-const ListView: React.FC<ListViewProps> = ({ columns, totalRecord, tabOnChange, data, setPage, loading, noRecordText, createPath, getRecords, currentTab, pageSize, scroll, isLoading, setSearchValue, setPageSize, searchValue, page, setSearch, search }) => {
+const ListView: React.FC<ListViewProps> = ({ columns, totalRecord, tabOnChange, data, setPage, loading, noRecordText, createPath, getRecords, currentTab, pageSize, scroll, isLoading, setSearchValue, setPageSize, searchValue, page, setSearch, search,
+    tabs,
+    handleSorting,
+    filters
+}) => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const PLACEHOLDERS: any = t("PLACEHOLDERS", { returnObjects: true });
@@ -52,30 +59,33 @@ const ListView: React.FC<ListViewProps> = ({ columns, totalRecord, tabOnChange, 
             <div className='mb-2' />
             {isLoading ? <Loader /> : <Row justify={"center"} align={"middle"}>
                 <Col xs={23} sm={{ span: 10, offset: 13 }} md={{ span: 10, offset: 13 }} lg={{ span: 6, offset: 17 }} className='search-create-container' >
-                    <Row gutter={4} align={"middle"}>
-                        <Col span={8}>
-                            <Button
-                                type='primary'
-                                block
-                                className='text-capitalize'
-                                size='middle'
-                                onClick={() => navigate(createPath)}
-                            >
-                                Create
-                            </Button>
-                        </Col>
-                        <Col span={16}>
-                            <Search
-                                placeholder={PLACEHOLDERS.SEARCH}
-                                onSearch={onSearch}
-                                size="middle"
-                                allowClear={true}
-                                data-testid='search-data'
-                                onChange={(e) => setSearchValue(e.target.value)}
-                                value={searchValue}
-                            />
-                        </Col>
-                    </Row>
+                    {filters ? filters :
+                        <Row gutter={4} align={"middle"}>
+                            <Col span={8}>
+                                <Button
+                                    type='primary'
+                                    block
+                                    className='text-capitalize'
+                                    size='middle'
+                                    onClick={() => navigate(createPath)}
+                                >
+                                    Create
+                                </Button>
+                            </Col>
+                            <Col span={16}>
+                                <Search
+                                    placeholder={PLACEHOLDERS.SEARCH}
+                                    onSearch={onSearch}
+                                    size="middle"
+                                    allowClear={true}
+                                    data-testid='search-data'
+                                    onChange={(e) => setSearchValue(e.target.value)}
+                                    value={searchValue}
+                                />
+                            </Col>
+                        </Row>
+                    }
+
                 </Col>
                 <Col span={24}>
                     <Tabs
@@ -83,11 +93,10 @@ const ListView: React.FC<ListViewProps> = ({ columns, totalRecord, tabOnChange, 
                         type='card'
                         activeKey={currentTab}
                     >
-                        <Tabs.TabPane tab={TABS_KEY.ENABLED} key="enabled">
-                            <Row>
-                                <Col span={24}>
+                        {tabs.map((key) => {
+                            return (
+                                <Tabs.TabPane tab={t(`TABS_KEY.${key}`)} key={key}>
                                     <Table
-                                        pageSize={pageSize}
                                         columns={columns}
                                         data={data || []}
                                         totalRecord={totalRecord}
@@ -96,49 +105,15 @@ const ListView: React.FC<ListViewProps> = ({ columns, totalRecord, tabOnChange, 
                                         search={search}
                                         setPage={setPage}
                                         handleCurrentPageChange={getRecords}
-                                        scroll={scroll}
                                         pagination={true}
                                         noRecordText={
                                             loading ? "Loading..." : noRecordText
                                         }
-                                    />
-                                </Col>
-                            </Row>
-                        </Tabs.TabPane>
-                        <Tabs.TabPane tab={TABS_KEY.DISABLED} key="disabled">
-                            <Table
-                                columns={columns}
-                                data={data || []}
-                                totalRecord={totalRecord}
-                                handlePageSizeChange={handlePageSizeChange}
-                                currentPage={page}
-                                search={search}
-                                setPage={setPage}
-                                handleCurrentPageChange={getRecords}
-                                pagination={true}
-                                noRecordText={
-                                    loading ? "Loading..." : noRecordText
-                                }
-                                pageSize={pageSize}
-                            />
-                        </Tabs.TabPane>
-                        <Tabs.TabPane tab={TABS_KEY.ALL} key="all">
-                            <Table
-                                columns={columns}
-                                data={data || []}
-                                totalRecord={totalRecord}
-                                handlePageSizeChange={handlePageSizeChange}
-                                currentPage={page}
-                                search={search}
-                                setPage={setPage}
-                                handleCurrentPageChange={getRecords}
-                                pagination={true}
-                                noRecordText={
-                                    loading ? "Loading..." : noRecordText
-                                }
-                                pageSize={pageSize}
-                            />
-                        </Tabs.TabPane>
+                                        pageSize={pageSize}
+                                        handleSorting={handleSorting} />
+                                </Tabs.TabPane>
+                            )
+                        })}
                     </Tabs>
                 </Col>
             </Row>}
