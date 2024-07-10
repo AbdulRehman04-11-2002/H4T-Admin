@@ -1,5 +1,5 @@
 import {
-  Button, Col, Divider, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile, Modal,
+  Switch, Button, Col, Divider, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile, Modal,
 } from 'antd';
 import { SetStateAction, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -71,7 +71,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const { ME, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
   const [form] = Form.useForm();
   const navigate = useNavigate();
-
+  const [isAvailableNowSlot, setIsAvailableNowSlot] = useState<boolean>(false);
   const inputNameRef = useRef<null | HTMLElement>(null);
   const inputCodeRef = useRef<null | HTMLElement>(null);
   const inputPhoneNumberRef = useRef<null | HTMLElement>(null);
@@ -152,6 +152,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       partnerId: partnerID,
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
+      isAvailableNow: isAvailableNowSlot
     }
     return request;
   }
@@ -199,6 +200,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       customerGuidelines: data?.customerGuidelines,
       status: data?.status,
     });
+    setIsAvailableNowSlot(data?.isAvailableNow);
     createOperatingHours(data?.partner_location_timings)
     setImageUrl(data?.imageUrl || "");
   }
@@ -316,6 +318,11 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     })
     setCityOptions(cityOptionsArr)
   }, [ME])
+
+  const onChangeAvailableNowSlot = (checked: boolean) => {
+    setIsAvailableNowSlot(checked);
+    setIsDataChange(true);
+  };
 
   return (
     <div className='create-partner-content'>
@@ -772,7 +779,10 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     throw new Error('Function not implemented.');
                   }} />
 
-
+                <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'white', padding: '12px', gap: "20px" }}>
+                  <span>{LABELS.WALK_IN_TXT}</span>
+                  <Switch title={isAvailableNowSlot ? LABELS.DISABLE_WALK_IN : LABELS.ENABLE_WALK_IN} checked={isAvailableNowSlot} onChange={onChangeAvailableNowSlot} />
+                </div>
               </Col>
             </Row>
           </Col>

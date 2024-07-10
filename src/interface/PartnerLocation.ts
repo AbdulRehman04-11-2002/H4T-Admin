@@ -51,6 +51,7 @@ export interface PartnerLocation {
     partnerId: number;
     city: City;
     partner_location_timings: PartnerLocationTiming[];
+    isAvailableNow: boolean;
 }
 
 interface PartnerLocationResponse {

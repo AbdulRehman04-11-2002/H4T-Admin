@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { UploadFile, message, notification } from "antd";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { API_ERRORS, API_STATUS } from "../../constants/contants";
+import { API_ERRORS, API_STATUS } from "../../constants/constants";
 
 dayjs.extend(customParseFormat);
 

@@ -2,7 +2,7 @@ import { DatabaseOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Image } from "antd";
-import { ROLES } from "../../constants/contants";
+import { ROLES } from "../../constants/constants";
 
 interface TableColumnProps {
     partnerID: string;

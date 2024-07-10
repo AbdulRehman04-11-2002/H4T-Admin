@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../constants/contants";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../constants/constants";
 
 
 const getAccessToken = () => {
