@@ -50,6 +50,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     customerGuidelines: "",
     status: "",
     docConsFixedFee: "",
+    email: ""
   });
 
   const [operatingHours, setOperatingHours] = useState<operatingHoursType[]>([
@@ -82,6 +83,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputStreetAddressRef = useRef<null | HTMLElement>(null);
   const inputCustomerGuidelinesRef = useRef<null | HTMLElement>(null);
   const inputStatusRef = useRef<null | HTMLElement>(null);
+  const inputEmailRef = useRef<null | HTMLElement>(null);
 
   const handleOperatingHoursChange = (timeString: string | string[], index: number, dayName: string) => {
     const updatedOperatingHours = [...operatingHours];
@@ -112,6 +114,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         return inputCustomerGuidelinesRef;
       case "status":
         return inputStatusRef;
+      case "email":
+        return inputEmailRef;
       default:
         return null;
     }
@@ -152,7 +156,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       partnerId: partnerID,
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
-      isAvailableNow: isAvailableNowSlot
+      isAvailableNow: isAvailableNowSlot,
+      emailAddress: form.getFieldValue("email"),
     }
     return request;
   }
@@ -199,6 +204,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       streetAddress: data?.streetAddress,
       customerGuidelines: data?.customerGuidelines,
       status: data?.status,
+      email: data?.emailAddress
     });
     setIsAvailableNowSlot(data?.isAvailableNow);
     createOperatingHours(data?.partner_location_timings)
@@ -610,7 +616,34 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   />
                 </Form.Item>
               </Col>
-
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.status ? "error" : ""}
+                  name='status'
+                  label={
+                    <label className='label '>
+                      {LABELS.STATUS}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.STATUS }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Select
+                    placeholder={PLACEHOLDERS.STATUS}
+                    ref={inputStatusRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  >
+                    <Option value='enabled'>{LABELS.ENABLED}</Option>
+                    <Option value='disabled'>{LABELS.DISABLED}</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
             </Row>
 
             <Row gutter={8}>
@@ -676,6 +709,31 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 sm={{ span: 23 }}
                 xs={{ span: 23 }}
               >
+                <Form.Item
+                  validateStatus={errors.email ? "error" : ""}
+                  name='email'
+                  label={
+                    <label className='label '>
+                      {LABELS.CONTACT_PERSON_EMAIL}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.EMAIL }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.CONTACT_PERSON_EMAIL}
+                    ref={inputEmailRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  />
+                </Form.Item>
+              </Col>
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
                 <Form.Item name="fileList" label={LABELS.LOCATION_IMAGE} valuePropName="fileList">
                   <UploadFile
                     setFileList={setFileList}
@@ -692,34 +750,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 </Form.Item>
               </Col>
 
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.status ? "error" : ""}
-                  name='status'
-                  label={
-                    <label className='label '>
-                      {LABELS.STATUS}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.STATUS }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Select
-                    placeholder={PLACEHOLDERS.STATUS}
-                    ref={inputStatusRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  >
-                    <Option value='enabled'>{LABELS.ENABLED}</Option>
-                    <Option value='disabled'>{LABELS.DISABLED}</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
+
             </Row>
 
 
