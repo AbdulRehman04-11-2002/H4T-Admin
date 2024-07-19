@@ -54,7 +54,6 @@
         "DISABLE_WALK_IN": "Disable Walk-in",
         "WALK_IN_TXT": "Walk-in",
         "GUIDELINE_TOOLTIP": "Guide the patient to your doorstep. Which modes of public transport lead here? If your clinic is inside a building, what is the name of the building? Which floor are you on if it is not visible from the street? Any parking instructions? Do they need to ring a doorbell?",
-        "CONTACT_PERSON_EMAIL": "Contact person's email",
         "PRODUCT_GUIDELINE_TOOLTIP": "Let the patient know if they need to bring any documents, fast, or otherwise prepare for this consultation",
         "DAY": "Day",
         "START_TIME": "Start Time",

@@ -491,7 +491,33 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   />
                 </Form.Item>
               </Col>
-
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.email ? "error" : ""}
+                  name='email'
+                  label={
+                    <label className='label '>
+                      {LABELS.EMAIL_ADDRESS}
+                    </label>
+                  }
+                  rules={[{ required: true, message: ERRORS.EMAIL }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.EMAIL_ADDRESS}
+                    ref={inputEmailRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={8}>
               <Col
                 lg={{ span: 12 }}
                 md={{ span: 12 }}
@@ -524,9 +550,31 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   </Select>
                 </Form.Item>
               </Col>
-
+              <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <Form.Item
+                  validateStatus={errors.postalCode ? "error" : ""}
+                  name='postalCode'
+                  label={
+                    <label className='label '>
+                      {LABELS.POSTAL_CODE}
+                    </label>
+                  }
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                >
+                  <Input
+                    placeholder={LABELS.POSTAL_CODE}
+                    ref={inputPostalCodeRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
-
             <Row gutter={8}>
               <Col
                 lg={{ span: 12 }}
@@ -589,63 +637,6 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 </Form.Item>
               </Col>
             </Row>
-
-            <Row gutter={8}>
-
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.postalCode ? "error" : ""}
-                  name='postalCode'
-                  label={
-                    <label className='label '>
-                      {LABELS.POSTAL_CODE}
-                    </label>
-                  }
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.POSTAL_CODE}
-                    ref={inputPostalCodeRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.status ? "error" : ""}
-                  name='status'
-                  label={
-                    <label className='label '>
-                      {LABELS.STATUS}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.STATUS }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Select
-                    placeholder={PLACEHOLDERS.STATUS}
-                    ref={inputStatusRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  >
-                    <Option value='enabled'>{LABELS.ENABLED}</Option>
-                    <Option value='disabled'>{LABELS.DISABLED}</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-
             <Row gutter={8}>
               <Col
                 lg={{ span: 12 }}
@@ -710,22 +701,25 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 xs={{ span: 23 }}
               >
                 <Form.Item
-                  validateStatus={errors.email ? "error" : ""}
-                  name='email'
+                  validateStatus={errors.status ? "error" : ""}
+                  name='status'
                   label={
                     <label className='label '>
-                      {LABELS.CONTACT_PERSON_EMAIL}
+                      {LABELS.STATUS}
                     </label>
                   }
-                  rules={[{ required: true, message: ERRORS.EMAIL }]}
+                  rules={[{ required: true, message: ERRORS.STATUS }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
-                  <Input
-                    placeholder={LABELS.CONTACT_PERSON_EMAIL}
-                    ref={inputEmailRef as any}
+                  <Select
+                    placeholder={PLACEHOLDERS.STATUS}
+                    ref={inputStatusRef as any}
                     autoFocus={false}
                     disabled={false}
-                  />
+                  >
+                    <Option value='enabled'>{LABELS.ENABLED}</Option>
+                    <Option value='disabled'>{LABELS.DISABLED}</Option>
+                  </Select>
                 </Form.Item>
               </Col>
               <Col
