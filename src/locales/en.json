@@ -50,9 +50,9 @@
         "LOCATION_IMAGE": "Location Image",
         "CUSTOM_GUIDELINES": "Arrival Instructions",
         "CUSTOMER_GUIDELINES": "Customer Guidelines",
-        "ENABLE_WALK_IN":"Enable Walk-in",
-        "DISABLE_WALK_IN":"Disable Walk-in",
-        "WALK_IN_TXT":"Walk-in",
+        "ENABLE_WALK_IN": "Enable Walk-in",
+        "DISABLE_WALK_IN": "Disable Walk-in",
+        "WALK_IN_TXT": "Walk-in",
         "GUIDELINE_TOOLTIP": "Guide the patient to your doorstep. Which modes of public transport lead here? If your clinic is inside a building, what is the name of the building? Which floor are you on if it is not visible from the street? Any parking instructions? Do they need to ring a doorbell?",
         "PRODUCT_GUIDELINE_TOOLTIP": "Let the patient know if they need to bring any documents, fast, or otherwise prepare for this consultation",
         "DAY": "Day",
@@ -78,7 +78,10 @@
         "BOOKING_NUMBER": "Booking Number",
         "ORDER_NUMBER": "Order Number",
         "SERVICE": "Service",
-        "LOCATION": "Location"
+        "LOCATION": "Location",
+        "ALL_LOCATIONS_ACCESS": "This user has access to all locations.",
+        "ALLOW_ALL_LOCATIONS": "Allow for all locations",
+        "SELECT_ALL": "Select all"
     },
     "PLACEHOLDERS": {
         "SEARCH": "Search",

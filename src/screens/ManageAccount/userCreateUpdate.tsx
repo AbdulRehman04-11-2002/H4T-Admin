@@ -1,5 +1,6 @@
 import {
   Button, Checkbox, Col, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile, GetProp,
+  List,
 } from 'antd';
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,7 +9,7 @@ import UploadFile from '../../components/UploadFile/Index';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
 import { useTranslation } from 'react-i18next';
 import { ApiError } from '../../services/api/Index';
-import { ROLES } from '../../constants/constants'
+import { ROLEIDS, ROLES } from '../../constants/constants'
 import { createPartnerUser, getPartnerUser, updatePartnerUser } from '../../services/api/partnerUser';
 import Loader from '../../components/Loader';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
@@ -26,7 +27,11 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   ])
   const [userRolesOptions, setUserRolesOptions] = useState<{ label: string; value: string }[]>([]);
   const [selectedRole, setSelectedRole] = useState<number>();
+  const [selectAllLocations, setSelectAllLocations] = useState(false);
   const [selectedLocations, setselectedLocations] = useState<cityValType[]>([])
+  const [partnerUserDetail, setPartnerUserDetail] = useState<User>()
+  const [indeterminate, setIndeterminate] = useState(false);
+  const [allowAllLocations, setAllowAllLocations] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>("")
   const [errors, setErrors] = useState({
     name: "",
@@ -88,6 +93,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       const response = await getPartnerUser(userID || "");
       const partnerUserDetail = response?.data?.user;
       setFormValues(partnerUserDetail)
+      setPartnerUserDetail(partnerUserDetail);
 
     } catch (error) {
       const _error = error as ApiError;
@@ -130,9 +136,9 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       status: form.getFieldValue("status").toUpperCase(),
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
-      locationIds: JSON.stringify(selectedLocations),
-      allowedAllLocations: false,
-      partnerId: partnerID
+      locationIds: allowAllLocations ? [] : JSON.stringify(selectedLocations),
+      partnerId: partnerID,
+      allowAllLocations: allowAllLocations
     }
     return request
   }
@@ -205,10 +211,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     }
   };
 
-  const handleUpdate = () => {
-    console.log('handleUpdate')
-  }
-
   const handleOnChange = () => {
     setIsDataChange(true)
   }
@@ -216,7 +218,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   useEffect(() => {
     userID && getPartnerUserDetails()
     fetchPartnerLocations()
-  }, [])
+  }, [ME])
 
   useEffect(() => {
     ME?.systemRoles &&
@@ -228,6 +230,25 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       );
   }, [ME])
 
+  useEffect(() => {
+    // Update the "all" checkbox status based on the individual checkboxes
+    setSelectAllLocations(selectedLocations.length === locationOptions.length);
+    setIndeterminate(!!selectedLocations.length && selectedLocations.length < locationOptions.length);
+  }, [selectedLocations]);
+
+  const handleSelectAllLocations = (e: { target: { checked: boolean } }) => {
+    const { checked } = e.target;
+    const allLocationIds = locationOptions?.map((location: any) => location?.value);
+    setselectedLocations(checked ? allLocationIds : []);
+    setSelectAllLocations(checked);
+    setIndeterminate(false);
+  };
+
+  const handleAllowAllLocations = (e: { target: { checked: boolean } }) => {
+    const { checked } = e.target;
+    setAllowAllLocations(checked);
+    setselectedLocations(partnerUserDetail?.user_partner_locations?.map((location: UserPartnerLocation) => location?.partner_location?.id) || [])
+  }
   return (
     <div className='create-partner-content'>
       {isLoading ? <Loader /> : <Form
@@ -455,15 +476,54 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 sm={{ span: 23 }}
                 xs={{ span: 23 }}
               >
-                <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
-                  <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={locationOnchange} />
-                </Form.Item>
+                {selectedRole === ROLEIDS.CLINIC_ADMIN ? (
+                  <Title level={5}>
+                    {LABELS.ALL_LOCATIONS_ACCESS}
+                  </Title>
+                ) : (
+                  <List
+                    header={
+                      <>
+                        <Checkbox
+                          onChange={handleAllowAllLocations}
+                          checked={allowAllLocations}
+                        >
+                          {LABELS.ALLOW_ALL_LOCATIONS}
+                        </Checkbox>
+                        {allowAllLocations &&
+                          <Title level={5}>
+                            {LABELS.ALL_LOCATIONS_ACCESS}
+                          </Title>
+                        }
+                      </>
+                    }
+                    locale={{ emptyText: <></> }}
+                    bordered={false}
+                  >
+                    {!allowAllLocations && (
+                      <>
+                        <List.Item>
+                          <Checkbox
+                            indeterminate={indeterminate}
+                            onChange={handleSelectAllLocations}
+                            checked={selectAllLocations}
+                          >
+                            {LABELS.SELECT_ALL}
+                          </Checkbox>
+                        </List.Item>
+                        <List.Item>
+                          <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
+                            <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={locationOnchange} />
+                          </Form.Item>
+                        </List.Item>
+                      </>
+                    )}
+                  </List>
+                )}
                 {!locationOptions.length && <Title level={5} >
                   {TABLE_NO_RECORDS_TEXT.LOCATION_AVAILABLE}
                 </Title>}
               </Col>
-
-
             </Row>
 
           </Col>
