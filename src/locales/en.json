@@ -85,6 +85,7 @@
     },
     "PLACEHOLDERS": {
         "SEARCH": "Search",
+        "ROLE": "Please select role",
         "STATUS": "Status*(enabled/disabled)",
         "FIXED_FEE": "Fixed Fee",
         "EMAIL": "Please enter email",

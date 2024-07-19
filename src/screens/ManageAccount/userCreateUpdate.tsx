@@ -25,8 +25,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [fileList, setFileList] = useState<AntUploadFile[]>([]);
   const [locationOptions, setlocationOptions] = useState<{ label: string; value: string }[]>([
   ])
-  const [userRolesOptions, setUserRolesOptions] = useState<{ label: string; value: string }[]>([]);
-  const [selectedRole, setSelectedRole] = useState<number>();
+  const [userRolesOptions, setUserRolesOptions] = useState<{ label: string; value: number }[]>([]);
   const [selectAllLocations, setSelectAllLocations] = useState(false);
   const [selectedLocations, setselectedLocations] = useState<cityValType[]>([])
   const [partnerUserDetail, setPartnerUserDetail] = useState<User>()
@@ -40,7 +39,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     uploadLogo: "",
     status: "",
   });
-  const [userRoles, setUserRoles] = useState<{ label: number; value: number }[]>([]);
   const [isDataChange, setIsDataChange] = useState(false)
   const { t } = useTranslation();
   const BUTTONS: any = t("BUTTONS", { returnObjects: true });
@@ -62,7 +60,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputRoleRef = useRef<null | HTMLElement>(null);
   const inputStatusRef = useRef<null | HTMLElement>(null);
 
-  //
   const getRoleLabelById = (roleObj: any) => {
     const role = ROLES.find(role => role.id === roleObj.id);
     return role ? t(`LABELS.${role.label}`) : roleObj.name;
@@ -92,6 +89,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     try {
       const response = await getPartnerUser(userID || "");
       const partnerUserDetail = response?.data?.user;
+      setAllowAllLocations(response?.data?.allowAllLocations);
       setFormValues(partnerUserDetail)
       setPartnerUserDetail(partnerUserDetail);
 
@@ -132,7 +130,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     const request = {
       name: form.getFieldValue("name"),
       email: form.getFieldValue("email"),
-      roleId: selectedRole,
+      roleId: form.getFieldValue("role"),
       status: form.getFieldValue("status").toUpperCase(),
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
@@ -178,19 +176,13 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       name: data.name,
       email: data.email,
       status: data.status,
+      role: data?.user_roles[0].roleId
     })
     setselectedLocations(data?.user_partner_locations?.map((location: UserPartnerLocation) => location?.partner_location?.id) || [])
-    setSelectedRole(data?.user_roles[0].roleId)
-    //setUserRoles(data?.user_roles?.map((role: any) => ({ label: '', value: role?.roleId })) || [])
     data?.imageUrl ? setFileList([{ uid: '-1', name: 'image', status: 'done', url: data?.imageUrl ?? "" }]) : setFileList([])
 
     setImageUrl(data?.imageUrl || "")
   }
-
-  const handleRoleChange = (value: number) => {
-    setSelectedRole(value);
-    setUserRoles([{ label: value, value }]);
-  };
 
   const submitFailed = (errorInfo: any) => {
     console.log('submitFailed')
@@ -218,7 +210,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   useEffect(() => {
     userID && getPartnerUserDetails()
     fetchPartnerLocations()
-  }, [ME])
+  }, [])
 
   useEffect(() => {
     ME?.systemRoles &&
@@ -242,12 +234,14 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     setselectedLocations(checked ? allLocationIds : []);
     setSelectAllLocations(checked);
     setIndeterminate(false);
+    setIsDataChange(true)
   };
 
   const handleAllowAllLocations = (e: { target: { checked: boolean } }) => {
     const { checked } = e.target;
     setAllowAllLocations(checked);
     setselectedLocations(partnerUserDetail?.user_partner_locations?.map((location: UserPartnerLocation) => location?.partner_location?.id) || [])
+    setIsDataChange(true)
   }
   return (
     <div className='create-partner-content'>
@@ -381,18 +375,21 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.ROLE}
                     </label>
                   }
-                  rules={[{ required: userRoles.length ? false : true, message: ERRORS.ROLE }]}
+                  rules={[{ required: true, message: ERRORS.STATUS }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Select
-                    allowClear
-                    style={{ width: '100%' }}
-                    placeholder="Please select"
-                    defaultValue={selectedRole}
-                    optionLabelProp='label'
-                    onChange={handleRoleChange}
-                    options={userRolesOptions}
-                  />
+                    placeholder={PLACEHOLDERS.ROLE}
+                    ref={inputRoleRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  >
+                    {userRolesOptions.map(role => (
+                      <Option key={role.value} value={role.value} label={role.label}>
+                        {role.label}
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
               </Col>
 
@@ -476,7 +473,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 sm={{ span: 23 }}
                 xs={{ span: 23 }}
               >
-                {selectedRole === ROLEIDS.CLINIC_ADMIN ? (
+                {form.getFieldValue("role") === ROLEIDS.CLINIC_ADMIN ? (
                   <Title level={5}>
                     {LABELS.ALL_LOCATIONS_ACCESS}
                   </Title>
