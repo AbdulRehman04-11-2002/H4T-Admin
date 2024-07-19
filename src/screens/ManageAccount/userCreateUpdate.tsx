@@ -375,7 +375,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.ROLE}
                     </label>
                   }
-                  rules={[{ required: true, message: ERRORS.STATUS }]}
+                  rules={[{ required: true, message: ERRORS.ROLE }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Select
