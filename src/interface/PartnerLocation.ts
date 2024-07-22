@@ -7,6 +7,10 @@ interface City {
     location: any; // You can define a more specific type for location if needed
 }
 
+export interface Location {
+    id: number;
+    name: string;
+}
 
 interface PartnerLocationResponse {
     pages: number;
@@ -14,6 +18,15 @@ interface PartnerLocationResponse {
     currentPage: number;
     pageSize: number;
     results: PartnerLocation[];
+}
+
+export interface AllPartnerLocationsApiResponse {
+    success: boolean;
+    data: {
+        partnerLocations: Location[];
+    };
+    message: string[];
+    error: any;
 }
 
 export interface PartnerLocationsApiResponse {

@@ -1,5 +1,5 @@
 import { api } from "./Index";
-import {  PartnerLocationGetApiResponse, PartnerLocationsApiResponse } from "../../interface/PartnerLocation";
+import { AllPartnerLocationsApiResponse, PartnerLocationGetApiResponse, PartnerLocationsApiResponse } from "../../interface/PartnerLocation";
 
 
 
@@ -24,7 +24,14 @@ export const getPartnerLocations = async (
     return response.data;
 };
 
+export const getAllPartnerLocations = async () => {
+    const params = {
+        status: "ENABLED",
+    };
 
+    const response = await api.get<AllPartnerLocationsApiResponse>("/partnerLocation/admin", { params });
+    return response.data;
+};
 
 export const getLocation = async (id: string) => {
     const response = await api.get<PartnerLocationGetApiResponse>(`/partnerLocation/${id}`);

@@ -3,10 +3,12 @@ import { PlanningColumns } from '../../components/TableColumns/PlanningColumns';
 import ListView from '../../components/GeneralListView/Index';
 import { useTranslation } from 'react-i18next';
 import { getOrderItems } from '../../services/api/order';
+import { getAllPartnerLocations } from '../../services/api/partnerLocation';
 import { handleErrorResponse, openToastNotification } from '../../helpers/globalFunctions';
 import { ApiError } from '../../services/api/Index';
 import Loader from '../../components/Loader';
 import { Order } from '../../interface/Order';
+import { Location } from '../../interface/PartnerLocation';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
 import { defaultPlannerSortBy } from '../../constants/constants'
@@ -38,7 +40,7 @@ function PlanningList() {
     const { success, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
     const [dateRange, setDateRange] = useState<[Moment | null, Moment | null]>([null, null]);
     const [selectedLocation, setSelectedLocation] = useState<string | undefined>(undefined);
-    const [partnerLocations, setPartnerLocations] = useState<[]>([]);
+    const [partnerLocations, setPartnerLocations] = useState<Location[]>([]);
 
     const [startDate, setStartDate] = useState<string | null>(null);
     const [endDate, setEndDate] = useState<string | null>(null);
@@ -46,9 +48,6 @@ function PlanningList() {
     const [orderBy, setOrderBy] = useState<string>(defaultPlannerSortBy);
 
     useEffect(() => {
-        //let userPartners = ME && ME?.user?.user_partners;
-        //let partnerLocations = userPartners?.length && userPartners[0]?.partner?.partner_locations;
-        //if (userPartners?.length) {
         getAllOrderItems(
             page,
             pageSize,
@@ -59,12 +58,6 @@ function PlanningList() {
             endDate,
             orderBy
         );
-        //     let allLocations = partnerLocations?.map((loc: any) => ({
-        //         id: loc.id,
-        //         name: loc.name
-        //     }));
-        //     setPartnerLocations(allLocations)
-        // }
     }, [page, pageSize, orderBy, currentTab, search, partnerLocationId, endDate, ME]);
 
     useEffect(() => {
@@ -75,6 +68,7 @@ function PlanningList() {
             );
             setSuccess("");
         }
+        getAllLocations();
     }, [])
 
     const getAllOrderItems = async (
@@ -112,6 +106,27 @@ function PlanningList() {
 
         } finally {
             hideLoader();
+        }
+    };
+
+    const getAllLocations = async () => {
+        try {
+            const response = await getAllPartnerLocations();
+            let allLocations = response?.data?.partnerLocations.map((loc: any) => ({
+                id: loc.id,
+                name: loc.name
+            }));
+
+            setPartnerLocations(allLocations)
+        } catch (error) {
+            const _error = error as ApiError;
+            const { errorMessage } = handleErrorResponse(_error);
+            openToastNotification(
+                errorMessage,
+                "notifications toast-notification-error"
+            );
+            console.log("error", _error);
+
         }
     };
 
@@ -157,18 +172,17 @@ function PlanningList() {
             ) : (
                 <ListView
                     filters={
-                        <></>
-                        // <PlanningFilters
-                        //     setSearch={setSearch}
-                        //     setSearchValue={setSearchValue}
-                        //     searchValue={searchValue}
-                        //     selectedDateRange={dateRange}
-                        //     dropDownOptions={partnerLocations}
-                        //     handleDateChange={handleDateChange}
-                        //     selectedDropDownVal={selectedLocation}
-                        //     handleDropDown={handleDropDown}
-                        //     setPage={setPage}
-                        // />
+                        <PlanningFilters
+                            setSearch={setSearch}
+                            setSearchValue={setSearchValue}
+                            searchValue={searchValue}
+                            selectedDateRange={dateRange}
+                            dropDownOptions={partnerLocations}
+                            handleDateChange={handleDateChange}
+                            selectedDropDownVal={selectedLocation}
+                            handleDropDown={handleDropDown}
+                            setPage={setPage}
+                        />
                     }
                     columns={PlanningColumns({ LABELS: LABELS })}
                     tabOnChange={tabOnChange}

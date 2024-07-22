@@ -57,66 +57,68 @@ const ListView: React.FC<ListViewProps> = ({ columns, totalRecord, tabOnChange, 
     return (
         <div>
             <div className='mb-2' />
-            {isLoading ? <Loader /> : <Row justify={"center"} align={"middle"}>
-                <Col xs={23} sm={{ span: 10, offset: 13 }} md={{ span: 10, offset: 13 }} lg={{ span: 6, offset: 17 }} className='search-create-container' >
+            {isLoading ? <Loader /> :
+                <Row justify={"center"} align={"middle"}>
                     {filters ? filters :
-                        <Row gutter={4} align={"middle"}>
-                            <Col span={8}>
-                                <Button
-                                    type='primary'
-                                    block
-                                    className='text-capitalize'
-                                    size='middle'
-                                    onClick={() => navigate(createPath)}
-                                >
-                                    Create
-                                </Button>
-                            </Col>
-                            <Col span={16}>
-                                <Search
-                                    placeholder={PLACEHOLDERS.SEARCH}
-                                    onSearch={onSearch}
-                                    size="middle"
-                                    allowClear={true}
-                                    data-testid='search-data'
-                                    onChange={(e) => setSearchValue(e.target.value)}
-                                    value={searchValue}
-                                />
-                            </Col>
-                        </Row>
+                        <Col xs={23} sm={{ span: 10, offset: 13 }} md={{ span: 10, offset: 13 }} lg={{ span: 6, offset: 17 }} className='search-create-container' >
+                            <Row gutter={4} align={"middle"}>
+                                <Col span={8}>
+                                    <Button
+                                        type='primary'
+                                        block
+                                        className='text-capitalize'
+                                        size='middle'
+                                        onClick={() => navigate(createPath)}
+                                    >
+                                        Create
+                                    </Button>
+                                </Col>
+                                <Col span={16}>
+                                    <Search
+                                        placeholder={PLACEHOLDERS.SEARCH}
+                                        onSearch={onSearch}
+                                        size="middle"
+                                        allowClear={true}
+                                        data-testid='search-data'
+                                        onChange={(e) => setSearchValue(e.target.value)}
+                                        value={searchValue}
+                                    />
+                                </Col>
+                            </Row>
+                        </Col>
                     }
 
-                </Col>
-                <Col span={24}>
-                    <Tabs
-                        onChange={tabOnChange}
-                        type='card'
-                        activeKey={currentTab}
-                    >
-                        {tabs.map((key) => {
-                            return (
-                                <Tabs.TabPane tab={t(`TABS_KEY.${key}`)} key={key}>
-                                    <Table
-                                        columns={columns}
-                                        data={data || []}
-                                        totalRecord={totalRecord}
-                                        handlePageSizeChange={handlePageSizeChange}
-                                        currentPage={page}
-                                        search={search}
-                                        setPage={setPage}
-                                        handleCurrentPageChange={getRecords}
-                                        pagination={true}
-                                        noRecordText={
-                                            loading ? "Loading..." : noRecordText
-                                        }
-                                        pageSize={pageSize}
-                                        handleSorting={handleSorting} />
-                                </Tabs.TabPane>
-                            )
-                        })}
-                    </Tabs>
-                </Col>
-            </Row>}
+
+                    <Col span={24}>
+                        <Tabs
+                            onChange={tabOnChange}
+                            type='card'
+                            activeKey={currentTab}
+                        >
+                            {tabs.map((key) => {
+                                return (
+                                    <Tabs.TabPane tab={t(`TABS_KEY.${key}`)} key={key}>
+                                        <Table
+                                            columns={columns}
+                                            data={data || []}
+                                            totalRecord={totalRecord}
+                                            handlePageSizeChange={handlePageSizeChange}
+                                            currentPage={page}
+                                            search={search}
+                                            setPage={setPage}
+                                            handleCurrentPageChange={getRecords}
+                                            pagination={true}
+                                            noRecordText={
+                                                loading ? "Loading..." : noRecordText
+                                            }
+                                            pageSize={pageSize}
+                                            handleSorting={handleSorting} />
+                                    </Tabs.TabPane>
+                                )
+                            })}
+                        </Tabs>
+                    </Col>
+                </Row>}
         </div>
     );
 };
