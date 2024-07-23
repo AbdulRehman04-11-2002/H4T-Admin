@@ -31,6 +31,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [partnerUserDetail, setPartnerUserDetail] = useState<User>()
   const [indeterminate, setIndeterminate] = useState(false);
   const [allowAllLocations, setAllowAllLocations] = useState(false);
+  const [role, setRole] = useState<string>();
   const [imageUrl, setImageUrl] = useState<string>("")
   const [errors, setErrors] = useState({
     name: "",
@@ -59,6 +60,27 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputEmailRef = useRef<null | HTMLElement>(null);
   const inputRoleRef = useRef<null | HTMLElement>(null);
   const inputStatusRef = useRef<null | HTMLElement>(null);
+
+  useEffect(() => {
+    userID && getPartnerUserDetails()
+    fetchPartnerLocations()
+  }, [])
+
+  useEffect(() => {
+    ME?.systemRoles &&
+      setUserRolesOptions(
+        ME?.systemRoles.map((role: any) => ({
+          label: getRoleLabelById(role),
+          value: role.id,
+        })) || []
+      );
+  }, [ME])
+
+  useEffect(() => {
+    // Update the "all" checkbox status based on the individual checkboxes
+    setSelectAllLocations(selectedLocations.length === locationOptions.length);
+    setIndeterminate(!!selectedLocations.length && selectedLocations.length < locationOptions.length);
+  }, [selectedLocations, locationOptions]);
 
   const getRoleLabelById = (roleObj: any) => {
     const role = ROLES.find(role => role.id === roleObj.id);
@@ -203,31 +225,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     }
   };
 
-  const handleOnChange = () => {
-    setIsDataChange(true)
-  }
-
-  useEffect(() => {
-    userID && getPartnerUserDetails()
-    fetchPartnerLocations()
-  }, [])
-
-  useEffect(() => {
-    ME?.systemRoles &&
-      setUserRolesOptions(
-        ME?.systemRoles.map((role: any) => ({
-          label: getRoleLabelById(role),
-          value: role.id,
-        })) || []
-      );
-  }, [ME])
-
-  useEffect(() => {
-    // Update the "all" checkbox status based on the individual checkboxes
-    setSelectAllLocations(selectedLocations.length === locationOptions.length);
-    setIndeterminate(!!selectedLocations.length && selectedLocations.length < locationOptions.length);
-  }, [selectedLocations]);
-
   const handleSelectAllLocations = (e: { target: { checked: boolean } }) => {
     const { checked } = e.target;
     const allLocationIds = locationOptions?.map((location: any) => location?.value);
@@ -243,6 +240,11 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     setselectedLocations(partnerUserDetail?.user_partner_locations?.map((location: UserPartnerLocation) => location?.partner_location?.id) || [])
     setIsDataChange(true)
   }
+
+  const handleRoleChange = (value: string) => {
+    setRole(value);
+  };
+
   return (
     <div className='create-partner-content'>
       {isLoading ? <Loader /> : <Form
@@ -253,7 +255,12 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         wrapperCol={{ span: 24 }}
         form={form}
         autoComplete='off'
-        onValuesChange={handleOnChange}
+        onValuesChange={(changedValues, allValues) => {
+          if (changedValues.role) {
+            handleRoleChange(changedValues.role);
+          }
+          setIsDataChange(true);
+        }}
       >
         <Row justify={"space-between"} className='mb-2'>
           <Col
