@@ -422,7 +422,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.CODE}
                     </label>
                   }
-                  rules={[{ required: true, message: ERRORS.CODE }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Code" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Code" }) }]}
+                  rules={[{ required: true, message: ERRORS.CODE }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Display Name" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Display Name" }) }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Input
