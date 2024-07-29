@@ -117,7 +117,7 @@
         "ACCOUNT_NUMBER": "Please enter account number",
         "ACCOUNT_HOLDER_NAME": "Please enter account holder name",
         "FIXED_FEE": "Please enter fixed fee",
-        "IMAGE_FILE_TYPE": "Please upload a valid image file",
+        "IMAGE_FILE_TYPE": "Only JPG and PNG image file formats are allowed",
         "SOME_THING_WENT_WRONG": "Something went wrong",
         "EMAIL": "Please enter email",
         "OTP_WRONG_TYPE": "OTP is invalid",

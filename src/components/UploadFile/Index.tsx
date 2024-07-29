@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { showError, validateFileType } from "../../helpers/globalFunctions";
-import {  Form, Upload, UploadFile as AntUploadFile, Image, GetProp, UploadProps, UploadFile as uploadFileType } from "antd";
+import { Form, Upload, UploadFile as AntUploadFile, Image, GetProp, UploadProps, UploadFile as uploadFileType } from "antd";
 
 interface Props {
     name: string;
@@ -63,7 +63,7 @@ const UploadFile: React.FC<Props> = ({
 
                 if (!isAllowedType) {
                     showError(fileTypeError);
-                    return false; // Stop the upload process if the file type is not allowed
+                    return Upload.LIST_IGNORE; // Stop the upload process if the file type is not allowed
                 }
 
                 if (!isAllowedSize && fileType.includes("video/mp4")) {
