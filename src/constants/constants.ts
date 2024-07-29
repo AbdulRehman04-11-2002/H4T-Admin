@@ -98,4 +98,12 @@ export const ROLES = [
     { id: 6, label: "ROLE_FRONTDESK" }
 ]
 
+export const ROLEIDS = {
+    CLINIC_ADMIN: 1,
+    CUSTOMER: 2,
+    H4T_ADMIN: 3,
+    CLINIC_MANAGER: 5,
+    CLINIC_FRONTDESK: 6
+}
+
 export const ACCESS_TOKEN_KEY = "accessToken";

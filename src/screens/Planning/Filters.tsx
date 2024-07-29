@@ -37,33 +37,35 @@ const PlanningFilters: React.FC<PlanningFilterProps> = ({
     };
 
     return (
-        <Row gutter={16} align={"stretch"}>
-            <Col xs={24} sm={12} md={8} lg={8} xl={8} style={{ paddingBottom: "8px" }}>
-                <RangePicker
-                    value={selectedDateRange}
-                    onChange={handleDateChange}
-                />
-            </Col>
-            <Col xs={24} sm={12} md={8} lg={8} xl={8} style={{ paddingBottom: "8px" }}>
-                <Dropdown
-                    options={dropDownOptions || []}
-                    handleDropDown={handleDropDown}
-                    selectedValue={selectedDropDownVal}
-                    placeholder={PLACEHOLDERS.LOCATION}
-                />
-            </Col>
-            <Col xs={24} sm={12} md={8} lg={8} xl={8} style={{ paddingBottom: "8px" }}>
-                <Search
-                    placeholder={PLACEHOLDERS.SEARCH}
-                    onSearch={onSearch}
-                    size="middle"
-                    allowClear={true}
-                    data-testid='search-data'
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    value={searchValue}
-                />
-            </Col>
-        </Row>
+        <Col span={24} style={{ display: "flex", justifyContent: "right" }}>
+            <Row gutter={16} align={"stretch"}>
+                <Col xs={24} sm={12} md={8} lg={8} xl={8} style={{ paddingBottom: "8px" }}>
+                    <RangePicker
+                        value={selectedDateRange}
+                        onChange={handleDateChange}
+                    />
+                </Col>
+                <Col xs={24} sm={12} md={8} lg={8} xl={8} style={{ paddingBottom: "8px" }}>
+                    <Dropdown
+                        options={dropDownOptions || []}
+                        handleDropDown={handleDropDown}
+                        selectedValue={selectedDropDownVal}
+                        placeholder={PLACEHOLDERS.LOCATION}
+                    />
+                </Col>
+                <Col xs={24} sm={12} md={8} lg={8} xl={8} style={{ paddingBottom: "8px" }}>
+                    <Search
+                        placeholder={PLACEHOLDERS.SEARCH}
+                        onSearch={onSearch}
+                        size="middle"
+                        allowClear={true}
+                        data-testid='search-data'
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        value={searchValue}
+                    />
+                </Col>
+            </Row>
+        </Col>
     );
 };
 export default PlanningFilters;
