@@ -1,5 +1,6 @@
 import {
   Button, Checkbox, Col, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile, GetProp,
+  List,
 } from 'antd';
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,7 +9,7 @@ import UploadFile from '../../components/UploadFile/Index';
 import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
 import { useTranslation } from 'react-i18next';
 import { ApiError } from '../../services/api/Index';
-import { ROLES } from '../../constants/constants'
+import { ROLEIDS, ROLES } from '../../constants/constants'
 import { createPartnerUser, getPartnerUser, updatePartnerUser } from '../../services/api/partnerUser';
 import Loader from '../../components/Loader';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
@@ -24,9 +25,13 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [fileList, setFileList] = useState<AntUploadFile[]>([]);
   const [locationOptions, setlocationOptions] = useState<{ label: string; value: string }[]>([
   ])
-  const [userRolesOptions, setUserRolesOptions] = useState<{ label: string; value: string }[]>([]);
-  const [selectedRole, setSelectedRole] = useState<number>();
+  const [userRolesOptions, setUserRolesOptions] = useState<{ label: string; value: number }[]>([]);
+  const [selectAllLocations, setSelectAllLocations] = useState(false);
   const [selectedLocations, setselectedLocations] = useState<cityValType[]>([])
+  const [partnerUserDetail, setPartnerUserDetail] = useState<User>()
+  const [indeterminate, setIndeterminate] = useState(false);
+  const [allowAllLocations, setAllowAllLocations] = useState(false);
+  const [role, setRole] = useState<string>();
   const [imageUrl, setImageUrl] = useState<string>("")
   const [errors, setErrors] = useState({
     name: "",
@@ -35,7 +40,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     uploadLogo: "",
     status: "",
   });
-  const [userRoles, setUserRoles] = useState<{ label: number; value: number }[]>([]);
   const [isDataChange, setIsDataChange] = useState(false)
   const { t } = useTranslation();
   const BUTTONS: any = t("BUTTONS", { returnObjects: true });
@@ -57,7 +61,27 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputRoleRef = useRef<null | HTMLElement>(null);
   const inputStatusRef = useRef<null | HTMLElement>(null);
 
-  //
+  useEffect(() => {
+    userID && getPartnerUserDetails()
+    fetchPartnerLocations()
+  }, [])
+
+  useEffect(() => {
+    ME?.systemRoles &&
+      setUserRolesOptions(
+        ME?.systemRoles.map((role: any) => ({
+          label: getRoleLabelById(role),
+          value: role.id,
+        })) || []
+      );
+  }, [ME])
+
+  useEffect(() => {
+    // Update the "all" checkbox status based on the individual checkboxes
+    setSelectAllLocations(selectedLocations.length === locationOptions.length);
+    setIndeterminate(!!selectedLocations.length && selectedLocations.length < locationOptions.length);
+  }, [selectedLocations, locationOptions]);
+
   const getRoleLabelById = (roleObj: any) => {
     const role = ROLES.find(role => role.id === roleObj.id);
     return role ? t(`LABELS.${role.label}`) : roleObj.name;
@@ -87,7 +111,9 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     try {
       const response = await getPartnerUser(userID || "");
       const partnerUserDetail = response?.data?.user;
+      setAllowAllLocations(response?.data?.allowAllLocations);
       setFormValues(partnerUserDetail)
+      setPartnerUserDetail(partnerUserDetail);
 
     } catch (error) {
       const _error = error as ApiError;
@@ -126,13 +152,13 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     const request = {
       name: form.getFieldValue("name"),
       email: form.getFieldValue("email"),
-      roleId: selectedRole,
+      roleId: form.getFieldValue("role"),
       status: form.getFieldValue("status").toUpperCase(),
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
-      locationIds: JSON.stringify(selectedLocations),
-      allowedAllLocations: false,
-      partnerId: partnerID
+      locationIds: allowAllLocations ? [] : JSON.stringify(selectedLocations),
+      partnerId: partnerID,
+      allowAllLocations: allowAllLocations
     }
     return request
   }
@@ -172,19 +198,13 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       name: data.name,
       email: data.email,
       status: data.status,
+      role: data?.user_roles[0].roleId
     })
     setselectedLocations(data?.user_partner_locations?.map((location: UserPartnerLocation) => location?.partner_location?.id) || [])
-    setSelectedRole(data?.user_roles[0].roleId)
-    //setUserRoles(data?.user_roles?.map((role: any) => ({ label: '', value: role?.roleId })) || [])
     data?.imageUrl ? setFileList([{ uid: '-1', name: 'image', status: 'done', url: data?.imageUrl ?? "" }]) : setFileList([])
 
     setImageUrl(data?.imageUrl || "")
   }
-
-  const handleRoleChange = (value: number) => {
-    setSelectedRole(value);
-    setUserRoles([{ label: value, value }]);
-  };
 
   const submitFailed = (errorInfo: any) => {
     console.log('submitFailed')
@@ -205,28 +225,25 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     }
   };
 
-  const handleUpdate = () => {
-    console.log('handleUpdate')
-  }
+  const handleSelectAllLocations = (e: { target: { checked: boolean } }) => {
+    const { checked } = e.target;
+    const allLocationIds = locationOptions?.map((location: any) => location?.value);
+    setselectedLocations(checked ? allLocationIds : []);
+    setSelectAllLocations(checked);
+    setIndeterminate(false);
+    setIsDataChange(true)
+  };
 
-  const handleOnChange = () => {
+  const handleAllowAllLocations = (e: { target: { checked: boolean } }) => {
+    const { checked } = e.target;
+    setAllowAllLocations(checked);
+    setselectedLocations(partnerUserDetail?.user_partner_locations?.map((location: UserPartnerLocation) => location?.partner_location?.id) || [])
     setIsDataChange(true)
   }
 
-  useEffect(() => {
-    userID && getPartnerUserDetails()
-    fetchPartnerLocations()
-  }, [])
-
-  useEffect(() => {
-    ME?.systemRoles &&
-      setUserRolesOptions(
-        ME?.systemRoles.map((role: any) => ({
-          label: getRoleLabelById(role),
-          value: role.id,
-        })) || []
-      );
-  }, [ME])
+  const handleRoleChange = (value: string) => {
+    setRole(value);
+  };
 
   return (
     <div className='create-partner-content'>
@@ -238,7 +255,12 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         wrapperCol={{ span: 24 }}
         form={form}
         autoComplete='off'
-        onValuesChange={handleOnChange}
+        onValuesChange={(changedValues, allValues) => {
+          if (changedValues.role) {
+            handleRoleChange(changedValues.role);
+          }
+          setIsDataChange(true);
+        }}
       >
         <Row justify={"space-between"} className='mb-2'>
           <Col
@@ -360,18 +382,21 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.ROLE}
                     </label>
                   }
-                  rules={[{ required: userRoles.length ? false : true, message: ERRORS.ROLE }]}
+                  rules={[{ required: true, message: ERRORS.ROLE }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Select
-                    allowClear
-                    style={{ width: '100%' }}
-                    placeholder="Please select"
-                    defaultValue={selectedRole}
-                    optionLabelProp='label'
-                    onChange={handleRoleChange}
-                    options={userRolesOptions}
-                  />
+                    placeholder={PLACEHOLDERS.ROLE}
+                    ref={inputRoleRef as any}
+                    autoFocus={false}
+                    disabled={false}
+                  >
+                    {userRolesOptions.map(role => (
+                      <Option key={role.value} value={role.value} label={role.label}>
+                        {role.label}
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
               </Col>
 
@@ -455,15 +480,54 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 sm={{ span: 23 }}
                 xs={{ span: 23 }}
               >
-                <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
-                  <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={locationOnchange} />
-                </Form.Item>
+                {form.getFieldValue("role") === ROLEIDS.CLINIC_ADMIN ? (
+                  <Title level={5}>
+                    {LABELS.ALL_LOCATIONS_ACCESS}
+                  </Title>
+                ) : (
+                  <List
+                    header={
+                      <>
+                        <Checkbox
+                          onChange={handleAllowAllLocations}
+                          checked={allowAllLocations}
+                        >
+                          {LABELS.ALLOW_ALL_LOCATIONS}
+                        </Checkbox>
+                        {allowAllLocations &&
+                          <Title level={5}>
+                            {LABELS.ALL_LOCATIONS_ACCESS}
+                          </Title>
+                        }
+                      </>
+                    }
+                    locale={{ emptyText: <></> }}
+                    bordered={false}
+                  >
+                    {!allowAllLocations && (
+                      <>
+                        <List.Item>
+                          <Checkbox
+                            indeterminate={indeterminate}
+                            onChange={handleSelectAllLocations}
+                            checked={selectAllLocations}
+                          >
+                            {LABELS.SELECT_ALL}
+                          </Checkbox>
+                        </List.Item>
+                        <List.Item>
+                          <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
+                            <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={locationOnchange} />
+                          </Form.Item>
+                        </List.Item>
+                      </>
+                    )}
+                  </List>
+                )}
                 {!locationOptions.length && <Title level={5} >
                   {TABLE_NO_RECORDS_TEXT.LOCATION_AVAILABLE}
                 </Title>}
               </Col>
-
-
             </Row>
 
           </Col>

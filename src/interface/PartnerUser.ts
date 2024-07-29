@@ -58,6 +58,7 @@ export interface PartnerUsersApiResponse {
 
 interface UserResponse {
     user: User;
+    allowAllLocations: boolean;
 }
 
 export interface PartnerUserDetailsApiResponse {

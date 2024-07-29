@@ -16,6 +16,13 @@ export interface Service {
         name: string;
     };
 }
+interface BankDetails {
+    id: number;
+    name: string;
+    accountNumber: string;
+    accountHolderName: string;
+    status: string;
+}
 
 export interface Partner {
     id: number;
@@ -27,6 +34,7 @@ export interface Partner {
     registeredStreetAddress: string;
     registeredPostalCode: string;
     contactPerson: string;
+    bankDetails: BankDetails[];
     phoneNumber: string;
     emailAddress: string;
     status: string;
