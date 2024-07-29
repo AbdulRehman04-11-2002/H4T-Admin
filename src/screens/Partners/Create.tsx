@@ -75,6 +75,9 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputEmailAddressRef = useRef<null | HTMLElement>(null);
   const inputPhoneNumberRef = useRef<null | HTMLElement>(null);
   const inputContactPersonRef = useRef<null | HTMLElement>(null);
+  const inputBankNameRef = useRef<null | HTMLElement>(null);
+  const inputAccountHolderRef = useRef<null | HTMLElement>(null);
+  const inputAccountNumberRef = useRef<null | HTMLElement>(null);
   const inputdocConsFixedFeeRef = useRef<null | HTMLElement>(null);
 
   const getInputRefByFieldName = (fieldName: string | undefined) => {
@@ -101,6 +104,12 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         return inputPhoneNumberRef;
       case "contactPerson":
         return inputContactPersonRef;
+      case "bankName":
+        return inputBankNameRef;
+      case "accountHolder":
+        return inputAccountHolderRef;
+      case "accountNumber":
+        return inputAccountNumberRef;
       case "fixedFee":
         return inputdocConsFixedFeeRef;
       default:
@@ -125,6 +134,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       phoneNumber: form.getFieldValue('phoneNumber'),
       contactPerson: form.getFieldValue('contactPerson'),
       createAdminAccount: isAdminAccount,
+      bankDetails: JSON.stringify([{ name: form.getFieldValue('bankName'), accountNumber: form.getFieldValue('accountNumber'), accountHolderName: form.getFieldValue('accountHolderName'), status: "ENABLED" }]),
       services: JSON.stringify(createServicepayload()),
     }
 
@@ -204,6 +214,9 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       emailAddress: currentPartner?.emailAddress,
       phoneNumber: currentPartner?.phoneNumber,
       contactPerson: currentPartner?.contactPerson,
+      bankName: currentPartner?.bankDetails?.[0]?.name,
+      accountNumber: currentPartner?.bankDetails?.[0]?.accountNumber,
+      accountHolderName: currentPartner?.bankDetails?.[0]?.accountHolderName,
       ...currentPartner?.services?.reduce((acc: any, service: any) => {
         acc[service.service.name] = service.feeValue;
         return acc;
@@ -745,6 +758,98 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   </Form.Item>
 
                 </Col>}
+              </Row>
+              <Row justify={"space-between"} className='mb-2'>
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 12 }}
+                  lg={{ span: 12 }}
+                >
+                  <Title level={3} className='remove-vertical-margin '>
+                    {HEADING.BANK_DETAILS}
+                  </Title>
+                </Col>
+              </Row>
+
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.contactPerson ? "error" : ""}
+                    name='bankName'
+                    label={
+                      <label className='label '>
+                        {LABELS.BANK_NAME}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.BANK_NAME }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Bank name" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Bank name" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.BANK_NAME}
+                      ref={inputBankNameRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.contactPerson ? "error" : ""}
+                    name='accountHolderName'
+                    label={
+                      <label className='label '>
+                        {LABELS.ACCOUNT_HOLDER_NAME}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.ACCOUNT_HOLDER_NAME }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Account holder name" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Account holder name" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.ACCOUNT_HOLDER_NAME}
+                      ref={inputAccountHolderRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.contactPerson ? "error" : ""}
+                    name='accountNumber'
+                    label={
+                      <label className='label '>
+                        {LABELS.ACCOUNT_NUMBER}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.ACCOUNT_NUMBER }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Account number" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Account number" }) }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.ACCOUNT_NUMBER}
+                      ref={inputAccountNumberRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
               </Row>
             </Col>
 
