@@ -31,7 +31,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [partnerUserDetail, setPartnerUserDetail] = useState<User>()
   const [indeterminate, setIndeterminate] = useState(false);
   const [allowAllLocations, setAllowAllLocations] = useState(false);
-  const [role, setRole] = useState<string>();
+  const [role, setRole] = useState<number>();
   const [imageUrl, setImageUrl] = useState<string>("")
   const [errors, setErrors] = useState({
     name: "",
@@ -200,6 +200,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       status: data.status,
       role: data?.user_roles[0].roleId
     })
+    setRole(data?.user_roles[0].roleId);
     setselectedLocations(data?.user_partner_locations?.map((location: UserPartnerLocation) => location?.partner_location?.id) || [])
     data?.imageUrl ? setFileList([{ uid: '-1', name: 'image', status: 'done', url: data?.imageUrl ?? "" }]) : setFileList([])
 
@@ -241,7 +242,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     setIsDataChange(true)
   }
 
-  const handleRoleChange = (value: string) => {
+  const handleRoleChange = (value: number) => {
     setRole(value);
   };
 
@@ -481,7 +482,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 sm={{ span: 23 }}
                 xs={{ span: 23 }}
               >
-                {form.getFieldValue("role") === ROLEIDS.CLINIC_ADMIN ? (
+                {role === ROLEIDS.CLINIC_ADMIN ? (
                   <Title level={5}>
                     {LABELS.ALL_LOCATIONS_ACCESS}
                   </Title>
