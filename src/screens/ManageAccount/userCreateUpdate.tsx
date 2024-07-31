@@ -359,8 +359,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     placeholder={LABELS.EMAIL}
                     ref={inputEmailRef as any}
                     autoFocus={false}
-                    disabled={true}
-                    readOnly
+                    disabled={isUpdateForm ? true : false}
                   />
                 </Form.Item>
               </Col>
