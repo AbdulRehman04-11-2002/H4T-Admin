@@ -435,7 +435,14 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     ref={inputCodeRef as any}
                     autoFocus={false}
                     disabled={false}
+                    count={{
+                      show: true,
+                      max: 10,
+                    }}
                   />
+                    {/* <Text type='secondary' style={{ display: 'block', marginTop: '4px', fontSize: '12px', color: '#888' }}>
+          Max char limit is {50}
+        </Text> */}
                 </Form.Item>
               </Col>
 
