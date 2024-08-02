@@ -428,6 +428,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     ref={inputNameRef as any}
                     autoFocus={false}
                     disabled={false}
+                    maxLength={50}
+                    showCount
                   />
                 </Form.Item>
               </Col>
@@ -456,6 +458,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     ref={inputCodeRef as any}
                     autoFocus={false}
                     disabled={false}
+                    maxLength={50}
+                    showCount
                   />
                 </Form.Item>
               </Col>
