@@ -39,6 +39,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     postalCode: "",
     status: "",
     price: "",
+    serviceType: ""
   });
   const { t } = useTranslation();
   const BUTTONS: any = t("BUTTONS", { returnObjects: true });
@@ -329,11 +330,15 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
               >
 
                 <Form.Item
+                  validateStatus={errors.serviceType ? "error" : ""}
+                  name='serviceType'
                   label={
                     <label className='label '>
                       {LABELS.SERVICE_TYPE}
                     </label>
                   }
+                  rules={[{ required: true, message: ERRORS.SERVICE_TYPE }]}
+                  validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Select
                     placeholder={LABELS.SERVICE_TYPE}
