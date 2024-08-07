@@ -534,8 +534,6 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     autoFocus={false}
                     disabled={false}
                     rows={5}
-                    maxLength={50}
-                    showCount
                   />
                 </Form.Item>
               </Col>
