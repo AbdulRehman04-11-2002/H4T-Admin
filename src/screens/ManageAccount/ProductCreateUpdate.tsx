@@ -375,6 +375,8 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     ref={inputNameRef as any}
                     autoFocus={false}
                     disabled={false}
+                    maxLength={50}
+                    showCount
                   />
                 </Form.Item>
               </Col>
@@ -435,7 +437,12 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     ref={inputCodeRef as any}
                     autoFocus={false}
                     disabled={false}
+                    maxLength={50}
+                    showCount
                   />
+                    {/* <Text type='secondary' style={{ display: 'block', marginTop: '4px', fontSize: '12px', color: '#888' }}>
+          Max char limit is {50}
+        </Text> */}
                 </Form.Item>
               </Col>
 
@@ -527,6 +534,8 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     autoFocus={false}
                     disabled={false}
                     rows={5}
+                    maxLength={50}
+                    showCount
                   />
                 </Form.Item>
               </Col>

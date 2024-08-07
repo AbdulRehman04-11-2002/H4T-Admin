@@ -428,6 +428,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     ref={inputNameRef as any}
                     autoFocus={false}
                     disabled={false}
+                    maxLength={50}
+                    showCount
                   />
                 </Form.Item>
               </Col>
@@ -456,6 +458,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     ref={inputCodeRef as any}
                     autoFocus={false}
                     disabled={false}
+                    maxLength={50}
+                    showCount
                   />
                 </Form.Item>
               </Col>
@@ -590,7 +594,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.LATITUDE}
                     </label>
                   }
-                  rules={[{ required: true, message: ERRORS.LATITUDE }, { pattern: new RegExp(/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,25}$/), message: t("ERRORS.VALID_INPUT", { type: "Latitude" }) }]}
+                  rules={[{ required: true, message: ERRORS.LATITUDE }, { pattern: new RegExp(/^-?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/), message: t("ERRORS.VALID_LATITUDE", { type: "Latitude" }) }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Input
@@ -616,7 +620,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     </label>
                   }
                   rules={[{ required: true, message: ERRORS.LONGITUDE }, {
-                    pattern: new RegExp(/^(-?(?:1[0-7]\d(\.\d{1,25})?|180(\.0{1,25})?)|(-?\d{1,2}(\.\d{1,25})?))$/), message: t("ERRORS.VALID_INPUT", { type: "Longitude" })
+                    pattern: new RegExp(/^-?((1[0-7]\d(\.\d{1,6})?)|180(\.0{1,6})?|([1-9]?\d(\.\d{1,6})?))$/), message: t("ERRORS.VALID_LONGITUDE", { type: "Longitude" })
                   }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
