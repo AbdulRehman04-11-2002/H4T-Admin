@@ -17,6 +17,9 @@ import {
 } from '@ant-design/icons';
 import { PartnerLocation } from '../../interface/PartnerLocation';
 import Tooltip from '../../components/Tooltip/Index';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css'
+
 type operatingHoursType = {
   day: string;
   startTime: string;
@@ -73,6 +76,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [isAvailableNowSlot, setIsAvailableNowSlot] = useState<boolean>(false);
+  const [phone, setPhone] = useState<string>('');
   const inputNameRef = useRef<null | HTMLElement>(null);
   const inputCodeRef = useRef<null | HTMLElement>(null);
   const inputPhoneNumberRef = useRef<null | HTMLElement>(null);
@@ -196,7 +200,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     form.setFieldsValue({
       name: data?.name,
       code: data?.code,
-      phoneNumber: data?.phoneNumber,
+      phoneNumber: data?.phoneNumber || '',
       city: data?.city.id,
       postalCode: data?.postalCode,
       longitude: data?.longitude,
@@ -483,11 +487,21 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
-                  <Input
-                    placeholder={LABELS.PHONE_NUMBER}
-                    ref={inputPhoneNumberRef as any}
-                    autoFocus={false}
-                    disabled={false}
+                  <PhoneInput
+                    country={'fr'}
+                    value={phone}
+                    onChange={(value: string, country: any, e: any, formattedValue: string) => {
+                      if (/^\+?\d{7,17}$/.test(value)) {
+                        setPhone(phone);
+                      } else {
+                        setPhone(phone);
+                      }
+                    }}
+                    disableSearchIcon={true}
+                    inputStyle={{ height: 32, width: "100%", border: "1px solid #d9d9d9", fontSize: 14 }}
+                    containerClass="custom-phone-input"
+                    enableSearch={true}
+                    inputProps={{ ref: inputPhoneNumberRef }}
                   />
                 </Form.Item>
               </Col>
