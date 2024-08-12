@@ -505,6 +505,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     inputStyle={{ height: 32, width: "100%", border: "1px solid #d9d9d9", fontSize: 14 }}
                     containerClass="custom-phone-input"
                     enableSearch={true}
+                    countryCodeEditable={false}
                     inputProps={{ ref: inputPhoneNumberRef }}
                   />
                 </Form.Item>
