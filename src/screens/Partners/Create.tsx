@@ -3,7 +3,7 @@ import {
 } from 'antd';
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { handleErrorResponse, openToastNotification, showError } from '../../helpers/globalFunctions';
+import { handleErrorResponse, openToastNotification, showError, getCountryCodeByIp } from '../../helpers/globalFunctions';
 import UploadFile from '../../components/UploadFile/Index';
 import { useTranslation } from 'react-i18next';
 import { createPartner, getPartner, updatePartner } from '../../services/api/partner';
@@ -44,6 +44,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [isAdminAccount, setIsAdminAccount] = useState(false)
   const [isDataChange, setIsDataChange] = useState(false)
   const [phone, setPhone] = useState<string>('');
+  const [countryCode, setCountryCode] = useState<string>('');
   const [services, setServices] = useState<Service[]>([
     { id: 1, name: 'Doctor Consultation', fee: 0, feeType: 'FIXED_FEE', checked: true },
   ]);
@@ -292,6 +293,16 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     setIsDataChange(true)
   };
 
+  const getCountryCode = async () => {
+    try {
+      const countryCode = await getCountryCodeByIp();
+      if (countryCode) {
+        setCountryCode(countryCode.toLowerCase());
+      }
+    } catch (error) {
+      console.error('Error fetching country code:', error);
+    }
+  };
 
   useEffect(() => {
     let cityOptionsArr: any = []
@@ -303,6 +314,10 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
     partnerID ? getPartnerDetail(services) : setServices(services)
   }, [ME])
+
+  useEffect(() => {
+    getCountryCode();
+  }, []);
 
   return (
     <div className={isUpdateForm ? 'update-partner-content' : 'create-partner-content'}>
@@ -735,7 +750,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     validateTrigger={["handleFinish", "handleUpdate"]}
                   >
                     <PhoneInput
-                      country={'fr'}
+                      country={countryCode || 'fr'}
                       value={phone}
                       onChange={(value: string, country: any, e: any, formattedValue: string) => {
                         if (/^\+?\d{7,17}$/.test(value)) {

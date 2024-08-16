@@ -3,7 +3,7 @@ import {
 } from 'antd';
 import { SetStateAction, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { handleErrorResponse, openToastNotification, showError } from '../../helpers/globalFunctions';
+import { handleErrorResponse, openToastNotification, showError, getCountryCodeByIp } from '../../helpers/globalFunctions';
 import UploadFile from '../../components/UploadFile/Index';
 import Table from '../../components/Table/Index';
 import { OperatingHours } from '../../components/TableColumns/OperatingHoursTable';
@@ -77,6 +77,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const navigate = useNavigate();
   const [isAvailableNowSlot, setIsAvailableNowSlot] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>('');
+  const [countryCode, setCountryCode] = useState<string>('');
   const inputNameRef = useRef<null | HTMLElement>(null);
   const inputCodeRef = useRef<null | HTMLElement>(null);
   const inputPhoneNumberRef = useRef<null | HTMLElement>(null);
@@ -316,9 +317,21 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   }
 
+  const getCountryCode = async () => {
+    try {
+      const countryCode = await getCountryCodeByIp();
+      if (countryCode) {
+        setCountryCode(countryCode.toLowerCase());
+      }
+    } catch (error) {
+      console.error('Error fetching country code:', error);
+    }
+  };
+
   useEffect(() => {
     locationID && getPartnerLocation();
     !locationID && createOperatingHours();
+    getCountryCode();
   }, [])
 
   useEffect(() => {
@@ -492,7 +505,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <PhoneInput
-                    country={'fr'}
+                    country={countryCode || 'fr'}
                     value={phone}
                     onChange={(value: string, country: any, e: any, formattedValue: string) => {
                       if (/^\+?\d{7,17}$/.test(value)) {
