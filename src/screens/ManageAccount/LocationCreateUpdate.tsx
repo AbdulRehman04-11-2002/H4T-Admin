@@ -249,7 +249,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
             endTime: partner_location_timings[dayIndex].endTime,
             breakStart: partner_location_timings[dayIndex].breakStart,
             breakEnd: partner_location_timings[dayIndex].breakEnd,
-            status: "ENABLED",
+            status: partner_location_timings[dayIndex].status,
             index: index
           })
         }
@@ -261,7 +261,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const createPayloadForOperatingHours = () => {
     let operatingHoursPayload: any = [];
     operatingHours.forEach((item) => {
-      if (item.status === "ENABLED") {
+      //if (item.status === "ENABLED") {
         operatingHoursPayload.push({
           day: item.day,
           startTime: item.startTime,
@@ -270,7 +270,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
           breakEnd: item.breakEnd,
           status: item.status
         })
-      }
+      //}
     })
     return operatingHoursPayload;
   }
