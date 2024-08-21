@@ -3,23 +3,26 @@ import {
 } from 'antd';
 import { SetStateAction, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { handleErrorResponse, openToastNotification, showError, getCountryCodeByIp } from '../../helpers/globalFunctions';
-import UploadFile from '../../components/UploadFile/Index';
-import Table from '../../components/Table/Index';
-import { OperatingHours } from '../../components/TableColumns/OperatingHoursTable';
-import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
+import { handleErrorResponse, openToastNotification, showError, getCountryCodeByIp } from '../../../helpers/globalFunctions';
+import UploadFile from '../../../components/UploadFile/Index';
+import Table from '../../../components/Table/Index';
+import { OperatingHours } from '../../../components/TableColumns/OperatingHoursTable';
+import { LoaderContext, LoaderContextValue } from '../../../context/LoaderContext';
 import { useTranslation } from 'react-i18next';
-import { ApiError } from '../../services/api/Index';
-import { createPartnerLocation, getLocation, updatePartnerLocation } from '../../services/api/partnerLocation';
-import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
+import { ApiError } from '../../../services/api/Index';
+import { createPartnerLocation, getLocation, updatePartnerLocation } from '../../../services/api/partnerLocation';
+import { GlobalContext, GlobalContextProps } from '../../../context/GlobalContext';
 import {
   ExclamationCircleOutlined
 } from '@ant-design/icons';
-import { PartnerLocation } from '../../interface/PartnerLocation';
-import Tooltip from '../../components/Tooltip/Index';
+import { PartnerLocation } from '../../../interface/PartnerLocation';
+import Tooltip from '../../../components/Tooltip/Index';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
-
+import DaysInput from './DaysInput';
+import HoursDropdown from './HoursDropdown';
+import MinutesDropdown from './MinutesDropdown';
+const { Text } = Typography;
 type operatingHoursType = {
   day: string;
   startTime: string;
@@ -59,7 +62,9 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [operatingHours, setOperatingHours] = useState<operatingHoursType[]>([
   ])
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [days, setDays] = useState<number | undefined>();
+  const [hours, setHours] = useState<number | undefined>();
+  const [minutes, setMinutes] = useState<number | undefined>();
   const { t } = useTranslation();
   const BUTTONS: any = t("BUTTONS", { returnObjects: true });
   const ERRORS: any = t("ERRORS", { returnObjects: true });
@@ -76,6 +81,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [isAvailableNowSlot, setIsAvailableNowSlot] = useState<boolean>(false);
+  const [isBookingNoticeEnabled, setIsBookingNotice] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>('');
   const [countryCode, setCountryCode] = useState<string>('');
   const inputNameRef = useRef<null | HTMLElement>(null);
@@ -163,6 +169,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
       isAvailableNow: isAvailableNowSlot,
       emailAddress: form.getFieldValue("email"),
+      isBookingNoticeEnabled: isBookingNoticeEnabled,
+      bookingNoticeMinutes: calculateBookingNoticeMinutes(),
     }
     return request;
   }
@@ -212,6 +220,13 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       email: data?.emailAddress
     });
     setIsAvailableNowSlot(data?.isAvailableNow);
+    setIsBookingNotice(data?.isBookingNoticeEnabled);
+    if (data?.bookingNoticeMinutes) {
+      const { days, hours, minutes } = extractTimeComponents(data.bookingNoticeMinutes);
+      setDays(days);
+      setHours(hours);
+      setMinutes(minutes);
+    }
     createOperatingHours(data?.partner_location_timings)
     setImageUrl(data?.imageUrl || "");
   }
@@ -343,9 +358,37 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }, [ME])
 
   const onChangeAvailableNowSlot = (checked: boolean) => {
-    setIsAvailableNowSlot(checked);
-    setIsDataChange(true);
+    if (isBookingNoticeEnabled && checked) {
+      showError("Please disable Minimum Booking Notice first");
+    }
+    else {
+      setIsAvailableNowSlot(checked);
+      setIsDataChange(true);
+    }
   };
+
+  const onChangeBookingNotice = (checked: boolean) => {
+    if (isAvailableNowSlot && checked) {
+      showError("Please disable Walk-in first");
+    }
+    else {
+      setIsBookingNotice(checked);
+      setIsDataChange(true);
+    }
+  };
+
+  const calculateBookingNoticeMinutes = () => {
+    const bookingNoticeMinutes = ((days || 0) * 1440) + ((hours || 0) * 60) + (minutes || 0);
+    return bookingNoticeMinutes;
+  }
+
+  const extractTimeComponents = (totalMinutes: number) => {
+    const days = Math.floor(totalMinutes / 1440);  // 1440 minutes in a day
+    const hours = Math.floor((totalMinutes % 1440) / 60);  // Remaining minutes to hours
+    const minutes = totalMinutes % 60;  // Remaining minutes
+
+    return { days, hours, minutes };
+  }
 
   return (
     <div className='create-partner-content'>
@@ -837,10 +880,87 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     throw new Error('Function not implemented.');
                   }} />
 
-                <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'white', padding: '12px', gap: "20px" }}>
+                {/* <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'white', padding: '12px', gap: "20px" }}>
+                  <span>{LABELS.WALK_IN_TXT}</span>
+                  <Switch title={isAvailableNowSlot ? LABELS.DISABLE_WALK_IN : LABELS.ENABLE_WALK_IN} checked={isAvailableNowSlot} onChange={onChangeAvailableNowSlot} />
+                </div> */}
+              </Col>
+            </Row>
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 24 }}
+                md={{ span: 24 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', padding: '12px', gap: "20px" }}>
                   <span>{LABELS.WALK_IN_TXT}</span>
                   <Switch title={isAvailableNowSlot ? LABELS.DISABLE_WALK_IN : LABELS.ENABLE_WALK_IN} checked={isAvailableNowSlot} onChange={onChangeAvailableNowSlot} />
                 </div>
+              </Col>
+            </Row>
+
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 24 }}
+                md={{ span: 24 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '12px', paddingBottom: '16px', gap: "20px" }}>
+                  <span>Minimum Booking Notice</span>
+                  <Switch title={isBookingNoticeEnabled ? LABELS.DISABLE_MIN_BOOKING_NOTICE : LABELS.ENABLE_MIN_BOOKING_NOTICE} checked={isBookingNoticeEnabled} onChange={onChangeBookingNotice} />
+                </div>
+              </Col>
+            </Row>
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 24 }}
+                md={{ span: 24 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '12px', paddingBottom: '16px', gap: "20px" }}>
+                  <Text style={{ fontSize: 13, color: "#1677ff" }} >To avoid last-minute bookings, choose how much notice is required when an appointment is booked.</Text>
+                </div>
+              </Col>
+            </Row>
+            <Row gutter={8}>
+              <Col
+                lg={{ span: 6 }}
+                md={{ span: 6 }}
+                sm={{ span: 8 }}
+                xs={{ span: 24 }}
+              >
+                <Form.Item
+                  labelCol={{ span: 7 }} wrapperCol={{ span: 16 }}
+                  label={
+                    <label className='label '>
+                      Days
+                    </label>
+                  }>
+                  <DaysInput disabled={!isBookingNoticeEnabled} value={days} onChange={setDays} />
+                </Form.Item>
+              </Col>
+              <Col
+                lg={{ span: 6 }}
+                md={{ span: 6 }}
+                sm={{ span: 8 }}
+                xs={{ span: 24 }}
+              >
+                <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="Hours">
+                  <HoursDropdown disabled={!isBookingNoticeEnabled} value={hours} onChange={setHours} />
+                </Form.Item>
+              </Col>
+              <Col
+                lg={{ span: 6 }}
+                md={{ span: 6 }}
+                sm={{ span: 8 }}
+                xs={{ span: 24 }}
+              >
+                <Form.Item labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} label="Minutes">
+                  <MinutesDropdown disabled={!isBookingNoticeEnabled} value={minutes} onChange={setMinutes} />
+                </Form.Item>
               </Col>
             </Row>
           </Col>

@@ -65,7 +65,9 @@ export interface PartnerLocation {
     city: City;
     partner_location_timings: PartnerLocationTiming[];
     isAvailableNow: boolean;
+    isBookingNoticeEnabled: boolean;
     emailAddress: string;
+    bookingNoticeMinutes: number;
 }
 
 interface PartnerLocationResponse {
