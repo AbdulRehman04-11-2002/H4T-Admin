@@ -262,14 +262,14 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     let operatingHoursPayload: any = [];
     operatingHours.forEach((item) => {
       //if (item.status === "ENABLED") {
-        operatingHoursPayload.push({
-          day: item.day,
-          startTime: item.startTime,
-          endTime: item.endTime,
-          breakStart: item.breakStart,
-          breakEnd: item.breakEnd,
-          status: item.status
-        })
+      operatingHoursPayload.push({
+        day: item.day,
+        startTime: item.startTime,
+        endTime: item.endTime,
+        breakStart: item.breakStart,
+        breakEnd: item.breakEnd,
+        status: item.status
+      })
       //}
     })
     return operatingHoursPayload;
@@ -711,6 +711,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       <Tooltip title={LABELS.GUIDELINE_TOOLTIP} />
                     </label>
                   }
+                  rules={[{ min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Arrival Instructions" }) }]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <TextArea
