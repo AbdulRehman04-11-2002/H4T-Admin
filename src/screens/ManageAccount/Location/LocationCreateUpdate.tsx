@@ -62,9 +62,6 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [operatingHours, setOperatingHours] = useState<operatingHoursType[]>([
   ])
   const [modalVisible, setModalVisible] = useState(false);
-  const [days, setDays] = useState<number | undefined>();
-  const [hours, setHours] = useState<number | undefined>();
-  const [minutes, setMinutes] = useState<number | undefined>();
   const { t } = useTranslation();
   const BUTTONS: any = t("BUTTONS", { returnObjects: true });
   const ERRORS: any = t("ERRORS", { returnObjects: true });
@@ -206,6 +203,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   const setFormValues = (data: PartnerLocation) => {
     data?.imageUrl ? setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: data?.imageUrl || "" }]) : setFileList([]);
+    const { days, hours, minutes } = extractTimeComponents(data?.bookingNoticeMinutes);
     form.setFieldsValue({
       name: data?.name,
       code: data?.code,
@@ -217,16 +215,13 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       streetAddress: data?.streetAddress,
       customerGuidelines: data?.customerGuidelines,
       status: data?.status,
-      email: data?.emailAddress
+      email: data?.emailAddress,
+      days: days,
+      hours: hours,
+      minutes: minutes
     });
     setIsAvailableNowSlot(data?.isAvailableNow);
     setIsBookingNotice(data?.isBookingNoticeEnabled);
-    if (data?.bookingNoticeMinutes) {
-      const { days, hours, minutes } = extractTimeComponents(data.bookingNoticeMinutes);
-      setDays(days);
-      setHours(hours);
-      setMinutes(minutes);
-    }
     createOperatingHours(data?.partner_location_timings)
     setImageUrl(data?.imageUrl || "");
   }
@@ -359,7 +354,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   const onChangeAvailableNowSlot = (checked: boolean) => {
     if (isBookingNoticeEnabled && checked) {
-      showError("Please disable Minimum Booking Notice first");
+      showError(LABELS.BOOKING_NOTICE_ALERT);
     }
     else {
       setIsAvailableNowSlot(checked);
@@ -369,7 +364,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   const onChangeBookingNotice = (checked: boolean) => {
     if (isAvailableNowSlot && checked) {
-      showError("Please disable Walk-in first");
+      showError(LABELS.BOOKING_NOTICE_WALKIN_ALERT);
     }
     else {
       setIsBookingNotice(checked);
@@ -378,14 +373,17 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   };
 
   const calculateBookingNoticeMinutes = () => {
+    let days = form.getFieldValue('days');
+    let hours = form.getFieldValue('hours');
+    let minutes = form.getFieldValue('minutes');
     const bookingNoticeMinutes = ((days || 0) * 1440) + ((hours || 0) * 60) + (minutes || 0);
     return bookingNoticeMinutes;
   }
 
   const extractTimeComponents = (totalMinutes: number) => {
-    const days = Math.floor(totalMinutes / 1440);  // 1440 minutes in a day
-    const hours = Math.floor((totalMinutes % 1440) / 60);  // Remaining minutes to hours
-    const minutes = totalMinutes % 60;  // Remaining minutes
+    const days = Math.floor(totalMinutes / 1440);
+    const hours = Math.floor((totalMinutes % 1440) / 60);
+    const minutes = totalMinutes % 60;
 
     return { days, hours, minutes };
   }
@@ -879,90 +877,160 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   noRecordText={isLoading ? "Loading..." : LABELS.NO_RECORDS_FOUND} currentPage={0} setPage={function (value: SetStateAction<number>): void {
                     throw new Error('Function not implemented.');
                   }} />
+              </Col>
+            </Row>
+            <Divider orientation={"center"} style={{ borderColor: "#f5f5f5" }} />
 
-                {/* <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'white', padding: '12px', gap: "20px" }}>
-                  <span>{LABELS.WALK_IN_TXT}</span>
-                  <Switch title={isAvailableNowSlot ? LABELS.DISABLE_WALK_IN : LABELS.ENABLE_WALK_IN} checked={isAvailableNowSlot} onChange={onChangeAvailableNowSlot} />
-                </div> */}
-              </Col>
-            </Row>
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 24 }}
-                md={{ span: 24 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', padding: '12px', gap: "20px" }}>
-                  <span>{LABELS.WALK_IN_TXT}</span>
-                  <Switch title={isAvailableNowSlot ? LABELS.DISABLE_WALK_IN : LABELS.ENABLE_WALK_IN} checked={isAvailableNowSlot} onChange={onChangeAvailableNowSlot} />
-                </div>
-              </Col>
-            </Row>
+            <div style={{ background: "white", position: "relative" }}>
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 24 }}
+                  md={{ span: 24 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', padding: '12px', gap: "20px", background: "white" }}>
+                    <span>{LABELS.WALK_IN_TXT}</span>
+                    <Switch title={isAvailableNowSlot ? LABELS.DISABLE_WALK_IN : LABELS.ENABLE_WALK_IN} checked={isAvailableNowSlot} onChange={onChangeAvailableNowSlot} />
+                  </div>
+                </Col>
+              </Row>
+              <Divider style={{ borderColor: "#f5f5f5", width: "50%", margin: "auto" }} />
 
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 24 }}
-                md={{ span: 24 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '12px', paddingBottom: '16px', gap: "20px" }}>
-                  <span>Minimum Booking Notice</span>
-                  <Switch title={isBookingNoticeEnabled ? LABELS.DISABLE_MIN_BOOKING_NOTICE : LABELS.ENABLE_MIN_BOOKING_NOTICE} checked={isBookingNoticeEnabled} onChange={onChangeBookingNotice} />
-                </div>
-              </Col>
-            </Row>
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 24 }}
-                md={{ span: 24 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '12px', paddingBottom: '16px', gap: "20px" }}>
-                  <Text style={{ fontSize: 13, color: "#1677ff" }} >To avoid last-minute bookings, choose how much notice is required when an appointment is booked.</Text>
-                </div>
-              </Col>
-            </Row>
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 6 }}
-                md={{ span: 6 }}
-                sm={{ span: 8 }}
-                xs={{ span: 24 }}
-              >
-                <Form.Item
-                  labelCol={{ span: 7 }} wrapperCol={{ span: 16 }}
-                  label={
-                    <label className='label '>
-                      Days
-                    </label>
-                  }>
-                  <DaysInput disabled={!isBookingNoticeEnabled} value={days} onChange={setDays} />
-                </Form.Item>
-              </Col>
-              <Col
-                lg={{ span: 6 }}
-                md={{ span: 6 }}
-                sm={{ span: 8 }}
-                xs={{ span: 24 }}
-              >
-                <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="Hours">
-                  <HoursDropdown disabled={!isBookingNoticeEnabled} value={hours} onChange={setHours} />
-                </Form.Item>
-              </Col>
-              <Col
-                lg={{ span: 6 }}
-                md={{ span: 6 }}
-                sm={{ span: 8 }}
-                xs={{ span: 24 }}
-              >
-                <Form.Item labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} label="Minutes">
-                  <MinutesDropdown disabled={!isBookingNoticeEnabled} value={minutes} onChange={setMinutes} />
-                </Form.Item>
-              </Col>
-            </Row>
+              <Row>
+                <Col
+                  lg={{ span: 24 }}
+                  md={{ span: 24 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "13px",
+                      gap: "20px",
+                      paddingLeft: "14px",
+                    }}
+                  >
+                    <span>{LABELS.BOOKING_NOTICE}</span>
+                    <Switch
+                      title={
+                        isBookingNoticeEnabled
+                          ? LABELS.DISABLE_MIN_BOOKING_NOTICE
+                          : LABELS.ENABLE_MIN_BOOKING_NOTICE
+                      }
+                      checked={isBookingNoticeEnabled}
+                      onChange={onChangeBookingNotice}
+                    />
+                  </div>
+                </Col>
+              </Row>
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "#1677ff",
+                      padding: "14px",
+                      paddingBottom: "0px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {LABELS.BOOKING_NOTICE_DESC}
+                  </Text>
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Row gutter={[16, 16]}>
+                    <Col
+                      lg={{ span: 9 }}
+                      md={{ span: 9 }}
+                      sm={{ span: 10 }}
+                      xs={{ span: 24 }}
+                    >
+                      <Form.Item
+                        name='days'
+                        label={
+                          <label className='label '>
+                            {LABELS.DAYS}
+                          </label>
+                        }
+                        validateTrigger={["handleFinish", "handleUpdate"]}
+                      >
+                        <DaysInput
+                          disabled={!isBookingNoticeEnabled}
+                          onChange={(val: number) => {
+                            setIsDataChange(true);
+                          }
+                          }
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col
+                      lg={{ span: 7 }}
+                      md={{ span: 7 }}
+                      sm={{ span: 7 }}
+                      xs={{ span: 12 }}
+                    >
+                      <Form.Item
+                        name='hours'
+                        label={
+                          <label className='label '>
+                            {LABELS.HOURS}
+                          </label>
+                        }
+                        validateTrigger={["handleFinish", "handleUpdate"]}
+                      >
+                        <HoursDropdown
+                          disabled={!isBookingNoticeEnabled}
+                          onChange={(val: number) => {
+                            setIsDataChange(true);
+                          }
+                          }
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col
+                      lg={{ span: 7 }}
+                      md={{ span: 7 }}
+                      sm={{ span: 7 }}
+                      xs={{ span: 12 }}
+                    >
+                      <Form.Item
+                        name='minutes'
+                        label={
+                          <label className='label '>
+                            {LABELS.MINUTES}
+                          </label>
+                        }
+                        validateTrigger={["handleFinish", "handleUpdate"]}
+                      >
+                        <MinutesDropdown
+                          disabled={!isBookingNoticeEnabled}
+                          onChange={(val: number) => {
+                            setIsDataChange(true);
+                          }
+                          }
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Col>
+
+
+              </Row>
+            </div>
           </Col>
         </Row>
       </Form >}

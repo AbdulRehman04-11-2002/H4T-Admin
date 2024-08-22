@@ -10,8 +10,8 @@ interface DaysInputProps {
 const DaysInput: React.FC<DaysInputProps> = ({ value, onChange, disabled }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
-        if (/^\d*$/.test(val)) {
-            onChange?.(parseInt(val, 10));
+        if (val === '' || /^\d+$/.test(val)) {
+            onChange?.(val === '' ? 0 : parseInt(val, 10));
         }
     };
 
