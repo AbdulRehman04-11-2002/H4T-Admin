@@ -18,7 +18,7 @@ const HoursDropdown: React.FC<HoursDropdownProps> = ({ value, onChange, disabled
 
     return (
         <Select
-            value={value}
+            value={value || 0}
             onChange={onChange}
             placeholder="hours"
             disabled={disabled}

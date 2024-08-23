@@ -4,6 +4,7 @@ import {
 import { SetStateAction, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { handleErrorResponse, openToastNotification, showError, getCountryCodeByIp } from '../../../helpers/globalFunctions';
+import { extractTimeComponents } from '../../../helpers/globalFunctions/fetchHandlers'
 import UploadFile from '../../../components/UploadFile/Index';
 import Table from '../../../components/Table/Index';
 import { OperatingHours } from '../../../components/TableColumns/OperatingHoursTable';
@@ -378,14 +379,6 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     let minutes = form.getFieldValue('minutes');
     const bookingNoticeMinutes = ((days || 0) * 1440) + ((hours || 0) * 60) + (minutes || 0);
     return bookingNoticeMinutes;
-  }
-
-  const extractTimeComponents = (totalMinutes: number) => {
-    const days = Math.floor(totalMinutes / 1440);
-    const hours = Math.floor((totalMinutes % 1440) / 60);
-    const minutes = totalMinutes % 60;
-
-    return { days, hours, minutes };
   }
 
   return (
@@ -881,7 +874,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
             </Row>
             <Divider orientation={"center"} style={{ borderColor: "#f5f5f5" }} />
 
-            <div style={{ background: "white", position: "relative" }}>
+            <div style={{ background: "white" }}>
               <Row gutter={8}>
                 <Col
                   lg={{ span: 24 }}

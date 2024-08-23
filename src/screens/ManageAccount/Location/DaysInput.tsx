@@ -17,7 +17,7 @@ const DaysInput: React.FC<DaysInputProps> = ({ value, onChange, disabled }) => {
 
     return (
         <Input
-            value={value}
+            value={value || 0}
             onChange={handleChange}
             placeholder="days"
             disabled={disabled}
