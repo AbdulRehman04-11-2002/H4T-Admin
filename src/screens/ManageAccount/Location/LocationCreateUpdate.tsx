@@ -889,18 +889,18 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   sm={{ span: 23 }}
                   xs={{ span: 23 }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', padding: '12px', gap: "20px", background: "white" }}>
+                  <div style={{ display: 'flex', alignItems: 'center', padding: '14px 14px 20px 14px', gap: "20px", background: "white" }}>
                     <span>{LABELS.WALK_IN_TXT}</span>
                     <Switch title={isAvailableNowSlot ? LABELS.DISABLE_WALK_IN : LABELS.ENABLE_WALK_IN} checked={isAvailableNowSlot} onChange={onChangeAvailableNowSlot} />
                   </div>
                 </Col>
               </Row>
-              <Divider style={{ borderColor: "#f5f5f5", width: "50%", margin: "auto" }} />
+              <Divider style={{ borderColor: "#f5f5f5", width: "50%", margin: "0 auto" }} />
 
               <Row>
                 <Col
-                  lg={{ span: 24 }}
-                  md={{ span: 24 }}
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
                   sm={{ span: 23 }}
                   xs={{ span: 23 }}
                 >
@@ -908,9 +908,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      padding: "13px",
+                      padding: "14px",
                       gap: "20px",
-                      paddingLeft: "14px",
                     }}
                   >
                     <span>{LABELS.BOOKING_NOTICE}</span>
@@ -924,21 +923,11 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       onChange={onChangeBookingNotice}
                     />
                   </div>
-                </Col>
-              </Row>
-              <Row gutter={8}>
-                <Col
-                  lg={{ span: 12 }}
-                  md={{ span: 12 }}
-                  sm={{ span: 23 }}
-                  xs={{ span: 23 }}
-                >
                   <Text
                     style={{
                       fontSize: 13,
                       color: "#1677ff",
                       padding: "14px",
-                      paddingBottom: "0px",
                       display: "flex",
                       alignItems: "center",
                     }}
@@ -1027,8 +1016,6 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     </Col>
                   </Row>
                 </Col>
-
-
               </Row>
             </div>
           </Col>
