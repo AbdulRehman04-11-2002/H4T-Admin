@@ -872,7 +872,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   }} />
               </Col>
             </Row>
-            <Divider orientation={"center"} style={{ borderColor: "#f5f5f5" }} />
+            <Divider orientation={"center"} style={{ margin: '4px 0', borderColor: "#f5f5f5" }} />
 
             <div style={{ background: "white" }}>
               <Row gutter={8}>
@@ -888,9 +888,17 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   </div>
                 </Col>
               </Row>
-              <Divider style={{ borderColor: "#f5f5f5", width: "50%", margin: "0 auto" }} />
+              <div style={{ padding: '0 30px', width: '100%' }}>
+                <Divider
+                  style={{
+                    borderColor: "#f5f5f5",
+                    width: "50%",
+                    margin: "0 auto",
+                  }}
+                />
+              </div>
 
-              <Row>
+              <Row gutter={8}>
                 <Col
                   lg={{ span: 12 }}
                   md={{ span: 12 }}
@@ -901,7 +909,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      padding: "14px",
+                      padding: "12px",
                       gap: "20px",
                     }}
                   >
@@ -920,7 +928,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     style={{
                       fontSize: 13,
                       color: "#1677ff",
-                      padding: "14px",
+                      padding: '0px 14px 35px 14px',
                       display: "flex",
                       alignItems: "center",
                     }}
