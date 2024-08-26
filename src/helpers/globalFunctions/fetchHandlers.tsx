@@ -48,7 +48,7 @@ export const getOrderStatus = (orderItemStatus: string | undefined, orderStatus:
 //---------- LocationCreateUpdate starts---------------//
 export const extractTimeComponents = (totalMinutes: number) => {
     const days = 0;
-    const hours = Math.floor((totalMinutes % 4320) / 60);
+    const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
 
     return { days, hours, minutes };
