@@ -10,11 +10,12 @@ interface MinutesDropdownProps {
 }
 
 const MinutesDropdown: React.FC<MinutesDropdownProps> = ({ value, onChange, disabled }) => {
+    const minStr = "min(s)"
     const options = Array.from({ length: 13 }, (_, i) => i * 5)
         .filter(value => value !== 60)
         .map(value => (
             <Option key={value} value={value}>
-                {value}
+                {value + " " + minStr}
             </Option>
         ));
 

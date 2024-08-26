@@ -78,6 +78,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const { ME, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [showWalkinError, setShowWalkinError] = useState<boolean>(false);
+  const [showMBNError, setShowMBNError] = useState<boolean>(false);
   const [isAvailableNowSlot, setIsAvailableNowSlot] = useState<boolean>(false);
   const [isBookingNoticeEnabled, setIsBookingNotice] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>('');
@@ -356,25 +358,29 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const onChangeAvailableNowSlot = (checked: boolean) => {
     if (isBookingNoticeEnabled && checked) {
       showError(LABELS.BOOKING_NOTICE_ALERT);
+      setShowWalkinError(true);
     }
     else {
       setIsAvailableNowSlot(checked);
       setIsDataChange(true);
+      setShowWalkinError(false);
     }
   };
 
   const onChangeBookingNotice = (checked: boolean) => {
     if (isAvailableNowSlot && checked) {
       showError(LABELS.BOOKING_NOTICE_WALKIN_ALERT);
+      setShowMBNError(true);
     }
     else {
       setIsBookingNotice(checked);
       setIsDataChange(true);
+      setShowMBNError(false);
     }
   };
 
   const calculateBookingNoticeMinutes = () => {
-    let days = form.getFieldValue('days');
+    let days = 0;
     let hours = form.getFieldValue('hours');
     let minutes = form.getFieldValue('minutes');
     const bookingNoticeMinutes = ((days || 0) * 1440) + ((hours || 0) * 60) + (minutes || 0);
@@ -882,10 +888,32 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   sm={{ span: 23 }}
                   xs={{ span: 23 }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', padding: '14px 14px 20px 14px', gap: "20px", background: "white" }}>
+                  <div style={{ display: 'flex', alignItems: 'center', padding: '14px 14px 10px 14px', gap: "20px", background: "white" }}>
                     <span>{LABELS.WALK_IN_TXT}</span>
                     <Switch title={isAvailableNowSlot ? LABELS.DISABLE_WALK_IN : LABELS.ENABLE_WALK_IN} checked={isAvailableNowSlot} onChange={onChangeAvailableNowSlot} />
                   </div>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "red",
+                      padding: '0px 0px 5px 14px',
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {showWalkinError ? LABELS.BOOKING_NOTICE_ALERT : ""}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "#1677ff",
+                      padding: '0px 0px 25px 14px',
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {LABELS.BOOKING_NOTICE_WALKIN_DESC}
+                  </Text>
                 </Col>
               </Row>
               <div style={{ padding: '0 30px', width: '100%' }}>
@@ -927,6 +955,18 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   <Text
                     style={{
                       fontSize: 13,
+                      color: "red",
+                      padding: '0px 0px 5px 14px',
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {showMBNError ? LABELS.BOOKING_NOTICE_WALKIN_ALERT : ""}
+                  </Text>
+
+                  <Text
+                    style={{
+                      fontSize: 13,
                       color: "#1677ff",
                       padding: '0px 14px 35px 14px',
                       display: "flex",
@@ -942,12 +982,18 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   sm={{ span: 23 }}
                   xs={{ span: 23 }}
                 >
-                  <Row gutter={[16, 16]}>
-                    <Col
-                      lg={{ span: 9 }}
-                      md={{ span: 9 }}
-                      sm={{ span: 10 }}
-                      xs={{ span: 24 }}
+                  <Row gutter={[10, 10]}
+                    style={{
+                      display: "flex",
+                      marginRight: "5px",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                     {/* <Col
+                      lg={{ span: 5 }}
+                      md={{ span: 5 }}
+                      sm={{ span: 6 }}
+                      xs={{ span: 20 }}
                     >
                       <Form.Item
                         name='days'
@@ -966,12 +1012,12 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                           }
                         />
                       </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col
-                      lg={{ span: 7 }}
-                      md={{ span: 7 }}
-                      sm={{ span: 7 }}
-                      xs={{ span: 12 }}
+                      lg={{ span: 10 }}
+                      md={{ span: 10 }}
+                      sm={{ span: 10 }}
+                      xs={{ span: 14 }}
                     >
                       <Form.Item
                         name='hours'
@@ -992,10 +1038,10 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       </Form.Item>
                     </Col>
                     <Col
-                      lg={{ span: 7 }}
-                      md={{ span: 7 }}
-                      sm={{ span: 7 }}
-                      xs={{ span: 12 }}
+                      lg={{ span: 10 }}
+                      md={{ span: 10 }}
+                      sm={{ span: 10 }}
+                      xs={{ span: 14 }}
                     >
                       <Form.Item
                         name='minutes'
