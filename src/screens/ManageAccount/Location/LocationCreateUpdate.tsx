@@ -172,6 +172,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       isBookingNoticeEnabled: isBookingNoticeEnabled,
       bookingNoticeMinutes: calculateBookingNoticeMinutes(),
     }
+
+    if (isBookingNoticeEnabled && !request.bookingNoticeMinutes) { return false; }
     return request;
   }
 
@@ -179,8 +181,10 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     try {
       showLoader();
       let response: any = {}
-      if (!locationID) response = await createPartnerLocation(partnerLocationRequest());
-      if (locationID) response = await updatePartnerLocation(locationID, partnerLocationRequest());
+      const partnerPayload = partnerLocationRequest();
+      if (!partnerPayload) { return; }
+      if (!locationID) response = await createPartnerLocation(partnerPayload);
+      if (locationID) response = await updatePartnerLocation(locationID, partnerPayload);
       form.resetFields();
       setFileList([]);
 
@@ -384,6 +388,19 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     let hours = form.getFieldValue('hours');
     let minutes = form.getFieldValue('minutes');
     const bookingNoticeMinutes = ((days || 0) * 1440) + ((hours || 0) * 60) + (minutes || 0);
+
+    if (isBookingNoticeEnabled && bookingNoticeMinutes === 0) {
+      submitFailed(
+        {
+          errorFields: [{
+            name: ['hours'], // replace with the actual field name
+            errors: [ERRORS.MINIMUM_BOOKING_NOTICE_ZERO_ERROR], // replace with the actual error message
+          }],
+        },
+      );
+      return false;
+    }
+
     return bookingNoticeMinutes;
   }
 
@@ -1032,8 +1049,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                           disabled={!isBookingNoticeEnabled}
                           onChange={(val: number) => {
                             setIsDataChange(true);
-                          }
-                          }
+                          }}
                         />
                       </Form.Item>
                     </Col>
@@ -1056,8 +1072,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                           disabled={!isBookingNoticeEnabled}
                           onChange={(val: number) => {
                             setIsDataChange(true);
-                          }
-                          }
+                          }}
                         />
                       </Form.Item>
                     </Col>

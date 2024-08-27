@@ -150,7 +150,8 @@
     "END_TIME": "Please select end time",
     "BREAK_START": "Please select break start time",
     "BREAK_END": "Please select break end time",
-    "SELECT_ATLEAST_ONE": "Please select at least one service"
+    "SELECT_ATLEAST_ONE": "Please select at least one service",
+    "MINIMUM_BOOKING_NOTICE_ZERO_ERROR": "Please set a valid time. Hours and minutes cannot both be set to 0 when the toggle is enabled."
   },
   "BUTTONS": {
     "ADD": "Add",
