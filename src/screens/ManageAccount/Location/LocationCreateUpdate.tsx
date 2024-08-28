@@ -3,23 +3,27 @@ import {
 } from 'antd';
 import { SetStateAction, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { handleErrorResponse, openToastNotification, showError, getCountryCodeByIp } from '../../helpers/globalFunctions';
-import UploadFile from '../../components/UploadFile/Index';
-import Table from '../../components/Table/Index';
-import { OperatingHours } from '../../components/TableColumns/OperatingHoursTable';
-import { LoaderContext, LoaderContextValue } from '../../context/LoaderContext';
+import { handleErrorResponse, openToastNotification, showError, getCountryCodeByIp } from '../../../helpers/globalFunctions';
+import { extractTimeComponents } from '../../../helpers/globalFunctions/fetchHandlers'
+import UploadFile from '../../../components/UploadFile/Index';
+import Table from '../../../components/Table/Index';
+import { OperatingHours } from '../../../components/TableColumns/OperatingHoursTable';
+import { LoaderContext, LoaderContextValue } from '../../../context/LoaderContext';
 import { useTranslation } from 'react-i18next';
-import { ApiError } from '../../services/api/Index';
-import { createPartnerLocation, getLocation, updatePartnerLocation } from '../../services/api/partnerLocation';
-import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
+import { ApiError } from '../../../services/api/Index';
+import { createPartnerLocation, getLocation, updatePartnerLocation } from '../../../services/api/partnerLocation';
+import { GlobalContext, GlobalContextProps } from '../../../context/GlobalContext';
 import {
   ExclamationCircleOutlined
 } from '@ant-design/icons';
-import { PartnerLocation } from '../../interface/PartnerLocation';
-import Tooltip from '../../components/Tooltip/Index';
+import { PartnerLocation } from '../../../interface/PartnerLocation';
+import Tooltip from '../../../components/Tooltip/Index';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
-
+import DaysInput from './DaysInput';
+import HoursDropdown from './HoursDropdown';
+import MinutesDropdown from './MinutesDropdown';
+const { Text } = Typography;
 type operatingHoursType = {
   day: string;
   startTime: string;
@@ -59,7 +63,6 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [operatingHours, setOperatingHours] = useState<operatingHoursType[]>([
   ])
   const [modalVisible, setModalVisible] = useState(false);
-
   const { t } = useTranslation();
   const BUTTONS: any = t("BUTTONS", { returnObjects: true });
   const ERRORS: any = t("ERRORS", { returnObjects: true });
@@ -75,7 +78,10 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const { ME, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [showWalkinError, setShowWalkinError] = useState<boolean>(false);
+  const [showMBNError, setShowMBNError] = useState<boolean>(false);
   const [isAvailableNowSlot, setIsAvailableNowSlot] = useState<boolean>(false);
+  const [isBookingNoticeEnabled, setIsBookingNotice] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>('');
   const [countryCode, setCountryCode] = useState<string>('');
   const inputNameRef = useRef<null | HTMLElement>(null);
@@ -163,7 +169,11 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
       isAvailableNow: isAvailableNowSlot,
       emailAddress: form.getFieldValue("email"),
+      isBookingNoticeEnabled: isBookingNoticeEnabled,
+      bookingNoticeMinutes: calculateBookingNoticeMinutes(),
     }
+
+    if (isBookingNoticeEnabled && !request.bookingNoticeMinutes) { return false; }
     return request;
   }
 
@@ -171,8 +181,10 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     try {
       showLoader();
       let response: any = {}
-      if (!locationID) response = await createPartnerLocation(partnerLocationRequest());
-      if (locationID) response = await updatePartnerLocation(locationID, partnerLocationRequest());
+      const partnerPayload = partnerLocationRequest();
+      if (!partnerPayload) { return; }
+      if (!locationID) response = await createPartnerLocation(partnerPayload);
+      if (locationID) response = await updatePartnerLocation(locationID, partnerPayload);
       form.resetFields();
       setFileList([]);
 
@@ -198,6 +210,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   const setFormValues = (data: PartnerLocation) => {
     data?.imageUrl ? setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: data?.imageUrl || "" }]) : setFileList([]);
+    const { days, hours, minutes } = extractTimeComponents(data?.bookingNoticeMinutes);
     form.setFieldsValue({
       name: data?.name,
       code: data?.code,
@@ -209,9 +222,13 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       streetAddress: data?.streetAddress,
       customerGuidelines: data?.customerGuidelines,
       status: data?.status,
-      email: data?.emailAddress
+      email: data?.emailAddress,
+      days: days,
+      hours: hours,
+      minutes: minutes
     });
     setIsAvailableNowSlot(data?.isAvailableNow);
+    setIsBookingNotice(data?.isBookingNoticeEnabled);
     createOperatingHours(data?.partner_location_timings)
     setImageUrl(data?.imageUrl || "");
   }
@@ -343,9 +360,49 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }, [ME])
 
   const onChangeAvailableNowSlot = (checked: boolean) => {
-    setIsAvailableNowSlot(checked);
-    setIsDataChange(true);
+    if (isBookingNoticeEnabled && checked) {
+      showError(LABELS.BOOKING_NOTICE_ALERT);
+      setShowWalkinError(true);
+    }
+    else {
+      setIsAvailableNowSlot(checked);
+      setIsDataChange(true);
+      setShowWalkinError(false);
+    }
   };
+
+  const onChangeBookingNotice = (checked: boolean) => {
+    if (isAvailableNowSlot && checked) {
+      showError(LABELS.BOOKING_NOTICE_WALKIN_ALERT);
+      setShowMBNError(true);
+    }
+    else {
+      setIsBookingNotice(checked);
+      setIsDataChange(true);
+      setShowMBNError(false);
+    }
+  };
+
+  const calculateBookingNoticeMinutes = () => {
+    let days = 0;
+    let hours = form.getFieldValue('hours');
+    let minutes = form.getFieldValue('minutes');
+    const bookingNoticeMinutes = ((days || 0) * 1440) + ((hours || 0) * 60) + (minutes || 0);
+
+    if (isBookingNoticeEnabled && bookingNoticeMinutes === 0) {
+      submitFailed(
+        {
+          errorFields: [{
+            name: ['hours'], // replace with the actual field name
+            errors: [ERRORS.MINIMUM_BOOKING_NOTICE_ZERO_ERROR], // replace with the actual error message
+          }],
+        },
+      );
+      return false;
+    }
+
+    return bookingNoticeMinutes;
+  }
 
   return (
     <div className='create-partner-content'>
@@ -836,13 +893,193 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   noRecordText={isLoading ? "Loading..." : LABELS.NO_RECORDS_FOUND} currentPage={0} setPage={function (value: SetStateAction<number>): void {
                     throw new Error('Function not implemented.');
                   }} />
-
-                <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'white', padding: '12px', gap: "20px" }}>
-                  <span>{LABELS.WALK_IN_TXT}</span>
-                  <Switch title={isAvailableNowSlot ? LABELS.DISABLE_WALK_IN : LABELS.ENABLE_WALK_IN} checked={isAvailableNowSlot} onChange={onChangeAvailableNowSlot} />
-                </div>
               </Col>
             </Row>
+            <Divider orientation={"center"} style={{ margin: '4px 0', borderColor: "#f5f5f5" }} />
+
+            <div style={{ background: "white" }}>
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 24 }}
+                  md={{ span: 24 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', padding: '14px 14px 10px 14px', gap: "20px", background: "white" }}>
+                    <span>{LABELS.WALK_IN_TXT}</span>
+                    <Switch title={isAvailableNowSlot ? LABELS.DISABLE_WALK_IN : LABELS.ENABLE_WALK_IN} checked={isAvailableNowSlot} onChange={onChangeAvailableNowSlot} />
+                  </div>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "red",
+                      padding: '0px 0px 5px 14px',
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {showWalkinError ? LABELS.BOOKING_NOTICE_ALERT : ""}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "#1677ff",
+                      padding: '0px 0px 25px 14px',
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {LABELS.BOOKING_NOTICE_WALKIN_DESC}
+                  </Text>
+                </Col>
+              </Row>
+              <div style={{ padding: '0 30px', width: '100%' }}>
+                <Divider
+                  style={{
+                    borderColor: "#f5f5f5",
+                    width: "50%",
+                    margin: "0 auto",
+                  }}
+                />
+              </div>
+
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "12px",
+                      gap: "20px",
+                    }}
+                  >
+                    <span>{LABELS.BOOKING_NOTICE}</span>
+                    <Switch
+                      title={
+                        isBookingNoticeEnabled
+                          ? LABELS.DISABLE_MIN_BOOKING_NOTICE
+                          : LABELS.ENABLE_MIN_BOOKING_NOTICE
+                      }
+                      checked={isBookingNoticeEnabled}
+                      onChange={onChangeBookingNotice}
+                    />
+                  </div>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "red",
+                      padding: '0px 0px 5px 14px',
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {showMBNError ? LABELS.BOOKING_NOTICE_WALKIN_ALERT : ""}
+                  </Text>
+
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "#1677ff",
+                      padding: '0px 14px 35px 14px',
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {LABELS.BOOKING_NOTICE_DESC}
+                  </Text>
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Row gutter={[10, 10]}
+                    style={{
+                      display: "flex",
+                      marginRight: "5px",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                     {/* <Col
+                      lg={{ span: 5 }}
+                      md={{ span: 5 }}
+                      sm={{ span: 6 }}
+                      xs={{ span: 20 }}
+                    >
+                      <Form.Item
+                        name='days'
+                        label={
+                          <label className='label '>
+                            {LABELS.DAYS}
+                          </label>
+                        }
+                        validateTrigger={["handleFinish", "handleUpdate"]}
+                      >
+                        <DaysInput
+                          disabled={!isBookingNoticeEnabled}
+                          onChange={(val: number) => {
+                            setIsDataChange(true);
+                          }
+                          }
+                        />
+                      </Form.Item>
+                    </Col> */}
+                    <Col
+                      lg={{ span: 10 }}
+                      md={{ span: 10 }}
+                      sm={{ span: 10 }}
+                      xs={{ span: 14 }}
+                    >
+                      <Form.Item
+                        name='hours'
+                        label={
+                          <label className='label '>
+                            {LABELS.HOURS}
+                          </label>
+                        }
+                        validateTrigger={["handleFinish", "handleUpdate"]}
+                      >
+                        <HoursDropdown
+                          disabled={!isBookingNoticeEnabled}
+                          onChange={(val: number) => {
+                            setIsDataChange(true);
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col
+                      lg={{ span: 10 }}
+                      md={{ span: 10 }}
+                      sm={{ span: 10 }}
+                      xs={{ span: 14 }}
+                    >
+                      <Form.Item
+                        name='minutes'
+                        label={
+                          <label className='label '>
+                            {LABELS.MINUTES}
+                          </label>
+                        }
+                        validateTrigger={["handleFinish", "handleUpdate"]}
+                      >
+                        <MinutesDropdown
+                          disabled={!isBookingNoticeEnabled}
+                          onChange={(val: number) => {
+                            setIsDataChange(true);
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </div>
           </Col>
         </Row>
       </Form >}
