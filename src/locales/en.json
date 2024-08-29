@@ -59,7 +59,7 @@
     "ENABLE_MIN_BOOKING_NOTICE": "Enable Minimum Booking Notice",
     "WALK_IN_TXT": "Walk-in",
     "BOOKING_NOTICE": "Minimum Booking Notice",
-    "BOOKING_NOTICE_DESC": "To avoid last-minute bookings, choose how much notice is required when an appointment is booked.",
+    "BOOKING_NOTICE_DESC": "To avoid last-minute bookings, choose how much notice time is required before the clinic can accept appointments.",
     "BOOKING_NOTICE_WALKIN_DESC": "Enabling “Walk-in” allows patients to make bookings at a non-specified time during your available hours. Please do not use “walk-in” if your clinic cannot flexibly accept patients outside of a fixed schedule.",
     "DAYS": "Days",
     "HOURS": "Hours",
