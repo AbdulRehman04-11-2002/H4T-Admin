@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import PartnersList from '../screens/Partners/PartnersList';
 import PartnerCreate from '../screens/Partners/Create';
 import ManageAccount from '../screens/ManageAccount/ManageAccount';
-import LocationCreateUpdate from '../screens/ManageAccount/LocationCreateUpdate';
+import LocationCreateUpdate from '../screens/ManageAccount/Location/LocationCreateUpdate';
 import ProductCreateUpdate from '../screens/ManageAccount/ProductCreateUpdate';
 import TermsOfUse from '../screens/TermsOfUse/Index';
 import DynamicBreadcrumb from '../components/Breadcrumb/Index';

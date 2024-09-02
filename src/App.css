@@ -135,6 +135,19 @@ body {
   font-size: 22px;
 }
 
+.react-tel-input .form-control:focus {
+  border-width: 1px !important;
+  border-radius: 6px !important;
+  line-height: 1.5714 !important;
+  display: inline-block !important;
+  border-color: #183a59 !important;
+  box-shadow: 0 0 0 2px rgba(3, 16, 23, 0.44);
+}
+
+.react-tel-input .form-control:hover {
+  border-color: #183a59 !important;
+}
+
 /* ant.design component customize */
 
 /* button customization */
