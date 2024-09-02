@@ -46,7 +46,7 @@ export const ERRORS = {
     CURRENCY: "Please enter currency",
     CONTACT_PERSON: "Please enter contact person",
     FIXED_FEE: "Please enter fixed fee",
-    IMAGE_FILE_TYPE: "Please upload a valid image file",
+    IMAGE_FILE_TYPE: "Only JPG and PNG image file formats are allowed",
     SOME_THING_WENT_WRONG: "Something went wrong",
     EMAIL: "Please enter email",
     OTP_WRONG_TYPE: "OTP is invalid",
