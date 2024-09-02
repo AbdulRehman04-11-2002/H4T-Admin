@@ -118,3 +118,11 @@ export const showError = (errorMessage: string) => {
         content: errorMessage,
     });
 };
+
+export const getCountryCodeByIp = async () => {
+    const response = await fetch('https://ipapi.co/json/');
+    const data = await response.json();
+    if (data && data.country_code) {
+        return data.country_code.toLowerCase();
+    }
+}

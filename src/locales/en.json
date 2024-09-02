@@ -1,320 +1,334 @@
 {
-    "MENULABEL": {
-        "PARTNER": "Partner",
-        "DASHBOARD": "dashboard",
-        "MANAGE_ACCOUNT": "Manage Account",
-        "PLANNING": "Planning"
+  "MENULABEL": {
+    "PARTNER": "Partner",
+    "DASHBOARD": "dashboard",
+    "MANAGE_ACCOUNT": "Manage Account",
+    "PLANNING": "Planning"
+  },
+  "LABELS": {
+    "COMPANY_LOGO": "Company Logo",
+    "OPTIONAL": "Optional",
+    "NO_RECORDS_FOUND": "No record in the table",
+    "REGISERED_NAME": "Registered Name",
+    "SERVICES": "Services",
+    "CONTACT_PERSON": "Contact Person Name",
+    "BANK_NAME": "Bank Name",
+    "ACCOUNT_NUMBER": "Account Number",
+    "ACCOUNT_HOLDER_NAME": "Account Holder Name",
+    "CITY": "City",
+    "CITY_TOOLTIP": "Please contact us if your city is not on this list.",
+    "NAME": "Name",
+    "BUSINESS_ID": "Business ID",
+    "LICENSE_NUMBER": "License Number",
+    "STATUS": "Status",
+    "UPLOAD_LOGO": "Upload Logo",
+    "CONTRACT_NUMBER": "Contract Number",
+    "SEARCH_AND_SELECT_CITY": "Please select city",
+    "STREET_ADDRESS": "Street Address",
+    "POSTAL_CODE": "Postal Code",
+    "EMAIL_ADDRESS": "Email Address",
+    "PHONE_NUMBER": "Phone Number",
+    "SERVICE_CONFIGURATION": "Service Configuration",
+    "CURRENCY": "Currency",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "CREATE": "Create",
+    "ENABLED": "Enabled",
+    "DISABLED": "Disabled",
+    "DIGITAL_SERVICES": "Digital Services: ",
+    "DOCTOR_CONSULTATION": "Doctor Consultation",
+    "CREATE_ADMIN_ACCOUNT": "Create a Admin Account",
+    "CODE": "Display Name",
+    "WELCOME": "Welcome to Health4Travel Admin",
+    "EMAIL": "Email",
+    "VERIFY_EMAIL": "Verify Email",
+    "FOUR_DIGIT_CODE": "Enter the 6-digit code sent to your email",
+    "OTP_RESEND_COUNTER": "Resend code in {counter} seconds",
+    "SERVICE_TYPE": "Service Type",
+    "LAST_MODIFIED": "Last Modified",
+    "ROLE": "Role",
+    "LONGITUDE": "Longitude",
+    "LATITUDE": "Latitude",
+    "SERVICE_PHOTO": "Service Photo",
+    "LOCATION_IMAGE": "Location Image",
+    "CUSTOM_GUIDELINES": "Arrival Instructions",
+    "CUSTOMER_GUIDELINES": "Customer Guidelines",
+    "ENABLE_WALK_IN": "Enable Walk-in",
+    "DISABLE_WALK_IN": "Disable Walk-in",
+    "DISABLE_MIN_BOOKING_NOTICE": "Disable Minimum Booking Notice",
+    "ENABLE_MIN_BOOKING_NOTICE": "Enable Minimum Booking Notice",
+    "WALK_IN_TXT": "Walk-in",
+    "BOOKING_NOTICE": "Minimum Booking Notice",
+    "BOOKING_NOTICE_DESC": "To avoid last-minute bookings, choose how much notice time is required before the clinic can accept appointments.",
+    "BOOKING_NOTICE_WALKIN_DESC": "Enabling “Walk-in” allows patients to make bookings at a non-specified time during your available hours. Please do not use “walk-in” if your clinic cannot flexibly accept patients outside of a fixed schedule.",
+    "DAYS": "Days",
+    "HOURS": "Hours",
+    "MINUTES": "Minutes",
+    "BOOKING_NOTICE_WALKIN_ALERT": "Please disable Walk-in first",
+    "BOOKING_NOTICE_ALERT": "Please disable Minimum Booking Notice first",
+    "GUIDELINE_TOOLTIP": "Guide the patient to your doorstep. Which modes of public transport lead here? If your clinic is inside a building, what is the name of the building? Which floor are you on if it is not visible from the street? Any parking instructions? Do they need to ring a doorbell?",
+    "PRODUCT_GUIDELINE_TOOLTIP": "Let the patient know if they need to bring any documents, fast, or otherwise prepare for this consultation",
+    "DAY": "Day",
+    "START_TIME": "Start Time",
+    "END_TIME": "End Time",
+    "BREAK_START": "Break Start",
+    "BREAK_END": "Break End",
+    "PRICE": "Your Price (€) excl. H4T fees",
+    "DESCRIPTION": "Description",
+    "DESCRIPTION_TOOLTIP": "Describe the consultation in more detail. Is there a time limit? What other languages is service available in?",
+    "EXPEXTED_DIMENSIONS_LXW": "Expected dimensions Lxw",
+    "CUSTOMER_SEES": "Customer sees",
+    "SLOT_DURATION": "Time before next booking slot is available (minutes)",
+    "TERMS_OF_USE": "Terms of Use",
+    "UPLOAD_PHOTO": "Upload photo",
+    "ROLE_ADMIN": "Clinic Admin",
+    "ROLE_CUSTOMER": "Customer",
+    "ROLE_H4TADMIN": "H4T Admin",
+    "ROLE_MANAGER": "Clinic Manager",
+    "ROLE_FRONTDESK": "Clinic Frontdesk",
+    "DATE": "Date",
+    "PARTNER_NAME": "Partner Name",
+    "BOOKING_NUMBER": "Booking Number",
+    "ORDER_NUMBER": "Order Number",
+    "SERVICE": "Service",
+    "LOCATION": "Location",
+    "ALL_LOCATIONS_ACCESS": "This user has access to all locations.",
+    "ALLOW_ALL_LOCATIONS": "Allow for all locations",
+    "SELECT_ALL": "Select all"
+  },
+  "PLACEHOLDERS": {
+    "SEARCH": "Search",
+    "ROLE": "Please select role",
+    "STATUS": "Status*(enabled/disabled)",
+    "FIXED_FEE": "Fixed Fee",
+    "EMAIL": "Please enter email",
+    "ENTER_FEE": "Enter fee",
+    "LOCATION": "Location"
+  },
+  "ERRORS": {
+    "NAME": "Please enter name",
+    "BUSINESS_ID": "Please enter business ID",
+    "LICENSE_NUMBER": "Please enter license number",
+    "STATUS": "Please select status",
+    "SERVICE_TYPE": "Please select service type",
+    "UPLOAD_LOGO": "Please upload logo",
+    "CONTRACT_NUMBER": "Please enter contract number",
+    "VALID_INPUT": "Please enter valid {{type}}",
+    "VALID_LATITUDE": "Enter value between -90 and 90 with up to 6 decimal places",
+    "VALID_LONGITUDE": "Enter value between -180 and 180 with up to 6 decimal places",
+    "VALID_DAYS": "Enter valid number of days",
+    "SEARCH_AND_SELECT_CITY": "Please select city",
+    "STREET_ADDRESS": "Please enter street address",
+    "POSTAL_CODE": "Please enter postal code",
+    "POSTAL_CODE_VALID": "Please enter valid postal code",
+    "EMAIL_ADDRESS": "Please enter email address",
+    "PHONE_NUMBER": "Please enter phone number",
+    "SERVICE_CONFIGURATION": "Please enter service configuration",
+    "CURRENCY": "Please enter currency",
+    "CONTACT_PERSON": "Please enter contact person name",
+    "BANK_NAME": "Please enter bank name",
+    "ACCOUNT_NUMBER": "Please enter account number",
+    "ACCOUNT_HOLDER_NAME": "Please enter account holder name",
+    "FIXED_FEE": "Please enter fixed fee",
+    "IMAGE_FILE_TYPE": "Only JPG and PNG image file formats are allowed",
+    "SOME_THING_WENT_WRONG": "Something went wrong",
+    "EMAIL": "Please enter email",
+    "OTP_WRONG_TYPE": "OTP is invalid",
+    "OTP_BLANK_ERROR": "Please enter the OTP",
+    "CODE": "Please enter code",
+    "LONGITUDE": "Please enter longitude",
+    "LATITUDE": "Please enter latitude",
+    "PRICE": "Please enter price",
+    "ROLE": "Please select role",
+    "VALID_EMAIL": "Please enter valid email",
+    "MIN_LENGTH_3": "Please enter minimum 3 characters of {{type}}",
+    "MAX_LENGTH_50": "Please enter maximum 50 characters of {{type}}",
+    "MAX_LENGTH_16": "Please enter maximum 16 characters of {{type}}",
+    "MIN_LENGTH_10": "Please enter minimum 10 characters of {{type}}",
+    "SLOT_DURATION": "Please select slot duration",
+    "START_TIME": "Please select start time",
+    "END_TIME": "Please select end time",
+    "BREAK_START": "Please select break start time",
+    "BREAK_END": "Please select break end time",
+    "SELECT_ATLEAST_ONE": "Please select at least one service",
+    "MINIMUM_BOOKING_NOTICE_ZERO_ERROR": "Please set a valid time. Hours and minutes cannot both be set to 0 when the toggle is enabled."
+  },
+  "BUTTONS": {
+    "ADD": "Add",
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "CREATE": "Create",
+    "SEND": "Send",
+    "VERIFY": "Verify",
+    "RESEND": "Resend",
+    "BACK": "Back",
+    "NEXT": "Next",
+    "SUBMIT": "Submit",
+    "DELETE": "Delete",
+    "UPDATE": "Update",
+    "SEARCH": "Search",
+    "RESET": "Reset",
+    "RESEND_CODE": "Resend Code"
+  },
+  "API_ERRORS": {
+    "UNAUTHORIZED": "Unauthorized",
+    "NOT_FOUND": "Not Found",
+    "PAYLOAD_TOO_LARGE": "Payload Too Large",
+    "INTERNAL_SERVER_ERROR": "Internal Server Error",
+    "SOME_THING_WENT_WRONG": "Something went wrong"
+  },
+  "TABS_KEY": {
+    "current": "Current",
+    "history": "History",
+    "ENABLED": "Enabled",
+    "DISABLED": "Disabled",
+    "ALL": "All"
+  },
+  "HEADING": {
+    "HEALTH$TRAVEL_ADMIN": "Health4Travel - Admin",
+    "BASIC_DETAILS": "Company Details",
+    "REGISTERED_ADDRESS": "Registered Address",
+    "CONTACT_DETAILS": "Contact Details",
+    "BANK_DETAILS": "Bank Account Information",
+    "CONFIGURATIONS": "H4T Fee Configurations *",
+    "OPERATING_HOURS": "Available Booking Times",
+    "OPERATING_HOURS_TOOLTIP": "For 24-hour availability, please set all start and end times to 00:00. If you have no breaks, please set the break start and end times to 00:00.",
+    "SELECT_LOCATIONS": "Which locations is this service available in?",
+    "CREATE_USER": "Create User",
+    "UPDATE_USER": "Update User",
+    "CREATE_PRODUCT": "Create Product",
+    "UPDATE_PRODUCT": "Update Product",
+    "CREATE_PARTNER": "Create Partner",
+    "UPDATE_PARTNER": "Update Partner",
+    "CREATE_PARTNER_LOCATION": "Create Location",
+    "UPDATE_PARTNER_LOCATION": "Update Location",
+    "CREATE_PARTNER_PRODUCT": "Create Product",
+    "UPDATE_PARTNER_PRODUCT": "Update Product",
+    "SELECT_USER_LOCATIONS": "Which locations can this user operate?"
+  },
+  "TABS_LABEL": {
+    "CURRENT": "current",
+    "PROFILE": "profile",
+    "PARTNERS": "partners",
+    "LOCATIONS": "Locations",
+    "PRODUCTS": "products",
+    "USER_ACCESS": "userAccess"
+  },
+  "TABLE_NO_RECORDS_TEXT": {
+    "PARTNERS": "No partners found.",
+    "ORDERS": "No orders found.",
+    "LOCATIONS": "No locations found.",
+    "PRODUCTS": "No products found.",
+    "USERS": "No users found.",
+    "LOCATION_AVAILABLE": "No locations available."
+  },
+  "privacyPolicy": {
+    "title": "Health4Travel Acceptable Use Agreement",
+    "introText": "This Health4Travel Acceptable Use Agreement (\"Agreement\") is entered into by and between Health4Travel (iFlyIT BV) (\"Health4Travel\") and all users of the Health4Travel platform (\"User\").",
+    "purpose": {
+      "title": "Purpose",
+      "text": "This Agreement sets forth the terms and conditions under which Users may access and use the Health4Travel platform (\"Platform\"). By accessing or using the Platform, you agree to be bound by the terms of this Agreement."
     },
-    "LABELS": {
-        "COMPANY_LOGO": "Company Logo",
-        "OPTIONAL": "Optional",
-        "NO_RECORDS_FOUND": "No record in the table",
-        "REGISERED_NAME": "Registered Name",
-        "SERVICES": "Services",
-        "CONTACT_PERSON": "Contact Person",
-        "BANK_NAME": "Bank Name",
-        "ACCOUNT_NUMBER": "Account Number",
-        "ACCOUNT_HOLDER_NAME": "Account Holder Name",
-        "CITY": "City",
-        "CITY_TOOLTIP": "Please contact us if your city is not on this list.",
-        "NAME": "Name",
-        "BUSINESS_ID": "Business ID",
-        "LICENSE_NUMBER": "License Number",
-        "STATUS": "Status",
-        "UPLOAD_LOGO": "Upload Logo",
-        "CONTRACT_NUMBER": "Contract Number",
-        "SEARCH_AND_SELECT_CITY": "Please select city",
-        "STREET_ADDRESS": "Street Address",
-        "POSTAL_CODE": "Postal Code",
-        "EMAIL_ADDRESS": "Email Address",
-        "PHONE_NUMBER": "Phone Number",
-        "SERVICE_CONFIGURATION": "Service Configuration",
-        "CURRENCY": "Currency",
-        "CANCEL": "Cancel",
-        "SAVE": "Save",
-        "CREATE": "Create",
-        "ENABLED": "Enabled",
-        "DISABLED": "Disabled",
-        "DIGITAL_SERVICES": "Digital Services: ",
-        "DOCTOR_CONSULTATION": "Doctor Consultation",
-        "CREATE_ADMIN_ACCOUNT": "Create a Admin Account",
-        "CODE": "Display Name",
-        "WELCOME": "Welcome to Health4Travel Admin",
-        "EMAIL": "Email",
-        "VERIFY_EMAIL": "Verify Email",
-        "FOUR_DIGIT_CODE": "Enter the 6-digit code sent to your email",
-        "OTP_RESEND_COUNTER": "Resend code in {counter} seconds",
-        "SERVICE_TYPE": "Service Type",
-        "LAST_MODIFIED": "Last Modified",
-        "ROLE": "Role",
-        "LONGITUDE": "Longitude",
-        "LATITUDE": "Latitude",
-        "SERVICE_PHOTO": "Service Photo",
-        "LOCATION_IMAGE": "Location Image",
-        "CUSTOM_GUIDELINES": "Arrival Instructions",
-        "CUSTOMER_GUIDELINES": "Customer Guidelines",
-        "ENABLE_WALK_IN": "Enable Walk-in",
-        "DISABLE_WALK_IN": "Disable Walk-in",
-        "WALK_IN_TXT": "Walk-in",
-        "GUIDELINE_TOOLTIP": "Guide the patient to your doorstep. Which modes of public transport lead here? If your clinic is inside a building, what is the name of the building? Which floor are you on if it is not visible from the street? Any parking instructions? Do they need to ring a doorbell?",
-        "PRODUCT_GUIDELINE_TOOLTIP": "Let the patient know if they need to bring any documents, fast, or otherwise prepare for this consultation",
-        "DAY": "Day",
-        "START_TIME": "Start Time",
-        "END_TIME": "End Time",
-        "BREAK_START": "Break Start",
-        "BREAK_END": "Break End",
-        "PRICE": "Your Price (€) excl. H4T fees",
-        "DESCRIPTION": "Description",
-        "DESCRIPTION_TOOLTIP": "Describe the consultation in more detail. Is there a time limit? What other languages is service available in?",
-        "EXPEXTED_DIMENSIONS_LXW": "Expected dimensions Lxw",
-        "CUSTOMER_SEES": "Customer sees",
-        "SLOT_DURATION": "Time before next booking slot is available (minutes)",
-        "TERMS_OF_USE": "Terms of Use",
-        "UPLOAD_PHOTO": "Upload photo",
-        "ROLE_ADMIN": "Clinic Admin",
-        "ROLE_CUSTOMER": "Customer",
-        "ROLE_H4TADMIN": "H4T Admin",
-        "ROLE_MANAGER": "Clinic Manager",
-        "ROLE_FRONTDESK": "Clinic Frontdesk",
-        "DATE": "Date",
-        "PARTNER_NAME": "Partner Name",
-        "BOOKING_NUMBER": "Booking Number",
-        "ORDER_NUMBER": "Order Number",
-        "SERVICE": "Service",
-        "LOCATION": "Location",
-        "ALL_LOCATIONS_ACCESS": "This user has access to all locations.",
-        "ALLOW_ALL_LOCATIONS": "Allow for all locations",
-        "SELECT_ALL": "Select all"
+    "userConduct": {
+      "title": "User Conduct",
+      "text1": "Users must use the Platform in a lawful and ethical manner.",
+      "text2": "Prohibited activities include, but are not limited to:",
+      "items": [
+        "Fraudulent or misleading practices.",
+        "Harassment, hate speech, or threats.",
+        "Unauthorized access to other users' accounts or data.",
+        "Violation of intellectual property rights."
+      ]
     },
-    "PLACEHOLDERS": {
-        "SEARCH": "Search",
-        "ROLE": "Please select role",
-        "STATUS": "Status*(enabled/disabled)",
-        "FIXED_FEE": "Fixed Fee",
-        "EMAIL": "Please enter email",
-        "ENTER_FEE": "Enter fee",
-        "LOCATION": "Location"
+    "contentGuidelines": {
+      "title": "Content Guidelines",
+      "text": "Users must adhere to the following content guidelines:",
+      "items": [
+        "Post accurate and non-deceptive content.",
+        "Prohibit content that is offensive, harmful, or illegal.",
+        "Respect intellectual property rights; do not use copyrighted materials without permission."
+      ]
     },
-    "ERRORS": {
-        "NAME": "Please enter name",
-        "BUSINESS_ID": "Please enter business ID",
-        "LICENSE_NUMBER": "Please enter license number",
-        "STATUS": "Please select status",
-        "SERVICE_TYPE": "Please select service type",
-        "UPLOAD_LOGO": "Please upload logo",
-        "CONTRACT_NUMBER": "Please enter contract number",
-        "VALID_INPUT": "Please enter valid {{type}}",
-        "SEARCH_AND_SELECT_CITY": "Please select city",
-        "STREET_ADDRESS": "Please enter street address",
-        "POSTAL_CODE": "Please enter postal code",
-        "POSTAL_CODE_VALID": "Please enter valid postal code",
-        "EMAIL_ADDRESS": "Please enter email address",
-        "PHONE_NUMBER": "Please enter phone number",
-        "SERVICE_CONFIGURATION": "Please enter service configuration",
-        "CURRENCY": "Please enter currency",
-        "CONTACT_PERSON": "Please enter contact person",
-        "BANK_NAME": "Please enter bank name",
-        "ACCOUNT_NUMBER": "Please enter account number",
-        "ACCOUNT_HOLDER_NAME": "Please enter account holder name",
-        "FIXED_FEE": "Please enter fixed fee",
-        "IMAGE_FILE_TYPE": "Please upload a valid image file",
-        "SOME_THING_WENT_WRONG": "Something went wrong",
-        "EMAIL": "Please enter email",
-        "OTP_WRONG_TYPE": "OTP is invalid",
-        "OTP_BLANK_ERROR": "Please enter the OTP",
-        "CODE": "Please enter code",
-        "LONGITUDE": "Please enter longitude",
-        "LATITUDE": "Please enter latitude",
-        "PRICE": "Please enter price",
-        "ROLE": "Please select role",
-        "VALID_EMAIL": "Please enter valid email",
-        "MIN_LENGTH_3": "Please enter minimum 3 characters of {{type}}",
-        "MAX_LENGTH_50": "Please enter maximum 50 characters of {{type}}",
-        "MAX_LENGTH_16": "Please enter maximum 16 characters of {{type}}",
-        "MIN_LENGTH_10": "Please enter minimum 10 characters of {{type}}",
-        "SLOT_DURATION": "Please select slot duration",
-        "START_TIME": "Please select start time",
-        "END_TIME": "Please select end time",
-        "BREAK_START": "Please select break start time",
-        "BREAK_END": "Please select break end time",
-        "SELECT_ATLEAST_ONE": "Please select at least one service"
+    "prohibitedItems": {
+      "title": "Prohibited Items or Services",
+      "text": "Users may not offer, list, or promote:",
+      "items": [
+        "Products or services that are illegal, counterfeit, or infringe on intellectual property rights.",
+        "Controlled substances, illegal drugs, or drug paraphernalia.",
+        "Items or services that are prohibited by applicable laws or regulations."
+      ]
     },
-    "BUTTONS": {
-        "ADD": "Add",
-        "SAVE": "Save",
-        "CANCEL": "Cancel",
-        "CREATE": "Create",
-        "SEND": "Send",
-        "VERIFY": "Verify",
-        "RESEND": "Resend",
-        "BACK": "Back",
-        "NEXT": "Next",
-        "SUBMIT": "Submit",
-        "DELETE": "Delete",
-        "UPDATE": "Update",
-        "SEARCH": "Search",
-        "RESET": "Reset",
-        "RESEND_CODE": "Resend Code"
+    "privacyAndData": {
+      "title": "Privacy and Data Handling",
+      "text": "Users must comply with the Health4Travel Privacy Policy, available at ",
+      "link": "https://health4travel.com/wp-content/uploads/2023/09/T2T-privacy-policy.pdf"
     },
-    "API_ERRORS": {
-        "UNAUTHORIZED": "Unauthorized",
-        "NOT_FOUND": "Not Found",
-        "PAYLOAD_TOO_LARGE": "Payload Too Large",
-        "INTERNAL_SERVER_ERROR": "Internal Server Error",
-        "SOME_THING_WENT_WRONG": "Something went wrong"
+    "intellectualProperty": {
+      "title": "Intellectual Property",
+      "text1": "Users are responsible for ensuring they have the necessary rights and permissions to use intellectual property on the Platform.",
+      "text2": "Health4Travel respects intellectual property rights and will respond to valid infringement claims promptly."
     },
-    "TABS_KEY": {
-        "current": "Current",
-        "history": "History",
-        "ENABLED": "Enabled",
-        "DISABLED": "Disabled",
-        "ALL": "All"
+    "userAccounts": {
+      "title": "User Accounts",
+      "text1": "Users are responsible for maintaining the security and accuracy of their accounts.",
+      "text2": "Do not share login credentials or allow unauthorized access to your account."
     },
-    "HEADING": {
-        "HEALTH$TRAVEL_ADMIN": "Health4Travel - Admin",
-        "BASIC_DETAILS": "Company Details",
-        "REGISTERED_ADDRESS": "Registered Address",
-        "CONTACT_DETAILS": "Contact Details",
-        "BANK_DETAILS": "Bank Account Information",
-        "CONFIGURATIONS": "H4T Fee Configurations *",
-        "OPERATING_HOURS": "Available Booking Times",
-        "OPERATING_HOURS_TOOLTIP": "For 24-hour availability, please set all start and end times to 00:00. If you have no breaks, please set the break start and end times to 00:00.",
-        "SELECT_LOCATIONS": "Which locations is this service available in?",
-        "CREATE_USER": "Create User",
-        "UPDATE_USER": "Update User",
-        "CREATE_PRODUCT": "Create Product",
-        "UPDATE_PRODUCT": "Update Product",
-        "CREATE_PARTNER": "Create Partner",
-        "UPDATE_PARTNER": "Update Partner",
-        "CREATE_PARTNER_LOCATION": "Create Location",
-        "UPDATE_PARTNER_LOCATION": "Update Location",
-        "CREATE_PARTNER_PRODUCT": "Create Product",
-        "UPDATE_PARTNER_PRODUCT": "Update Product",
-        "SELECT_USER_LOCATIONS": "Which locations can this user operate?"
+    "terminationOfAccounts": {
+      "title": "Termination of Accounts",
+      "text": "Health4Travel reserves the right to suspend or terminate a User's access to the Platform for violations of this Agreement or for any other reason, in its sole discretion."
     },
-    "TABS_LABEL": {
-        "CURRENT": "current",
-        "PROFILE": "profile",
-        "PARTNERS": "partners",
-        "LOCATIONS": "Locations",
-        "PRODUCTS": "products",
-        "USER_ACCESS": "userAccess"
+    "disputeResolution": {
+      "title": "Dispute Resolution",
+      "text": "Users agree to resolve disputes with other Users through peaceful means, including negotiation and mediation if necessary."
     },
-    "TABLE_NO_RECORDS_TEXT": {
-        "PARTNERS": "No partners found.",
-        "ORDERS": "No orders found.",
-        "LOCATIONS": "No locations found.",
-        "PRODUCTS": "No products found.",
-        "USERS": "No users found.",
-        "LOCATION_AVAILABLE": "No locations available."
+    "reportingViolations": {
+      "title": "Reporting Violations",
+      "text": "Users can report violations of this Agreement or other misconduct on the Platform through the designated reporting mechanism."
     },
-    "privacyPolicy": {
-        "title": "Health4Travel Acceptable Use Agreement",
-        "introText": "This Health4Travel Acceptable Use Agreement (\"Agreement\") is entered into by and between Health4Travel (iFlyIT BV) (\"Health4Travel\") and all users of the Health4Travel platform (\"User\").",
-        "purpose": {
-            "title": "Purpose",
-            "text": "This Agreement sets forth the terms and conditions under which Users may access and use the Health4Travel platform (\"Platform\"). By accessing or using the Platform, you agree to be bound by the terms of this Agreement."
-        },
-        "userConduct": {
-            "title": "User Conduct",
-            "text1": "Users must use the Platform in a lawful and ethical manner.",
-            "text2": "Prohibited activities include, but are not limited to:",
-            "items": [
-                "Fraudulent or misleading practices.",
-                "Harassment, hate speech, or threats.",
-                "Unauthorized access to other users' accounts or data.",
-                "Violation of intellectual property rights."
-            ]
-        },
-        "contentGuidelines": {
-            "title": "Content Guidelines",
-            "text": "Users must adhere to the following content guidelines:",
-            "items": [
-                "Post accurate and non-deceptive content.",
-                "Prohibit content that is offensive, harmful, or illegal.",
-                "Respect intellectual property rights; do not use copyrighted materials without permission."
-            ]
-        },
-        "prohibitedItems": {
-            "title": "Prohibited Items or Services",
-            "text": "Users may not offer, list, or promote:",
-            "items": [
-                "Products or services that are illegal, counterfeit, or infringe on intellectual property rights.",
-                "Controlled substances, illegal drugs, or drug paraphernalia.",
-                "Items or services that are prohibited by applicable laws or regulations."
-            ]
-        },
-        "privacyAndData": {
-            "title": "Privacy and Data Handling",
-            "text": "Users must comply with the Health4Travel Privacy Policy, available at ",
-            "link": "https://health4travel.com/wp-content/uploads/2023/09/T2T-privacy-policy.pdf"
-        },
-        "intellectualProperty": {
-            "title": "Intellectual Property",
-            "text1": "Users are responsible for ensuring they have the necessary rights and permissions to use intellectual property on the Platform.",
-            "text2": "Health4Travel respects intellectual property rights and will respond to valid infringement claims promptly."
-        },
-        "userAccounts": {
-            "title": "User Accounts",
-            "text1": "Users are responsible for maintaining the security and accuracy of their accounts.",
-            "text2": "Do not share login credentials or allow unauthorized access to your account."
-        },
-        "terminationOfAccounts": {
-            "title": "Termination of Accounts",
-            "text": "Health4Travel reserves the right to suspend or terminate a User's access to the Platform for violations of this Agreement or for any other reason, in its sole discretion."
-        },
-        "disputeResolution": {
-            "title": "Dispute Resolution",
-            "text": "Users agree to resolve disputes with other Users through peaceful means, including negotiation and mediation if necessary."
-        },
-        "reportingViolations": {
-            "title": "Reporting Violations",
-            "text": "Users can report violations of this Agreement or other misconduct on the Platform through the designated reporting mechanism."
-        },
-        "liabilityDisclaimer": {
-            "title": "Liability Disclaimer",
-            "text": "Health4Travel is a platform and technology provider and is not responsible or liable for the quality, safety, or legality of products or services offered by Users on the Platform."
-        },
-        "governingLaw": {
-            "title": "Governing Law",
-            "text": "This Agreement shall be governed by and construed in accordance with the laws of The Netherlands."
-        },
-        "updatesToAgreement": {
-            "title": "Updates to the Agreement",
-            "text": "Health4Travel reserves the right to modify this Agreement and will provide notice of any changes via email and the platform. Continued use of the Platform constitutes acceptance of the revised Agreement."
-        },
-        "contactInformation": {
-            "title": "Contact Information",
-            "text": "For questions or concerns regarding this Agreement, please contact Health4Travel at ",
-            "email": "info@health4travel.fi"
-        },
-        "acceptance": {
-            "text": "By using the Health4Travel Platform, you acknowledge that you have read, understood, and agree to abide by the terms and conditions of this Acceptable Use Agreement."
-        }
+    "liabilityDisclaimer": {
+      "title": "Liability Disclaimer",
+      "text": "Health4Travel is a platform and technology provider and is not responsible or liable for the quality, safety, or legality of products or services offered by Users on the Platform."
     },
-    "HEALTH4TRAVEL": "Health4Travel",
-    "SUCCESS": {
-        "LOGIN_SUCCESS": "Login Successfully!",
-        "PARTNER_CREATED": "Partner created successfully",
-        "PARTNER_UPDATED": "Partner updated successfully",
-        "PARTNER_USER_CREATED": "Partner user created successfully",
-        "PARTNER_USER_UPDATED": "Partner user updated successfully",
-        "PARTNER_LOCATION_CREATED": "Partner location created successfully",
-        "PARTNER_LOCATION_UPDATED": "Partner location updated successfully",
-        "PARTNER_PRODUCT_CREATED": "Partner product created successfully",
-        "PARTNER_PRODUCT_UPDATED": "Partner product updated successfully"
+    "governingLaw": {
+      "title": "Governing Law",
+      "text": "This Agreement shall be governed by and construed in accordance with the laws of The Netherlands."
     },
-    "LONGITUDE_LATITUDE": {
-        "title": "How to find Longitude and Latitude",
-        "text": "To find the longitude and latitude of a location, you can use various methods:",
-        "list": [
-            "Visit ",
-            "Copy and paste the first number into the “Latitude” box.",
-            "Copy and paste the second number into the “Longitude” box."
-        ]
+    "updatesToAgreement": {
+      "title": "Updates to the Agreement",
+      "text": "Health4Travel reserves the right to modify this Agreement and will provide notice of any changes via email and the platform. Continued use of the Platform constitutes acceptance of the revised Agreement."
     },
-    "REFRESH_TOKEN_KEY": "refreshToken",
-    "DELAY_COUNT": 30,
-    "timeFormat": "HH:mm",
-    "ACCESS_TOKEN_KEY": "accessToken"
+    "contactInformation": {
+      "title": "Contact Information",
+      "text": "For questions or concerns regarding this Agreement, please contact Health4Travel at ",
+      "email": "info@health4travel.fi"
+    },
+    "acceptance": {
+      "text": "By using the Health4Travel Platform, you acknowledge that you have read, understood, and agree to abide by the terms and conditions of this Acceptable Use Agreement."
+    }
+  },
+  "HEALTH4TRAVEL": "Health4Travel",
+  "SUCCESS": {
+    "LOGIN_SUCCESS": "Login Successfully!",
+    "PARTNER_CREATED": "Partner created successfully",
+    "PARTNER_UPDATED": "Partner updated successfully",
+    "PARTNER_USER_CREATED": "Partner user created successfully",
+    "PARTNER_USER_UPDATED": "Partner user updated successfully",
+    "PARTNER_LOCATION_CREATED": "Partner location created successfully",
+    "PARTNER_LOCATION_UPDATED": "Partner location updated successfully",
+    "PARTNER_PRODUCT_CREATED": "Partner product created successfully",
+    "PARTNER_PRODUCT_UPDATED": "Partner product updated successfully"
+  },
+  "LONGITUDE_LATITUDE": {
+    "title": "How to find Longitude and Latitude",
+    "text": "To find the longitude and latitude of a location, you can use various methods:",
+    "list": [
+      "Visit ",
+      "Copy and paste the first number into the “Latitude” box.",
+      "Copy and paste the second number into the “Longitude” box."
+    ]
+  },
+  "REFRESH_TOKEN_KEY": "refreshToken",
+  "DELAY_COUNT": 30,
+  "timeFormat": "HH:mm",
+  "ACCESS_TOKEN_KEY": "accessToken"
 }
