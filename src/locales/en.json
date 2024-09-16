@@ -330,5 +330,20 @@
   "REFRESH_TOKEN_KEY": "refreshToken",
   "DELAY_COUNT": 30,
   "timeFormat": "HH:mm",
-  "ACCESS_TOKEN_KEY": "accessToken"
+  "ACCESS_TOKEN_KEY": "accessToken",
+  "BOOKING_NO": "Booking number",
+  "ORDER": {
+    "LOCATION": "Location",
+    "BOOKING_DATE": "Booking date",
+    "NO_PEOPLE": "Number of people",
+    "PAID": "Paid",
+    "ADDITIONAL_CHARGES": "Additional charges",
+    "ORDER_NO": "Order number",
+    "VISITOR": "Visitor",
+    "INSURANCE": "Insurance",
+    "DATE_TIME": "Date and time",
+    "SUB_TOTAL": "Subtotal",
+    "PAID_AMOUNT": "Paid amount",
+    "PAYABLE_AMOUNT": "Payable amount"
+  }
 }
