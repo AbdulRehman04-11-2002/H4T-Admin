@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 import Table, { ColumnsType } from "antd/es/table";
 import { ApiError } from "../../services/api/Index";
 import { AmountState } from "../../interface/Order";
+import { useContext, useEffect, useState } from "react";
 import { getOrderDetail } from "../../services/api/order";
-import { useContext, useEffect, useMemo, useState } from "react";
 import { Card, Col, List, Row, Space, Tag, Typography } from "antd";
 import { LoaderContext, LoaderContextValue } from "../../context/LoaderContext";
 import {
@@ -38,11 +38,6 @@ const OrderDetails = () => {
   const [orderItems, setOrderItems] = useState<any>([]);
   const [bookingInfo, setBookingInfo] = useState<any>([]);
   const [orderTotal, setOrderTotal] = useState<AmountState>({ total: 0 });
-  const [additionalCharges, setAdditionalCharges] = useState<number>(0)
-  const [
-    totalAmountInclAdditionalServices,
-    setTotalAmountInclAdditionalServices,
-  ] = useState<number>(0);
 
   const { id } = useParams();
   const { showLoader, hideLoader } = useContext(
@@ -52,26 +47,6 @@ const OrderDetails = () => {
   useEffect(() => {
     id && fetchOrderDetailById(id);
   }, []);
-
-  const calculateAmountInclAdditionalServices = useMemo(() => {
-    return Object.values(orderTotal).reduce((acc, val) => acc + val, 0);
-  }, [orderTotal]);
-
-  const handleOrderTotal = (amount: number, id: number) => {
-    setOrderTotal((prevAmounts) => ({ ...prevAmounts, [id]: amount }));
-  };
-
-  useEffect(() => {
-    // if (calculateAmountInclAdditionalServices > 0 && data?.totalPaidServicesAmount && calculateAmountInclAdditionalServices > data?.totalPaidServicesAmount) {
-    //     setGeneratePaymentBtn(true);
-    // }
-    // else {
-    //     setGeneratePaymentBtn(false);
-    // }
-    // setButtonContent(getButtonTitleFn)
-    setTotalAmountInclAdditionalServices(calculateAmountInclAdditionalServices);
-  }, [calculateAmountInclAdditionalServices, totalAmountInclAdditionalServices]);
-
   const columns: ColumnsType<any> = [
     {
       title: `SERVICES`,
@@ -88,59 +63,6 @@ const OrderDetails = () => {
     },
   ];
 
-  const calculateAdditionalChargesAmount = (orderItems: any, data: any) => {
-    console.log("calling Function")
-    console.log("data", data)
-    console.log("orderItems", orderItems[0]?.productPrice)
-    let total = 0;
-    orderItems.forEach((item: any) => {
-      total = item?.productPrice;
-      // console.log("other_services", item.other_services)
-      // console.log("productPrice", item?.productPrice)
-      // console.log("totalPaidServicesAmount", item?.totalPaidServicesAmount)
-    });
-    console.log("total", total)
-
-    // orderItems.map((order: any, index: number) => {
-    //   let subTotal = order?.productPrice;
-    //   subTotal += order?.other_services.reduce(
-    //     (acc: any, currentVal: any) => {
-    //       let amountToAdd =
-    //         typeof currentVal.productPrice === "string"
-    //           ? parseFloat(currentVal.productPrice)
-    //           : currentVal.productPrice;
-    //       return acc + amountToAdd;
-    //     },
-    //     0
-    //   );
-
-    // let subTotal = order?.productPrice;
-    //         subTotal += order?.other_services.reduce(
-    //           (acc: any, currentVal: any) => {
-    //             let amountToAdd =
-    //               typeof currentVal.productPrice === "string"
-    //                 ? parseFloat(currentVal.productPrice)
-    //                 : currentVal.productPrice;
-    //             return acc + amountToAdd;
-    //           },
-    //           0
-    //         )
-    // totalAmountInclAdditionalServices,
-    //   response?.data?.order.totalPaidServicesAmount
-    // let subTotal = data?.order?.productPrice;
-    // console.log("subTotal: " + subTotal);
-    // subTotal += order?.other_services.reduce(
-    //   (acc: any, currentVal: any) => {
-    //     let amountToAdd =
-    //       typeof currentVal.productPrice === "string"
-    //         ? parseFloat(currentVal.productPrice)
-    //         : currentVal.productPrice;
-    //     return acc + amountToAdd;
-    //   },
-    //   0
-    // );
-  }
-
   const fetchOrderDetailById = async (id: string) => {
     showLoader();
     try {
@@ -148,13 +70,35 @@ const OrderDetails = () => {
       if (response?.success) {
         setData(response?.data?.order);
         setOrderItems(response?.data?.order?.order_items);
-        // setAdditionalCharges(orderItems.map((order:any,index:number) => ))
+        let totalSubTotal = 0;
+        response?.data?.order?.order_items.forEach((order: any) => {
+          let subTotal =
+            typeof order?.productPrice === "string"
+              ? parseFloat(order.productPrice)
+              : order?.productPrice || 0;
+
+          if (Array.isArray(order?.other_services)) {
+            subTotal += order?.other_services.reduce(
+              (acc: any, currentVal: any) => {
+                let amountToAdd =
+                  typeof currentVal.productPrice === "string"
+                    ? parseFloat(currentVal.productPrice)
+                    : currentVal.productPrice || 0;
+                return acc + amountToAdd;
+              },
+              0
+            );
+          }
+          totalSubTotal += subTotal;
+          totalSubTotal -= order?.totalPaidServicesAmount;
+        });
+
         setBookingInfo([
           {
             id: 0,
             title: ORDER.LOCATION,
             content:
-              response?.data?.order.order_items[0]?.partnerLocation?.name
+              response?.data?.order.order_items[0]?.partnerLocation?.name,
           },
           {
             id: 2,
@@ -172,28 +116,19 @@ const OrderDetails = () => {
           {
             id: 4,
             title: ORDER.PAID,
-            content: `€ ${response?.data?.order.totalPaidServicesAmount
-              ? formatToTwoDecimalPlaces(
-                response?.data?.order.totalPaidServicesAmount
-              )
-              : 0
-              }`,
+            content: `€ ${
+              response?.data?.order.totalPaidServicesAmount
+                ? formatToTwoDecimalPlaces(
+                    response?.data?.order.totalPaidServicesAmount
+                  )
+                : 0
+            }`,
           },
           {
             id: 5,
             title: ORDER.ADDITIONAL_CHARGES,
-            content: `€ ${calculateAdditionalChargesAmount(response?.data?.order?.order_items, response?.data)}`,
-            // content: `€ ${calculateAdditionalCharges(
-            //   totalAmountInclAdditionalServices,
-            //   response?.data?.order.totalPaidServicesAmount
-            // )}`,
-            bgColor: `${calculateAdditionalCharges(
-              totalAmountInclAdditionalServices,
-              response?.data?.order.totalPaidServicesAmount
-            ) > 0
-              ? "#F9C510"
-              : "#E8ECEF"
-              }`,
+            content: `€ ${totalSubTotal}`,
+            bgColor: `${totalSubTotal > 0 ? "#F9C510" : "#E8ECEF"}`,
           },
         ]);
       }
@@ -201,7 +136,6 @@ const OrderDetails = () => {
       const _error = error as ApiError;
       const { errorMessage } = handleErrorResponse(_error);
       openToastNotification(NOTIFICATION_STATUS.ERROR, errorMessage);
-      console.log("error", _error);
     } finally {
       hideLoader();
     }
@@ -252,6 +186,7 @@ const OrderDetails = () => {
                   title={item.title}
                   bordered={false}
                   className="equal-height-card"
+                  style={{ background: item?.bgColor }}
                 >
                   {item.content}
                 </Card>
@@ -334,11 +269,6 @@ const OrderDetails = () => {
                     }
                     bordered={false}
                     dataSource={[...dataTable]}
-                    // dataSource={
-                    //   [
-                    //   [order?.productName,...order?.other_services],
-                    //   { key: "addRowButton" },
-                    // ]}
                     columns={columns}
                   />
                   <Row justify={"end"} style={{ paddingTop: "16px" }}>
