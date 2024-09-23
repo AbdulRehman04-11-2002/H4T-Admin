@@ -3,7 +3,7 @@ name: H4T-Admin-FE-CI-CD-Workflow
 on:
   push:
     branches:
-      - bug/create-update-partner-product-allow-user-to-input-decimal-values-while-adding-price-of-the-productMilestone-2.5
+      - bug/create-update-partner-product-allow-user-to-input-decimal-values-while-adding-price-of-the-product
       - main
       - stage
 
