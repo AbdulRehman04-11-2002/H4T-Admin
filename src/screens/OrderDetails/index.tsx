@@ -36,9 +36,9 @@ const OrderDetails = () => {
 
   const [data, setData] = useState<any>();
   const [orderItems, setOrderItems] = useState<any>([]);
-  const [dataSource, setDataSource] = useState<any>([]);
   const [bookingInfo, setBookingInfo] = useState<any>([]);
   const [orderTotal, setOrderTotal] = useState<AmountState>({ total: 0 });
+  const [additionalCharges, setAdditionalCharges] = useState<number>(0)
   const [
     totalAmountInclAdditionalServices,
     setTotalAmountInclAdditionalServices,
@@ -53,14 +53,24 @@ const OrderDetails = () => {
     id && fetchOrderDetailById(id);
   }, []);
 
-  const data1 = [
-    { label: `Sub total`, amount: formatToTwoDecimalPlaces(0) },
-    { label: `Paid amount`, amount: 25 },
-    {
-      label: `Payable amount`,
-      amount: calculateAdditionalCharges(25, 35),
-    },
-  ];
+  const calculateAmountInclAdditionalServices = useMemo(() => {
+    return Object.values(orderTotal).reduce((acc, val) => acc + val, 0);
+  }, [orderTotal]);
+
+  const handleOrderTotal = (amount: number, id: number) => {
+    setOrderTotal((prevAmounts) => ({ ...prevAmounts, [id]: amount }));
+  };
+
+  useEffect(() => {
+    // if (calculateAmountInclAdditionalServices > 0 && data?.totalPaidServicesAmount && calculateAmountInclAdditionalServices > data?.totalPaidServicesAmount) {
+    //     setGeneratePaymentBtn(true);
+    // }
+    // else {
+    //     setGeneratePaymentBtn(false);
+    // }
+    // setButtonContent(getButtonTitleFn)
+    setTotalAmountInclAdditionalServices(calculateAmountInclAdditionalServices);
+  }, [calculateAmountInclAdditionalServices, totalAmountInclAdditionalServices]);
 
   const columns: ColumnsType<any> = [
     {
@@ -71,12 +81,65 @@ const OrderDetails = () => {
     },
     {
       title: `Amount (€)`,
-      dataIndex: "amount",
-      key: "amount",
+      dataIndex: "productPrice",
+      key: "productPrice",
       width: 200,
-      render: (text) => <Space>{text}</Space>,
+      render: (text) => <Space>{formatToTwoDecimalPlaces(text)}</Space>,
     },
   ];
+
+  const calculateAdditionalChargesAmount = (orderItems: any, data: any) => {
+    console.log("calling Function")
+    console.log("data", data)
+    console.log("orderItems", orderItems[0]?.productPrice)
+    let total = 0;
+    orderItems.forEach((item: any) => {
+      total = item?.productPrice;
+      // console.log("other_services", item.other_services)
+      // console.log("productPrice", item?.productPrice)
+      // console.log("totalPaidServicesAmount", item?.totalPaidServicesAmount)
+    });
+    console.log("total", total)
+
+    // orderItems.map((order: any, index: number) => {
+    //   let subTotal = order?.productPrice;
+    //   subTotal += order?.other_services.reduce(
+    //     (acc: any, currentVal: any) => {
+    //       let amountToAdd =
+    //         typeof currentVal.productPrice === "string"
+    //           ? parseFloat(currentVal.productPrice)
+    //           : currentVal.productPrice;
+    //       return acc + amountToAdd;
+    //     },
+    //     0
+    //   );
+
+    // let subTotal = order?.productPrice;
+    //         subTotal += order?.other_services.reduce(
+    //           (acc: any, currentVal: any) => {
+    //             let amountToAdd =
+    //               typeof currentVal.productPrice === "string"
+    //                 ? parseFloat(currentVal.productPrice)
+    //                 : currentVal.productPrice;
+    //             return acc + amountToAdd;
+    //           },
+    //           0
+    //         )
+    // totalAmountInclAdditionalServices,
+    //   response?.data?.order.totalPaidServicesAmount
+    // let subTotal = data?.order?.productPrice;
+    // console.log("subTotal: " + subTotal);
+    // subTotal += order?.other_services.reduce(
+    //   (acc: any, currentVal: any) => {
+    //     let amountToAdd =
+    //       typeof currentVal.productPrice === "string"
+    //         ? parseFloat(currentVal.productPrice)
+    //         : currentVal.productPrice;
+    //     return acc + amountToAdd;
+    //   },
+    //   0
+    // );
+  }
 
   const fetchOrderDetailById = async (id: string) => {
     showLoader();
@@ -85,51 +148,54 @@ const OrderDetails = () => {
       if (response?.success) {
         setData(response?.data?.order);
         setOrderItems(response?.data?.order?.order_items);
+        // setAdditionalCharges(orderItems.map((order:any,index:number) => ))
         setBookingInfo([
           {
             id: 0,
             title: ORDER.LOCATION,
-            content: data?.order_items[0]?.partnerLocation?.name,
+            content:
+              response?.data?.order.order_items[0]?.partnerLocation?.name
           },
           {
             id: 2,
             title: ORDER.BOOKING_DATE,
             content:
-              data?.order_items?.length > 0
-                ? getBookingDate(data?.order_items[0])
+              response?.data?.order.order_items?.length > 0
+                ? getBookingDate(response?.data?.order.order_items[0])
                 : "-",
           },
           {
             id: 3,
             title: ORDER.NO_PEOPLE,
-            content: data?.order_items.length,
+            content: response?.data?.order.order_items.length,
           },
           {
             id: 4,
             title: ORDER.PAID,
-            content: `€ ${data?.totalPaidServicesAmount
-                ? formatToTwoDecimalPlaces(data?.totalPaidServicesAmount)
-                : 0
+            content: `€ ${response?.data?.order.totalPaidServicesAmount
+              ? formatToTwoDecimalPlaces(
+                response?.data?.order.totalPaidServicesAmount
+              )
+              : 0
               }`,
           },
           {
             id: 5,
             title: ORDER.ADDITIONAL_CHARGES,
-            content: `€ ${calculateAdditionalCharges(
-              totalAmountInclAdditionalServices,
-              data?.totalPaidServicesAmount
-            )}`,
+            content: `€ ${calculateAdditionalChargesAmount(response?.data?.order?.order_items, response?.data)}`,
+            // content: `€ ${calculateAdditionalCharges(
+            //   totalAmountInclAdditionalServices,
+            //   response?.data?.order.totalPaidServicesAmount
+            // )}`,
             bgColor: `${calculateAdditionalCharges(
               totalAmountInclAdditionalServices,
-              data?.totalPaidServicesAmount
+              response?.data?.order.totalPaidServicesAmount
             ) > 0
-                ? "#F9C510"
-                : "#E8ECEF"
+              ? "#F9C510"
+              : "#E8ECEF"
               }`,
           },
         ]);
-        console.log("order items", response?.data?.order?.order_items);
-        // setTotalAmount(data?.totalAmount);
       }
     } catch (error) {
       const _error = error as ApiError;
@@ -140,25 +206,6 @@ const OrderDetails = () => {
       hideLoader();
     }
   };
-
-  const formattedDateTime = (
-    date: string,
-    timezone: string,
-    format: string
-  ) => {
-    if (date && timezone && format) {
-      return moment(date).tz(timezone).format(format);
-    }
-    return "-";
-  };
-
-  const handleOrderTotal = (amount: number, id: number) => {
-    setOrderTotal((prevAmounts) => ({ ...prevAmounts, [id]: amount }));
-  };
-
-  const calculateAmountInclAdditionalServices = useMemo(() => {
-    return Object.values(orderTotal).reduce((acc, val) => acc + val, 0);
-  }, [orderTotal]);
 
   return (
     <div className="create-partner-content ">
@@ -191,7 +238,7 @@ const OrderDetails = () => {
         </Row>
         <Row gutter={[16, 16]}>
           {bookingInfo.length > 0 &&
-            bookingInfo.map((item: any) => (
+            bookingInfo.map((item: any, index: number) => (
               <Col
                 xs={24}
                 sm={12}
@@ -199,6 +246,7 @@ const OrderDetails = () => {
                 lg={6}
                 xl={4}
                 className="booking-columns"
+                key={index}
               >
                 <Card
                   title={item.title}
@@ -214,17 +262,18 @@ const OrderDetails = () => {
       <Row justify="center" gutter={16}>
         {orderItems.length > 0 &&
           orderItems.map((order: any, index: number) => {
-            const subTotal = order?.other_services.reduce(
+            let subTotal = order?.productPrice;
+            subTotal += order?.other_services.reduce(
               (acc: any, currentVal: any) => {
                 let amountToAdd =
-                  typeof currentVal.amount === "string"
-                    ? parseFloat(currentVal.amount)
-                    : currentVal.amount;
+                  typeof currentVal.productPrice === "string"
+                    ? parseFloat(currentVal.productPrice)
+                    : currentVal.productPrice;
                 return acc + amountToAdd;
               },
               0
             );
-            const data = [
+            const additionalServicesData = [
               {
                 label: `${ORDER.SUB_TOTAL}`,
                 amount: formatToTwoDecimalPlaces(subTotal),
@@ -240,6 +289,13 @@ const OrderDetails = () => {
                   order?.totalPaidServicesAmount
                 ),
               },
+            ];
+            const dataTable = [
+              {
+                name: order?.productName,
+                productPrice: order?.productPrice,
+              },
+              ...order?.other_services,
             ];
             return (
               <Col
@@ -277,17 +333,19 @@ const OrderDetails = () => {
                       record.editable ? "editable-row" : ""
                     }
                     bordered={false}
-                    dataSource={[
-                      ...order?.other_services,
-                      { key: "addRowButton" },
-                    ]}
+                    dataSource={[...dataTable]}
+                    // dataSource={
+                    //   [
+                    //   [order?.productName,...order?.other_services],
+                    //   { key: "addRowButton" },
+                    // ]}
                     columns={columns}
                   />
                   <Row justify={"end"} style={{ paddingTop: "16px" }}>
                     <List
                       style={{ width: "200px" }}
                       size="large"
-                      dataSource={data}
+                      dataSource={additionalServicesData}
                       renderItem={(item) => (
                         <List.Item>
                           <Row style={{ display: "contents" }}>

@@ -344,6 +344,8 @@
     "DATE_TIME": "Date and time",
     "SUB_TOTAL": "Subtotal",
     "PAID_AMOUNT": "Paid amount",
-    "PAYABLE_AMOUNT": "Payable amount"
+    "PAYABLE_AMOUNT": "Payable amount",
+    "INSURANCE_NAME": "Insurance name",
+    "POLICY_NUMBER": "Policy number"
   }
 }

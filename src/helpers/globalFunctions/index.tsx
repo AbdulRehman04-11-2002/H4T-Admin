@@ -127,6 +127,7 @@ export const getCountryCodeByIp = async () => {
     }
 }
 
-export const formatToTwoDecimalPlaces = (value: number) => {
-    return parseFloat(value.toFixed(2));
+export const formatToTwoDecimalPlaces = (value: number): number => {
+    if (value < 0) return -formatToTwoDecimalPlaces(-value);
+    return +(Math.round(+(value + 'e+2')) + 'e-2');
 };
