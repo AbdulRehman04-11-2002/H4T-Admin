@@ -60,7 +60,7 @@ jobs:
 
       # upload to s3 bucket of dev
       - name: Upload to S3 Dev develop
-        if: github.ref == 'refs/heads/Milestone-2.5'
+        if: github.ref == 'refs/heads/enhancement/admin-portal-implement-order-detail-view'
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read
@@ -72,7 +72,7 @@ jobs:
 
       # invalidate outdated cache
       - name: Cloudfront Cache Invalidation Dev
-        if: github.ref == 'refs/heads/Milestone-2.5'
+        if: github.ref == 'refs/heads/enhancement/admin-portal-implement-order-detail-view'
         uses: chetan/invalidate-cloudfront-action@master
         env:
           DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_DEVELOPMENT }}
