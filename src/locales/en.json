@@ -94,7 +94,8 @@
     "LOCATION": "Location",
     "ALL_LOCATIONS_ACCESS": "This user has access to all locations.",
     "ALLOW_ALL_LOCATIONS": "Allow for all locations",
-    "SELECT_ALL": "Select all"
+    "SELECT_ALL": "Select all",
+    "AMOUNT":"Amount"
   },
   "PLACEHOLDERS": {
     "SEARCH": "Search",

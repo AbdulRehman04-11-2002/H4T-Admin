@@ -73,7 +73,6 @@ export const calculateAdditionalCharges = (
     total: number,
     totalPaidServicesAmount?: number
 ) => {
-    debugger;
     if (totalPaidServicesAmount) {
         const additionalCharge = Math.abs(total - totalPaidServicesAmount);
         return totalPaidServicesAmount > total

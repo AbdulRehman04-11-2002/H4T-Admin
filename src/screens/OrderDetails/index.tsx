@@ -32,12 +32,12 @@ const { Text } = Typography;
 const OrderDetails = () => {
   const { t } = useTranslation();
   const bookingNumber: any = t("BOOKING_NO");
+  const LABELS: any = t("LABELS", { returnObjects: true });
   const ORDER: any = t("ORDER", { returnObjects: true });
 
   const [data, setData] = useState<any>();
   const [orderItems, setOrderItems] = useState<any>([]);
   const [bookingInfo, setBookingInfo] = useState<any>([]);
-  const [orderTotal, setOrderTotal] = useState<AmountState>({ total: 0 });
 
   const { id } = useParams();
   const { showLoader, hideLoader } = useContext(
@@ -47,15 +47,16 @@ const OrderDetails = () => {
   useEffect(() => {
     id && fetchOrderDetailById(id);
   }, []);
+
   const columns: ColumnsType<any> = [
     {
-      title: `SERVICES`,
+      title: `${LABELS.SERVICES}`,
       dataIndex: "name",
       key: "name",
       render: (text) => text,
     },
     {
-      title: `Amount (€)`,
+      title: `${LABELS.AMOUNT} (€)`,
       dataIndex: "productPrice",
       key: "productPrice",
       width: 200,
@@ -76,7 +77,6 @@ const OrderDetails = () => {
             typeof order?.productPrice === "string"
               ? parseFloat(order.productPrice)
               : order?.productPrice || 0;
-
           if (Array.isArray(order?.other_services)) {
             subTotal += order?.other_services.reduce(
               (acc: any, currentVal: any) => {
@@ -90,7 +90,9 @@ const OrderDetails = () => {
             );
           }
           totalSubTotal += subTotal;
-          totalSubTotal -= order?.totalPaidServicesAmount;
+          totalSubTotal =
+            Number(totalSubTotal.toFixed(2)) -
+            Number(order?.totalPaidServicesAmount.toFixed(2));
         });
 
         setBookingInfo([
@@ -220,8 +222,8 @@ const OrderDetails = () => {
               {
                 label: `${ORDER.PAYABLE_AMOUNT}`,
                 amount: calculateAdditionalCharges(
-                  subTotal,
-                  order?.totalPaidServicesAmount
+                  Number(subTotal.toFixed(2)),
+                  Number(order?.totalPaidServicesAmount.toFixed(2))
                 ),
               },
             ];
