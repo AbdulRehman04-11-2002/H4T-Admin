@@ -181,10 +181,6 @@ body {
   background-color: rgb(243, 245, 246);
 }
 
-.booking-details .ant-card-body {
-  background-color: rgb(232, 236, 239);
-}
-
 .booking-columns {
   display: flex;
 }
