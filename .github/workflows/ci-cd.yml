@@ -6,7 +6,6 @@ on:
       - enhancement/admin-portal-implement-order-detail-view
       - main
       - stage
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
