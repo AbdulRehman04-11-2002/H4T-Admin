@@ -30,16 +30,9 @@ const OrderInfo = ({ order }: Props) => {
       title: `${ORDER.INSURANCE}`,
       content: (
         <>
-          <div>
-            {order?.insuranceProviderName
-              ? `${ORDER.INSURANCE_NAME} ${order?.insuranceProviderName}`
-              : ORDER.NAME_NOT_PROVIDED}
-          </div>
-          <div>
-            {order?.insurancePolicyNumber
-              ? `${ORDER.POLICY_NUMBER} ${order?.insurancePolicyNumber}`
-              : ORDER.NUMBER_NOT_PROVIDED}
-          </div>
+          <div>{order?.insuranceProviderName ? `${ORDER.INSURANCE_NAME} ${order?.insuranceProviderName}` : ORDER.NAME_NOT_PROVIDED}</div>
+          <div>{order?.insurancePolicyNumber ? `${ORDER.POLICY_NUMBER} ${order?.insurancePolicyNumber}` : ORDER.NUMBER_NOT_PROVIDED}</div>
+          <div style={{ visibility: "hidden" }}>{ORDER.POLICY_NUMBER}</div>
         </>
       ),
     },
@@ -50,6 +43,7 @@ const OrderInfo = ({ order }: Props) => {
         <>
           <div>{formattedDateTime(date, timezone, "MMM DD, dddd")}</div>
           <div>{formattedDateTime(date, timezone, "HH:mm")}</div>
+          <div style={{ visibility: "hidden" }}>{formattedDateTime(date, timezone, "HH:mm")}</div>
         </>
       ),
     },

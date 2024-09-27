@@ -347,6 +347,8 @@
     "PAID_AMOUNT": "Paid amount",
     "PAYABLE_AMOUNT": "Payable amount",
     "INSURANCE_NAME": "Insurance name",
-    "POLICY_NUMBER": "Policy number"
+    "POLICY_NUMBER": "Policy number",
+    "NAME_NOT_PROVIDED": "Insurance name not provided",
+    "NUMBER_NOT_PROVIDED": "Policy number not provided"
   }
 }
