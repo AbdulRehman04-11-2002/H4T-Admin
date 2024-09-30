@@ -94,7 +94,8 @@
     "LOCATION": "Location",
     "ALL_LOCATIONS_ACCESS": "This user has access to all locations.",
     "ALLOW_ALL_LOCATIONS": "Allow for all locations",
-    "SELECT_ALL": "Select all"
+    "SELECT_ALL": "Select all",
+    "AMOUNT":"Amount"
   },
   "PLACEHOLDERS": {
     "SEARCH": "Search",
@@ -330,5 +331,24 @@
   "REFRESH_TOKEN_KEY": "refreshToken",
   "DELAY_COUNT": 30,
   "timeFormat": "HH:mm",
-  "ACCESS_TOKEN_KEY": "accessToken"
+  "ACCESS_TOKEN_KEY": "accessToken",
+  "BOOKING_NO": "Booking number",
+  "ORDER": {
+    "LOCATION": "Location",
+    "BOOKING_DATE": "Booking date",
+    "NO_PEOPLE": "Number of people",
+    "PAID": "Paid",
+    "ADDITIONAL_CHARGES": "Additional charges",
+    "ORDER_NO": "Order number",
+    "VISITOR": "Visitor",
+    "INSURANCE": "Insurance",
+    "DATE_TIME": "Date and time",
+    "SUB_TOTAL": "Subtotal",
+    "PAID_AMOUNT": "Paid amount",
+    "PAYABLE_AMOUNT": "Payable amount",
+    "INSURANCE_NAME": "Insurance name",
+    "POLICY_NUMBER": "Policy number",
+    "NAME_NOT_PROVIDED": "Insurance name not provided",
+    "NUMBER_NOT_PROVIDED": "Policy number not provided"
+  }
 }

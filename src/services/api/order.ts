@@ -1,4 +1,4 @@
-import { GetOrderItemsApiResponse } from "../../interface/Order";
+import { GetOrderItemsApiResponse, OrderDetailApiResponse } from "../../interface/Order";
 import { api } from "./Index";
 
 export const getOrderItems = async (
@@ -25,5 +25,10 @@ export const getOrderItems = async (
     const response = await api.get<GetOrderItemsApiResponse>("/order/orderItems", {
         params,
     });
+    return response.data;
+};
+
+export const getOrderDetail = async (id: string) => {
+    const response = await api.get<OrderDetailApiResponse>(`/order/${id}`);
     return response.data;
 };
