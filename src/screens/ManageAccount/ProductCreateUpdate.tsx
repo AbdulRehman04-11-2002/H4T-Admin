@@ -66,7 +66,9 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   const serviceTypeOnChange = (SelectedID: number) => {
     setIsDataChange(true)
-    setselectedServiceType(SelectedID)
+    form.setFieldsValue({
+      serviceType:SelectedID
+    });
     customerSeesPrice(SelectedID)
 
 
@@ -169,7 +171,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       description: form.getFieldValue("description"),
       guidelines: form.getFieldValue("customerGuidelines"),
       status: form.getFieldValue("status").toUpperCase(),
-      partnerServiceId: selectedServiceType,
+      partnerServiceId: form.getFieldValue("serviceType"),
       file: !isUpdateForm ? fileList[0] : fileList[0]?.thumbUrl ? fileList[0] : {},
       imageUrl: isUpdateForm ? (fileList[0] && fileList[0]?.thumbUrl ? "" : imageUrl) : "",
       locationIds: JSON.stringify(selectedLocations),
@@ -217,21 +219,18 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       description: data?.description,
       customerGuidelines: data?.guidelines,
       status: data?.status,
-      slotDuration: data?.slotDuration
+      slotDuration: data?.slotDuration,
+      serviceType:data.partner_service.id
     });
-    setselectedServiceType(data.partner_service.id)
     setselectedLocations(data?.partner_product_locations?.map((location: any) => location?.partner_location?.id) || [])
     setImageUrl(data?.imageUrl || "")
     data?.imageUrl ? setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: data?.imageUrl || "" }]) : setFileList([])
   }
 
   const submitFailed = (errorInfo: any) => {
-    console.log('submitFailed')
     const errorFields = errorInfo.errorFields;
     let firstErrorFieldName = "";
     for (const error of errorFields) {
-      console.log('error', error);
-
       const fieldName = error?.name[0].toString() || "";
       if (!firstErrorFieldName) {
         firstErrorFieldName = fieldName;
@@ -243,10 +242,6 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       }
     }
   };
-
-  const handleUpdate = () => {
-    console.log('handleUpdate')
-  }
 
   const handleOnChange = () => {
     setIsDataChange(true)
@@ -345,7 +340,6 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     ref={inputStatusRef as any}
                     autoFocus={false}
                     disabled={false}
-                    value={selectedServiceType}
                     onChange={serviceTypeOnChange}
                   >
                     {serviceOptions.map((service: any) => <Option key={service.value} value={service.value}>{service.label}</Option>)}
@@ -491,7 +485,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                         {LABELS.PRICE}
                       </label>
                     }
-                    rules={[{ required: true, message: ERRORS.PRICE }, { pattern: new RegExp(/^[0-9]+$/), message: t("ERRORS.VALID_INPUT", { type: "Price" }) }]}
+                    rules={[{ required: true, message: ERRORS.PRICE }, { pattern: new RegExp(/^[0-9]+(\.[0-9]{1,2})?$/), message: t("ERRORS.VALID_INPUT", { type: "Price" }) }]}
                     validateTrigger={["handleFinish", "handleUpdate"]}
                   >
                     <Input

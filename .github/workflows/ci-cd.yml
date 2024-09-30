@@ -3,7 +3,7 @@ name: H4T-Admin-FE-CI-CD-Workflow
 on:
   push:
     branches:
-      - enhancement/admin-portal-implement-order-detail-view
+      - milestone-2.6
       - main
       - stage
 jobs:
@@ -27,7 +27,7 @@ jobs:
         run: npm run build:prod
 
       - name: Build app development
-        if: github.ref == 'refs/heads/enhancement/admin-portal-implement-order-detail-view'
+        if: github.ref == 'refs/heads/milestone-2.6'
         run: npm run build:dev
 
       - name: Build app staging
@@ -59,7 +59,7 @@ jobs:
 
       # upload to s3 bucket of dev
       - name: Upload to S3 Dev develop
-        if: github.ref == 'refs/heads/enhancement/admin-portal-implement-order-detail-view'
+        if: github.ref == 'refs/heads/milestone-2.6'
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read
@@ -71,7 +71,7 @@ jobs:
 
       # invalidate outdated cache
       - name: Cloudfront Cache Invalidation Dev
-        if: github.ref == 'refs/heads/enhancement/admin-portal-implement-order-detail-view'
+        if: github.ref == 'refs/heads/milestone-2.6'
         uses: chetan/invalidate-cloudfront-action@master
         env:
           DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_DEVELOPMENT }}
