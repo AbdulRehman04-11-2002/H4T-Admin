@@ -57,6 +57,10 @@ export const ERRORS = {
     PRICE: "Please enter price",
     ROLE: "Please select role",
     VALID_EMAIL: "Please enter valid email",
+    EMAIL_REQUIRED:"Email field is required",
+    MISSING_ATRATE: "Email is missing the '@' symbol",
+    INVALID_EMAIL_FORMAT:"Invalid email format",
+    EMAIL_CONSECUTIVE_DTOS:"Email cannot contain consecutive dots"
 };
 
 export const API_ERRORS = {

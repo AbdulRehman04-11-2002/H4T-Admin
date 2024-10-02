@@ -15,6 +15,7 @@ import Loader from '../../components/Loader';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
 import { User, UserPartnerLocation } from '../../interface/PartnerUser';
 import { getPartnerLocations } from '../../services/api/partnerLocation';
+import { emailValidate } from '../../utils/globalFunctions';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -257,8 +258,13 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         form={form}
         autoComplete='off'
         onValuesChange={(changedValues, allValues) => {
+          const name = Object.keys(changedValues)?.[0];
+          const value = changedValues[name]; 
           if (changedValues.role) {
             handleRoleChange(changedValues.role);
+          }
+          if (name === "email" && value) {
+            form.setFieldValue(name, value.toLowerCase().trim());
           }
           setIsDataChange(true);
         }}
@@ -347,20 +353,33 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
               >
                 <Form.Item
                   validateStatus={errors.email ? "error" : ""}
-                  name='email'
-                  label={
-                    <label className='label '>
-                      {LABELS.EMAIL}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.EMAIL }]}
+                  name="email"
+                  label={<label className="label">{LABELS.EMAIL_ADDRESS}</label>}
+                  rules={[
+                    {
+                      required: true,
+                      message: ERRORS.EMAIL_REQUIRED,
+                    },
+                    {
+                      validator: (_, value) => {
+                        if (!value) {
+                          return Promise.resolve();
+                        }
+                        const validationError = emailValidate(value);
+                        if (validationError) {
+                          return Promise.reject(new Error(validationError));
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
                   validateTrigger={["handleFinish", "handleUpdate"]}
                 >
                   <Input
-                    placeholder={LABELS.EMAIL}
+                    placeholder={LABELS.EMAIL_ADDRESS}
                     ref={inputEmailRef as any}
                     autoFocus={false}
-                    disabled={isUpdateForm ? true : false}
+                    disabled={false}
                   />
                 </Form.Item>
               </Col>
