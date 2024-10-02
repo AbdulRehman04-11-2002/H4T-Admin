@@ -8,6 +8,7 @@ import TermsOfUse from '../screens/TermsOfUse/Index';
 import DynamicBreadcrumb from '../components/Breadcrumb/Index';
 import UserCreateUpdate from '../screens/ManageAccount/userCreateUpdate';
 import PlanningList from '../screens/Planning/PlanningList'
+import OrderDetails from '../screens/OrderDetails';
 
 const Routing = () => {
     return (
@@ -15,6 +16,7 @@ const Routing = () => {
             <DynamicBreadcrumb />
             <Routes>
                 <Route path='/' element={<PartnersList />} />
+                <Route path='/order/detail/:id' element={<OrderDetails />} />
                 <Route path='Partner'>
                     <Route path='' element={<PartnersList />} />
                     <Route path='Create' element={<PartnerCreate />} />

@@ -107,3 +107,8 @@ export const ROLEIDS = {
 }
 
 export const ACCESS_TOKEN_KEY = "accessToken";
+
+export const NOTIFICATION_STATUS = {
+    SUCCESS: "success",
+    ERROR: "error"
+}

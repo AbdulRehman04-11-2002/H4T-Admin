@@ -56,7 +56,7 @@ export const PlanningColumns = ({ LABELS }: TableColumnProps) => {
             sorter: true,
             render: (_: any, record: any) => (
                 <div className='fontWeight-semiBold'>
-                    {record?.order?.code}
+                    <Link to={`/order/detail/${record?.order?.id}`}>{record?.order?.code}</Link>
                 </div>
             ),
         },
