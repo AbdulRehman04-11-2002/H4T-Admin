@@ -1,6 +1,7 @@
 
 import { OrderItem } from "../../interface/Order";
 import { ORDER_STATUS, ORDER_STATUS_COLORS, ORDER_BACKEND_STATUS, defaultTimezone } from "../../constants/constants";
+import { formatToTwoDecimalPlaces } from ".";
 const moment = require('moment-timezone');
 
 
@@ -54,3 +55,41 @@ export const extractTimeComponents = (totalMinutes: number) => {
     return { days, hours, minutes };
 }
 //---------- LocationCreateUpdate ends---------------//
+
+export const getCheckinBookingStatus = (orderItems: OrderItem[], orderStatus: string | undefined, paymentStatus: string | undefined) => {
+    const noShowStatuses = orderItems.find(obj => obj?.status === ORDER_BACKEND_STATUS.NO_SHOW);
+    if (paymentStatus === ORDER_BACKEND_STATUS.PAYMENT_PENDING)
+        return ORDER_STATUS.PAYMENT_PENDING;
+    else if (noShowStatuses) {
+        return ORDER_STATUS.INPROGRESS;
+    }
+    else {
+        return ORDER_STATUS[orderStatus as keyof typeof ORDER_STATUS]
+    }
+}
+
+
+export const calculateAdditionalCharges = (
+    total: number,
+    totalPaidServicesAmount?: number
+) => {
+    if (totalPaidServicesAmount) {
+        const additionalCharge = Math.abs(total - totalPaidServicesAmount);
+        return totalPaidServicesAmount > total
+            ? -formatToTwoDecimalPlaces(additionalCharge)
+            : formatToTwoDecimalPlaces(additionalCharge);
+    }
+    return 0;
+};
+
+export const getBookingDate = (orderItem: OrderItem) => {
+    if (orderItem) {
+        const date = orderItem?.serviceDateTime;
+        const timezone = orderItem?.partnerLocation?.timeZone;
+        const dateTime =
+            date && timezone
+                ? formattedDateTime(date, timezone, "MMM DD, dddd HH:mm")
+                : "-";
+        return `${dateTime} (${timezone})`;
+    }
+};

@@ -71,3 +71,30 @@ export interface Order {
     orderStatus?: string;
     order_items: OrderItem[];
 }
+
+export interface OrderDetailApiResponse {
+    success: boolean;
+    data: OrderDetailResponse;
+    message: string;
+    error: {
+        code: number;
+        messages: (string | {
+            name: string;
+            code: string;
+            clientVersion: string;
+            meta: {
+                modelName: string;
+                field_name: string;
+            };
+        })[];
+    }[];
+}
+
+interface OrderDetailResponse {
+    order: Order
+}
+
+export interface AmountState {
+    [id: number]: number;
+    total: number;
+}
