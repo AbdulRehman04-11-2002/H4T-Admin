@@ -126,3 +126,8 @@ export const getCountryCodeByIp = async () => {
         return data.country_code.toLowerCase();
     }
 }
+
+export const formatToTwoDecimalPlaces = (value: number): number => {
+    if (value < 0) return -formatToTwoDecimalPlaces(-value);
+    return +(Math.round(+(value + 'e+2')) + 'e-2');
+};

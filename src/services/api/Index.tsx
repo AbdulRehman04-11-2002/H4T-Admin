@@ -15,7 +15,7 @@ export const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     const token = Storage.getAccessToken();
-
+    config.headers['ngrok-skip-browser-warning'] = "hello Abdullah"
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
