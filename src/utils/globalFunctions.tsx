@@ -1,26 +1,24 @@
 import { ERRORS } from "../constants/constants";
 
-export const emailValidate = (email: string) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const consecutiveDotsRegex = /\.{2,}/;
+const CONSECUTIVE_DOTS_REGEX = /\.{2,}/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+export const emailValidate = (email: string): string => {
     if (!email) {
         return ERRORS.EMAIL_REQUIRED;
     }
 
-    // Check for missing "@" symbol
     if (!email.includes("@")) {
         return ERRORS.MISSING_ATRATE;
     }
 
-    // Check for consecutive dots
-    if (consecutiveDotsRegex.test(email)) {
-        return ERRORS.EMAIL_CONSECUTIVE_DTOS;
-    }
-
-    // Check if the email format is valid
-    if (!emailRegex.test(email)) {
+    if (!EMAIL_REGEX.test(email)) {
         return ERRORS.INVALID_EMAIL_FORMAT;
     }
-    return ""; 
+
+    if (CONSECUTIVE_DOTS_REGEX.test(email)) {
+        return ERRORS.EMAIL_CONSECUTIVE_DTOS;
+    }
+    
+    return "";
 };
