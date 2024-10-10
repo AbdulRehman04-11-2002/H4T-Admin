@@ -8,6 +8,9 @@ export const api = axios.create({
   baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
+    "x-portal": "ADMIN",
+    "x-platform": "WEB",
+    "x-version": "2.6"
   },
 });
 
@@ -75,6 +78,11 @@ api.interceptors.response.use(
         (error?.response?.data.message.includes(API_ERRORS.INVALID_ACCESS_TOKEN) || error?.response?.data.message.includes(API_ERRORS.TOKEN_NOT_FOUND))
       ) {
         statusCode = API_STATUS.REFRESH_TOKEN_ERROR;
+        reload();
+      }
+      else if (
+        statusCode === API_STATUS.UNAUTHORIZED && error?.response?.headers['x-version-support-status'] === "UNSUPPORTED"
+      ) {
         reload();
       }
     }
