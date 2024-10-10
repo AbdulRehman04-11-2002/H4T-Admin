@@ -10,7 +10,7 @@ export const api = axios.create({
     "Content-Type": "application/json",
     "x-portal": "ADMIN",
     "x-platform": "WEB",
-    "x-version": "2.6"
+    "x-version": "2.7"
   },
 });
 
@@ -39,6 +39,7 @@ api.interceptors.response.use(
     let message = ERRORS.SOME_THING_WENT_WRONG;
     let statusCode = API_STATUS.INTERNAL_SERVER_ERROR;
     let errorData = [];
+    debugger;
     if (axios.isAxiosError(error)) {
       if (
         !error.response?.data.message &&
@@ -82,6 +83,7 @@ api.interceptors.response.use(
       else if (
         statusCode === API_STATUS.UNAUTHORIZED && error?.response?.headers['x-version-support-status'] === "UNSUPPORTED"
       ) {
+        message = JSON.stringify(error.response?.data?.message);
         setTimeout(() => {
           reload();
       }, 1000);

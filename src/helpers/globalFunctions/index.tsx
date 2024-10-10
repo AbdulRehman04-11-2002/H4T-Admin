@@ -83,7 +83,7 @@ export const handleErrorResponse = (
     error: { statusCode: number | undefined; message: string },
     inputRefs?: any) => {
     const { statusCode, message } = error;
-
+debugger;
     if (statusCode === API_STATUS.BAD_REQUEST) {
         if (!isJSONString(message)) {
             return { statusCode, errorMessage: error?.message, obj: {} };
@@ -91,6 +91,8 @@ export const handleErrorResponse = (
             const { obj, errorMessage } = errorsMessageFocus(JSON.parse(message), inputRefs);
             return { statusCode, errorMessage, obj };
         }
+    } else if (statusCode === API_STATUS.UNAUTHORIZED && message.includes("Version")) {
+        return { statusCode, errorMessage: message, obj: {} };
     } else if (statusCode === API_STATUS.UNAUTHORIZED) {
         return { statusCode, errorMessage: API_ERRORS.UNAUTHORIZED, obj: {} };
     } else if (statusCode === API_STATUS.NOT_FOUND2 || statusCode === API_STATUS.NOT_FOUND) {
