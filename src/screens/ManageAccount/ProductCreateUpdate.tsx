@@ -65,7 +65,6 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputCustomerGuidelinesRef = useRef<null | HTMLElement>(null);
   const inputSlotDurationRef = useRef<null | HTMLElement>(null);
   const checkAll = locationOptions?.length === selectedLocations?.length;
-  const indeterminate = selectedLocations?.length > 0 && selectedLocations?.length < locationOptions?.length;
 
   const serviceTypeOnChange = (SelectedID: number) => {
     setIsDataChange(true)
@@ -586,7 +585,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 xs={{ span: 23 }}
               >
                 <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
-                  <Checkbox indeterminate={indeterminate} onChange={onCheckAllLocationsChange} checked={checkAll}>{LABELS.SELECT_ALL}</Checkbox>
+                  <Checkbox onChange={onCheckAllLocationsChange} checked={checkAll}>{LABELS.SELECT_ALL}</Checkbox>
                   <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={cityOnchange} />
                 </Form.Item>
                 {!locationOptions.length && <Title level={5} >
