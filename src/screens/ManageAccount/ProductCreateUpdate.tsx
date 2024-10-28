@@ -1,5 +1,6 @@
 import {
   Button, Checkbox, Col, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile,
+  CheckboxProps,
 } from 'antd';
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -63,6 +64,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputDescriptionRef = useRef<null | HTMLElement>(null);
   const inputCustomerGuidelinesRef = useRef<null | HTMLElement>(null);
   const inputSlotDurationRef = useRef<null | HTMLElement>(null);
+  const checkAll = locationOptions?.length === selectedLocations?.length;
 
   const serviceTypeOnChange = (SelectedID: number) => {
     setIsDataChange(true)
@@ -246,6 +248,11 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const handleOnChange = () => {
     setIsDataChange(true)
   }
+
+  const onCheckAllLocationsChange: CheckboxProps['onChange'] = (e) => {
+    setselectedLocations(e.target.checked ? locationOptions.map(option => option.value) : []);
+    setIsDataChange(true)
+  };
 
   useEffect(() => {
     getPartnerDetail()
@@ -578,6 +585,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 xs={{ span: 23 }}
               >
                 <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
+                  <Checkbox onChange={onCheckAllLocationsChange} checked={checkAll}>{LABELS.SELECT_ALL}</Checkbox>
                   <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={cityOnchange} />
                 </Form.Item>
                 {!locationOptions.length && <Title level={5} >
