@@ -427,20 +427,19 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
             open={modalVisible}
             onCancel={() => setModalVisible(false)}
             footer={null}
-          >
-            <p>{LONGITUDE_LATITUDE.text}</p>
-            <ol>
-              <li>
-                {LONGITUDE_LATITUDE?.list[0]}
-                <a href="https://www.latlong.net/convert-address-to-lat-long.html">
-                  https://www.latlong.net/convert-address-to-lat-long.html
-                </a>
-                .
-              </li>
-              <li>{LONGITUDE_LATITUDE?.list[1]}</li>
-              <li>{LONGITUDE_LATITUDE?.list[2]}</li>
-            </ol>
-          </Modal>
+            >
+          <p>
+            {LONGITUDE_LATITUDE.text}
+          </p>
+          <ol>
+            <li>{LONGITUDE_LATITUDE?.list[0]}<a href="https://www.latlong.net/convert-address-to-lat-long.html">https://www.latlong.net/convert-address-to-lat-long.html</a>.</li>
+            <li>{LONGITUDE_LATITUDE?.list[1]}</li>
+            <li>{LONGITUDE_LATITUDE?.list[2]}</li>
+          </ol>
+          <p>
+            <strong>{LONGITUDE_LATITUDE?.note}</strong> {LONGITUDE_LATITUDE?.note_text}
+          </p>
+        </Modal>
           <Row justify={"space-between"} className="mb-2">
             <Col
               lg={{ span: 12 }}

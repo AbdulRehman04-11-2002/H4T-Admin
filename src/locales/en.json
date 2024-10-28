@@ -326,7 +326,9 @@
       "Visit ",
       "Copy and paste the first number into the “Latitude” box.",
       "Copy and paste the second number into the “Longitude” box."
-    ]
+    ],
+    "note": "NOTE:",
+    "note_text": "Negative numbers work fine"
   },
   "REFRESH_TOKEN_KEY": "refreshToken",
   "DELAY_COUNT": 30,
