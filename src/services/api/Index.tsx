@@ -8,6 +8,9 @@ export const api = axios.create({
   baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
+    "x-portal": "ADMIN",
+    "x-platform": "WEB",
+    "x-version": "2.9"
   },
 });
 
@@ -15,7 +18,6 @@ export const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     const token = Storage.getAccessToken();
-    config.headers['ngrok-skip-browser-warning'] = "hello Abdullah"
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -76,6 +78,14 @@ api.interceptors.response.use(
       ) {
         statusCode = API_STATUS.REFRESH_TOKEN_ERROR;
         reload();
+      }
+      else if (
+        statusCode === API_STATUS.UNAUTHORIZED && error?.response?.headers['x-version-support-status'] === "UNSUPPORTED"
+      ) {
+        message = JSON.stringify(error.response?.data?.message);
+        setTimeout(() => {
+          reload();
+      }, 1000);
       }
     }
     return Promise.reject(new ApiError(statusCode, message, errorData));
