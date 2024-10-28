@@ -83,7 +83,6 @@ export const handleErrorResponse = (
     error: { statusCode: number | undefined; message: string },
     inputRefs?: any) => {
     const { statusCode, message } = error;
-debugger;
     if (statusCode === API_STATUS.BAD_REQUEST) {
         if (!isJSONString(message)) {
             return { statusCode, errorMessage: error?.message, obj: {} };

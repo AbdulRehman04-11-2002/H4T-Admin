@@ -39,7 +39,6 @@ api.interceptors.response.use(
     let message = ERRORS.SOME_THING_WENT_WRONG;
     let statusCode = API_STATUS.INTERNAL_SERVER_ERROR;
     let errorData = [];
-    debugger;
     if (axios.isAxiosError(error)) {
       if (
         !error.response?.data.message &&
