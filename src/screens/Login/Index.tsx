@@ -26,6 +26,7 @@ import { GlobalContext, GlobalContextProps } from "../../context/GlobalContext";
 import { Storage } from "../../services/storage";
 import { useTranslation } from "react-i18next";
 import { getME } from "../../services/api/global";
+import { emailValidate } from "../../utils/globalFunctions";
 
 const { Title, Text } = Typography;
 
@@ -50,6 +51,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
   const { setSuccess, setUserDetails, setME } = useContext(GlobalContext) as GlobalContextProps;
 
   const [form] = Form.useForm();
+  const [emailForm] = Form.useForm();
   const navigate = useNavigate();
 
   const inputOtpRef = useRef<null | HTMLElement>(null);
@@ -72,12 +74,12 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
     const name = Object.keys(changedValues)?.[0];
     const value = Object.values(changedValues)?.[0];
 
-    form.setFieldValue(name, value);
-    setResponse({ ...response, [name]: value });
+    emailForm.setFieldValue(name, value.toLowerCase().trim());
+    setResponse({ ...response, [name]: value.toLowerCase().trim() });
   };
 
   const resendCode = async () => {
-    const email = form.getFieldValue("email");
+    const email = emailForm.getFieldValue("email");
     if (!email) {
       showError(ERRORS.EMAIL);
       return false;
@@ -112,7 +114,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
   };
 
   const getOtp = async (values: SubmitEmailProps) => {
-    const email = form.getFieldValue("email");
+    const email = emailForm.getFieldValue("email");
     if (!email) {
       inputEmailRef?.current?.focus();
       showError(ERRORS.EMAIL);
@@ -275,11 +277,29 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
               onFinishFailed={getOtpError}
               autoComplete='off'
               onValuesChange={handleOnChange}
+              form={emailForm}
             >
               <Form.Item
                 validateTrigger={"getOtp"}
                 messageVariables={{ label: LABELS.EMAIL }}
-                rules={[{ type: 'email', message: t("ERRORS.VALID_INPUT", { type: "email" }) }, { required: true, message: ERRORS.EMAIL }]}
+                rules={[
+                  {
+                    required: true,
+                    message: ERRORS.EMAIL_REQUIRED,
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.resolve();
+                      }
+                      const validationError = emailValidate(value);
+                      if (validationError) {
+                        return Promise.reject(new Error(validationError));
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
                 label={
                   <label className='label text-capitalize'>
                     {LABELS.EMAIL}

@@ -23,6 +23,7 @@ import 'react-phone-input-2/lib/style.css'
 import DaysInput from './DaysInput';
 import HoursDropdown from './HoursDropdown';
 import MinutesDropdown from './MinutesDropdown';
+import { emailValidate } from '../../../utils/globalFunctions';
 const { Text } = Typography;
 type operatingHoursType = {
   day: string;
@@ -329,9 +330,13 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     setModalVisible(true);
   };
 
-  const handleOnChange = () => {
+  const handleOnChange = (changedValues: string) => {
+    const name = Object.keys(changedValues)?.[0];
+    const value = Object.values(changedValues)?.[0];
+    if(name === "email") {
+      form.setFieldValue(name, value.toLowerCase().trim());
+    }
     setIsDataChange(true)
-
   }
 
   const getCountryCode = async () => {
@@ -405,24 +410,24 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   return (
-    <div className='create-partner-content'>
-      {<Form
-        onFinish={handleFinish}
-        onFinishFailed={submitFailed}
-        name='basic'
-        labelCol={{ span: 24 }}
-        wrapperCol={{ span: 24 }}
-        form={form}
-        autoComplete='off'
-        onValuesChange={handleOnChange}
-      >
-        <Modal
-          title={LONGITUDE_LATITUDE.title}
-          open={modalVisible}
-          onCancel={() => setModalVisible(false)}
-          footer={null}
-
+    <div className="create-partner-content">
+      {
+        <Form
+          onFinish={handleFinish}
+          onFinishFailed={submitFailed}
+          name="basic"
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+          form={form}
+          autoComplete="off"
+          onValuesChange={handleOnChange}
         >
+          <Modal
+            title={LONGITUDE_LATITUDE.title}
+            open={modalVisible}
+            onCancel={() => setModalVisible(false)}
+            footer={null}
+            >
           <p>
             {LONGITUDE_LATITUDE.text}
           </p>
@@ -435,472 +440,502 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
             <strong>{LONGITUDE_LATITUDE?.note}</strong> {LONGITUDE_LATITUDE?.note_text}
           </p>
         </Modal>
-        <Row justify={"space-between"} className='mb-2'>
-          <Col
-            lg={{ span: 12 }}
-            md={{ span: 12 }}
-            sm={{ span: 23 }}
-            xs={{ span: 23 }}
-          >
-            <Title level={3} className='remove-vertical-margin '>
-              {isUpdateForm ? HEADING.UPDATE_PARTNER_LOCATION : HEADING.CREATE_PARTNER_LOCATION}
-            </Title>
-          </Col>
+          <Row justify={"space-between"} className="mb-2">
+            <Col
+              lg={{ span: 12 }}
+              md={{ span: 12 }}
+              sm={{ span: 23 }}
+              xs={{ span: 23 }}
+            >
+              <Title level={3} className="remove-vertical-margin ">
+                {isUpdateForm
+                  ? HEADING.UPDATE_PARTNER_LOCATION
+                  : HEADING.CREATE_PARTNER_LOCATION}
+              </Title>
+            </Col>
 
-          <Col
-            lg={{ span: 12 }}
-            md={{ span: 12 }}
-            sm={{ span: 23 }}
-            xs={{ span: 23 }}
-          >
-            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", height: "100%" }}>
-              <Space>
-                <Button
-                  type='default'
-                  htmlType='button'
-                  onClick={() => navigate(`/partner/${partnerID}/manageAccount/`)}
-                >
-                  {LABELS.CANCEL}
-                </Button>
-                <Button
-                  type='primary'
-                  htmlType='submit'
-                  disabled={(partnerID && (isDataChange ? false : true) || false)}
-                >
-                  {isUpdateForm ? BUTTONS.UPDATE : BUTTONS.SAVE}
-                </Button>
-              </Space>
-            </div>
-          </Col>
-
-        </Row>
-        <Row gutter={16}>
-
-          <Col
-            lg={{ span: 13 }}
-            md={{ span: 24 }}
-            sm={{ span: 24 }}
-            xs={{ span: 24 }}
-          >
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
+            <Col
+              lg={{ span: 12 }}
+              md={{ span: 12 }}
+              sm={{ span: 23 }}
+              xs={{ span: 23 }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  height: "100%",
+                }}
               >
-                <Form.Item
-                  validateStatus={errors.name ? "error" : ""}
-                  name='name'
-                  label={
-                    <label className='label '>
-                      {LABELS.NAME}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.NAME }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Name" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Name" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.NAME}
-                    ref={inputNameRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                    maxLength={50}
-                    showCount
-                  />
-                </Form.Item>
-              </Col>
-
-
-
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.code ? "error" : ""}
-                  name='code'
-                  label={
-                    <label className='label '>
-                      {LABELS.CODE}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.CODE }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Code" }) }, { max: 50, message: t("ERRORS.MAX_LENGTH_50", { type: "Code" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.CODE}
-                    ref={inputCodeRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                    maxLength={50}
-                    showCount
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Row gutter={8}>
-
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.phoneNumber ? "error" : ""}
-                  name='phoneNumber'
-                  label={
-                    <label className='label '>
-                      {LABELS.PHONE_NUMBER}
-                    </label>
-                  }
-                  rules={[{
-                    pattern: /^\+?\d{7,17}$/
-                    , message: t("ERRORS.VALID_INPUT", { type: "Phone number" })
-                  }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <PhoneInput
-                    country={countryCode || 'fr'}
-                    value={phone}
-                    onChange={(value: string, country: any, e: any, formattedValue: string) => {
-                      if (/^\+?\d{7,17}$/.test(value)) {
-                        setPhone(phone);
-                      } else {
-                        setPhone(phone);
-                      }
-                    }}
-                    disableSearchIcon={true}
-                    inputStyle={{ height: 32, width: "100%", border: "1px solid #d9d9d9", fontSize: 14 }}
-                    containerClass="custom-phone-input"
-                    enableSearch={true}
-                    countryCodeEditable={false}
-                    inputProps={{ ref: inputPhoneNumberRef }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.email ? "error" : ""}
-                  name='email'
-                  label={
-                    <label className='label '>
-                      {LABELS.EMAIL_ADDRESS}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.EMAIL }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.EMAIL_ADDRESS}
-                    ref={inputEmailRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.city ? "error" : ""}
-                  name='city'
-                  label={
-                    <label className='label '>
-                      {LABELS.CITY}
-                      <Tooltip title={LABELS.CITY_TOOLTIP} />
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.SEARCH_AND_SELECT_CITY }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Select
-                    placeholder={LABELS.SEARCH_AND_SELECT_CITY}
-                    ref={inputCityRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  >
-                    {cityOptions.map((city) => (
-                      <Option key={city.value} value={city.value}>
-                        {city.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.postalCode ? "error" : ""}
-                  name='postalCode'
-                  label={
-                    <label className='label '>
-                      {LABELS.POSTAL_CODE}
-                    </label>
-                  }
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.POSTAL_CODE}
-                    ref={inputPostalCodeRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.lattitude ? "error" : ""}
-                  name='lattitude'
-                  label={
-                    <label className='label '>
-                      {LABELS.LATITUDE}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.LATITUDE }, { pattern: new RegExp(/^-?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/), message: t("ERRORS.VALID_LATITUDE", { type: "Latitude" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.LATITUDE}
-                    ref={inputLatitudeRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                  />
-                </Form.Item>
-              </Col>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.longitude ? "error" : ""}
-                  name='longitude'
-                  label={
-                    <label className='label '>
-                      {LABELS.LONGITUDE}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.LONGITUDE }, {
-                    pattern: new RegExp(/^-?((1[0-7]\d(\.\d{1,6})?)|180(\.0{1,6})?|([1-9]?\d(\.\d{1,6})?))$/), message: t("ERRORS.VALID_LONGITUDE", { type: "Longitude" })
-                  }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Input
-                    placeholder={LABELS.LONGITUDE}
-                    ref={inputLongitudeRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                    addonAfter={
-                      <span
-                        style={{ cursor: 'pointer', margin: '5px' }}
-                        onClick={handleIconClick}
-                      >
-                        <ExclamationCircleOutlined />
-                      </span>
+                <Space>
+                  <Button
+                    type="default"
+                    htmlType="button"
+                    onClick={() =>
+                      navigate(`/partner/${partnerID}/manageAccount/`)
                     }
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.streetAddress ? "error" : ""}
-                  name='streetAddress'
-                  label={
-                    <label className='label '>
-                      {LABELS.STREET_ADDRESS}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.STREET_ADDRESS }, { min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Street Address" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <TextArea
-                    placeholder={LABELS.STREET_ADDRESS}
-                    ref={inputStreetAddressRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                    rows={5}
-                  />
-                </Form.Item>
-              </Col>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.customerGuidelines ? "error" : ""}
-                  name='customerGuidelines'
-                  label={
-                    <label className='label '>
-                      {LABELS.CUSTOM_GUIDELINES}
-                      <Tooltip title={LABELS.GUIDELINE_TOOLTIP} />
-                    </label>
-                  }
-                  rules={[{ min: 3, message: t("ERRORS.MIN_LENGTH_3", { type: "Arrival Instructions" }) }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <TextArea
-                    placeholder={LABELS.CUSTOM_GUIDELINES}
-                    ref={inputStreetAddressRef as any}
-                    autoFocus={false}
-                    disabled={false}
-                    rows={5}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-
-
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item
-                  validateStatus={errors.status ? "error" : ""}
-                  name='status'
-                  label={
-                    <label className='label '>
-                      {LABELS.STATUS}
-                    </label>
-                  }
-                  rules={[{ required: true, message: ERRORS.STATUS }]}
-                  validateTrigger={["handleFinish", "handleUpdate"]}
-                >
-                  <Select
-                    placeholder={PLACEHOLDERS.STATUS}
-                    ref={inputStatusRef as any}
-                    autoFocus={false}
-                    disabled={false}
                   >
-                    <Option value='enabled'>{LABELS.ENABLED}</Option>
-                    <Option value='disabled'>{LABELS.DISABLED}</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col
-                lg={{ span: 12 }}
-                md={{ span: 12 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Form.Item name="fileList" label={LABELS.LOCATION_IMAGE} valuePropName="fileList">
-                  <UploadFile
-                    setFileList={setFileList}
-                    fileType={"image/png"}
-                    fileTypeError={ERRORS?.IMAGE_FILE_TYPE}
-                    requiredImage={false}
-                    errorMessage={ERRORS.UPLOAD_LOGO}
-                    validateTrigger={["handleSave", "handleUpdate"]}
-                    label={LABELS.UPLOAD_LOGO}
-                    name={"image"}
-                    fileListArr={fileList}
-                    setImageUrl={setImageUrl}
-                  />
-                </Form.Item>
-              </Col>
+                    {LABELS.CANCEL}
+                  </Button>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    disabled={
+                      (partnerID && (isDataChange ? false : true)) || false
+                    }
+                  >
+                    {isUpdateForm ? BUTTONS.UPDATE : BUTTONS.SAVE}
+                  </Button>
+                </Space>
+              </div>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col
+              lg={{ span: 13 }}
+              md={{ span: 24 }}
+              sm={{ span: 24 }}
+              xs={{ span: 24 }}
+            >
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.name ? "error" : ""}
+                    name="name"
+                    label={<label className="label ">{LABELS.NAME}</label>}
+                    rules={[
+                      { required: true, message: ERRORS.NAME },
+                      {
+                        min: 3,
+                        message: t("ERRORS.MIN_LENGTH_3", { type: "Name" }),
+                      },
+                      {
+                        max: 50,
+                        message: t("ERRORS.MAX_LENGTH_50", { type: "Name" }),
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.NAME}
+                      ref={inputNameRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                      maxLength={50}
+                      showCount
+                    />
+                  </Form.Item>
+                </Col>
 
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.code ? "error" : ""}
+                    name="code"
+                    label={<label className="label ">{LABELS.CODE}</label>}
+                    rules={[
+                      { required: true, message: ERRORS.CODE },
+                      {
+                        min: 3,
+                        message: t("ERRORS.MIN_LENGTH_3", { type: "Code" }),
+                      },
+                      {
+                        max: 50,
+                        message: t("ERRORS.MAX_LENGTH_50", { type: "Code" }),
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.CODE}
+                      ref={inputCodeRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                      maxLength={50}
+                      showCount
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
 
-            </Row>
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.phoneNumber ? "error" : ""}
+                    name="phoneNumber"
+                    label={
+                      <label className="label ">{LABELS.PHONE_NUMBER}</label>
+                    }
+                    rules={[
+                      {
+                        pattern: /^\+?\d{7,17}$/,
+                        message: t("ERRORS.VALID_INPUT", {
+                          type: "Phone number",
+                        }),
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <PhoneInput
+                      country={countryCode || "fr"}
+                      value={phone}
+                      onChange={(
+                        value: string,
+                        country: any,
+                        e: any,
+                        formattedValue: string
+                      ) => {
+                        if (/^\+?\d{7,17}$/.test(value)) {
+                          setPhone(phone);
+                        } else {
+                          setPhone(phone);
+                        }
+                      }}
+                      disableSearchIcon={true}
+                      inputStyle={{
+                        height: 32,
+                        width: "100%",
+                        border: "1px solid #d9d9d9",
+                        fontSize: 14,
+                      }}
+                      containerClass="custom-phone-input"
+                      enableSearch={true}
+                      countryCodeEditable={false}
+                      inputProps={{ ref: inputPhoneNumberRef }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.email ? "error" : ""}
+                    name="email"
+                    label={
+                      <label className="label">{LABELS.EMAIL_ADDRESS}</label>
+                    }
+                    rules={[
+                      {
+                        required: true,
+                        message: ERRORS.EMAIL_REQUIRED,
+                      },
+                      {
+                        validator: (_, value) => {
+                          if (!value) {
+                            return Promise.resolve();
+                          }
+                          const validationError = emailValidate(value);
+                          if (validationError) {
+                            return Promise.reject(new Error(validationError));
+                          }
+                          return Promise.resolve();
+                        },
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.EMAIL_ADDRESS}
+                      ref={inputEmailRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.city ? "error" : ""}
+                    name="city"
+                    label={
+                      <label className="label ">
+                        {LABELS.CITY}
+                        <Tooltip title={LABELS.CITY_TOOLTIP} />
+                      </label>
+                    }
+                    rules={[
+                      {
+                        required: true,
+                        message: ERRORS.SEARCH_AND_SELECT_CITY,
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Select
+                      placeholder={LABELS.SEARCH_AND_SELECT_CITY}
+                      ref={inputCityRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    >
+                      {cityOptions.map((city) => (
+                        <Option key={city.value} value={city.value}>
+                          {city.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.postalCode ? "error" : ""}
+                    name="postalCode"
+                    label={
+                      <label className="label ">{LABELS.POSTAL_CODE}</label>
+                    }
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.POSTAL_CODE}
+                      ref={inputPostalCodeRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.lattitude ? "error" : ""}
+                    name="lattitude"
+                    label={<label className="label ">{LABELS.LATITUDE}</label>}
+                    rules={[
+                      { required: true, message: ERRORS.LATITUDE },
+                      {
+                        pattern: new RegExp(
+                          /^-?([1-8]?\d(\.\d{1,6})?|90(\.0{1,6})?)$/
+                        ),
+                        message: t("ERRORS.VALID_LATITUDE", {
+                          type: "Latitude",
+                        }),
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.LATITUDE}
+                      ref={inputLatitudeRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.longitude ? "error" : ""}
+                    name="longitude"
+                    label={<label className="label ">{LABELS.LONGITUDE}</label>}
+                    rules={[
+                      { required: true, message: ERRORS.LONGITUDE },
+                      {
+                        pattern: new RegExp(
+                          /^-?((1[0-7]\d(\.\d{1,6})?)|180(\.0{1,6})?|([1-9]?\d(\.\d{1,6})?))$/
+                        ),
+                        message: t("ERRORS.VALID_LONGITUDE", {
+                          type: "Longitude",
+                        }),
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Input
+                      placeholder={LABELS.LONGITUDE}
+                      ref={inputLongitudeRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                      addonAfter={
+                        <span
+                          style={{ cursor: "pointer", margin: "5px" }}
+                          onClick={handleIconClick}
+                        >
+                          <ExclamationCircleOutlined />
+                        </span>
+                      }
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.streetAddress ? "error" : ""}
+                    name="streetAddress"
+                    label={
+                      <label className="label ">{LABELS.STREET_ADDRESS}</label>
+                    }
+                    rules={[
+                      { required: true, message: ERRORS.STREET_ADDRESS },
+                      {
+                        min: 3,
+                        message: t("ERRORS.MIN_LENGTH_3", {
+                          type: "Street Address",
+                        }),
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <TextArea
+                      placeholder={LABELS.STREET_ADDRESS}
+                      ref={inputStreetAddressRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                      rows={5}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.customerGuidelines ? "error" : ""}
+                    name="customerGuidelines"
+                    label={
+                      <label className="label ">
+                        {LABELS.CUSTOM_GUIDELINES}
+                        <Tooltip title={LABELS.GUIDELINE_TOOLTIP} />
+                      </label>
+                    }
+                    rules={[
+                      {
+                        min: 3,
+                        message: t("ERRORS.MIN_LENGTH_3", {
+                          type: "Arrival Instructions",
+                        }),
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <TextArea
+                      placeholder={LABELS.CUSTOM_GUIDELINES}
+                      ref={inputStreetAddressRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                      rows={5}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
 
+              <Row gutter={8}>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.status ? "error" : ""}
+                    name="status"
+                    label={<label className="label ">{LABELS.STATUS}</label>}
+                    rules={[{ required: true, message: ERRORS.STATUS }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Select
+                      placeholder={PLACEHOLDERS.STATUS}
+                      ref={inputStatusRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    >
+                      <Option value="enabled">{LABELS.ENABLED}</Option>
+                      <Option value="disabled">{LABELS.DISABLED}</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    name="fileList"
+                    label={LABELS.LOCATION_IMAGE}
+                    valuePropName="fileList"
+                  >
+                    <UploadFile
+                      setFileList={setFileList}
+                      fileType={"image/png"}
+                      fileTypeError={ERRORS?.IMAGE_FILE_TYPE}
+                      requiredImage={false}
+                      errorMessage={ERRORS.UPLOAD_LOGO}
+                      validateTrigger={["handleSave", "handleUpdate"]}
+                      label={LABELS.UPLOAD_LOGO}
+                      name={"image"}
+                      fileListArr={fileList}
+                      setImageUrl={setImageUrl}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Col>
 
+            {/* create a horizental divider according to defined row and col structure,  */}
+            <Col
+              lg={{ span: 1 }}
+              md={{ span: 0 }}
+              sm={{ span: 0 }}
+              xs={{ span: 0 }}
+            >
+              <Divider
+                orientation={"center"}
+                type="vertical"
+                style={{ height: "100%" }}
+              />
+            </Col>
 
-
-
-          </Col>
-
-          {/* create a horizental divider according to defined row and col structure,  */}
-          <Col
-            lg={{ span: 1 }}
-            md={{ span: 0 }}
-            sm={{ span: 0 }}
-            xs={{ span: 0 }}
-          >
-            <Divider orientation={"center"} type='vertical' style={{ height: '100%' }} />
-          </Col>
-
-
-
-          <Col
-            lg={{ span: 10 }}
-            md={{ span: 24 }}
-            sm={{ span: 24 }}
-            xs={{ span: 24 }}
-          >
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 24 }}
-                md={{ span: 24 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                <Title level={3} className='remove-vertical-margin '>
-                  {HEADING.OPERATING_HOURS}
-                  <Tooltip title={HEADING.OPERATING_HOURS_TOOLTIP} />
-                </Title>
-              </Col>
-            </Row>
-
-            <Row gutter={8}>
-              <Col
-                lg={{ span: 24 }}
-                md={{ span: 24 }}
-                sm={{ span: 23 }}
-                xs={{ span: 23 }}
-              >
-                {/* create a table which has 5 columns, day, start time, end time, break slot, break end, use antd table, use ant.table */}
-                <Table
-                  columns={OperatingHours({ handleOperatingHoursChange, onCheckBoxChange, ERRORS })}
-                  data={operatingHours || []}
-                  totalRecord={operatingHours?.length}
-                  scroll={500}
-                  pageSize={0}
-                  pagination={false}
-                  noRecordText={isLoading ? "Loading..." : LABELS.NO_RECORDS_FOUND} currentPage={0} setPage={function (value: SetStateAction<number>): void {
-                    throw new Error('Function not implemented.');
-                  }} />
-              </Col>
-            </Row>
-            <Divider orientation={"center"} style={{ margin: '4px 0', borderColor: "#f5f5f5" }} />
-
-            <div style={{ background: "white" }}>
+            <Col
+              lg={{ span: 10 }}
+              md={{ span: 24 }}
+              sm={{ span: 24 }}
+              xs={{ span: 24 }}
+            >
               <Row gutter={8}>
                 <Col
                   lg={{ span: 24 }}
@@ -908,108 +943,174 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   sm={{ span: 23 }}
                   xs={{ span: 23 }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', padding: '14px 14px 10px 14px', gap: "20px", background: "white" }}>
-                    <span>{LABELS.WALK_IN_TXT}</span>
-                    <Switch title={isAvailableNowSlot ? LABELS.DISABLE_WALK_IN : LABELS.ENABLE_WALK_IN} checked={isAvailableNowSlot} onChange={onChangeAvailableNowSlot} />
-                  </div>
-                  <Text
-                    style={{
-                      fontSize: 13,
-                      color: "red",
-                      padding: '0px 0px 5px 14px',
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    {showWalkinError ? LABELS.BOOKING_NOTICE_ALERT : ""}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 13,
-                      color: "#1677ff",
-                      padding: '0px 0px 25px 14px',
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    {LABELS.BOOKING_NOTICE_WALKIN_DESC}
-                  </Text>
+                  <Title level={3} className="remove-vertical-margin ">
+                    {HEADING.OPERATING_HOURS}
+                    <Tooltip title={HEADING.OPERATING_HOURS_TOOLTIP} />
+                  </Title>
                 </Col>
               </Row>
-              <div style={{ padding: '0 30px', width: '100%' }}>
-                <Divider
-                  style={{
-                    borderColor: "#f5f5f5",
-                    width: "50%",
-                    margin: "0 auto",
-                  }}
-                />
-              </div>
 
               <Row gutter={8}>
                 <Col
-                  lg={{ span: 12 }}
-                  md={{ span: 12 }}
+                  lg={{ span: 24 }}
+                  md={{ span: 24 }}
                   sm={{ span: 23 }}
                   xs={{ span: 23 }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "12px",
-                      gap: "20px",
+                  {/* create a table which has 5 columns, day, start time, end time, break slot, break end, use antd table, use ant.table */}
+                  <Table
+                    columns={OperatingHours({
+                      handleOperatingHoursChange,
+                      onCheckBoxChange,
+                      ERRORS,
+                    })}
+                    data={operatingHours || []}
+                    totalRecord={operatingHours?.length}
+                    scroll={500}
+                    pageSize={0}
+                    pagination={false}
+                    noRecordText={
+                      isLoading ? "Loading..." : LABELS.NO_RECORDS_FOUND
+                    }
+                    currentPage={0}
+                    setPage={function (value: SetStateAction<number>): void {
+                      throw new Error("Function not implemented.");
                     }}
-                  >
-                    <span>{LABELS.BOOKING_NOTICE}</span>
-                    <Switch
-                      title={
-                        isBookingNoticeEnabled
-                          ? LABELS.DISABLE_MIN_BOOKING_NOTICE
-                          : LABELS.ENABLE_MIN_BOOKING_NOTICE
-                      }
-                      checked={isBookingNoticeEnabled}
-                      onChange={onChangeBookingNotice}
-                    />
-                  </div>
-                  <Text
-                    style={{
-                      fontSize: 13,
-                      color: "red",
-                      padding: '0px 0px 5px 14px',
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    {showMBNError ? LABELS.BOOKING_NOTICE_WALKIN_ALERT : ""}
-                  </Text>
-
-                  <Text
-                    style={{
-                      fontSize: 13,
-                      color: "#1677ff",
-                      padding: '0px 14px 35px 14px',
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    {LABELS.BOOKING_NOTICE_DESC}
-                  </Text>
+                  />
                 </Col>
-                <Col
-                  lg={{ span: 12 }}
-                  md={{ span: 12 }}
-                  sm={{ span: 23 }}
-                  xs={{ span: 23 }}
-                >
-                  <Row gutter={[10, 10]}
-                    style={{
-                      display: "flex",
-                      marginRight: "5px",
-                      justifyContent: "flex-end",
-                    }}
+              </Row>
+              <Divider
+                orientation={"center"}
+                style={{ margin: "4px 0", borderColor: "#f5f5f5" }}
+              />
+
+              <div style={{ background: "white" }}>
+                <Row gutter={8}>
+                  <Col
+                    lg={{ span: 24 }}
+                    md={{ span: 24 }}
+                    sm={{ span: 23 }}
+                    xs={{ span: 23 }}
                   >
-                     {/* <Col
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "14px 14px 10px 14px",
+                        gap: "20px",
+                        background: "white",
+                      }}
+                    >
+                      <span>{LABELS.WALK_IN_TXT}</span>
+                      <Switch
+                        title={
+                          isAvailableNowSlot
+                            ? LABELS.DISABLE_WALK_IN
+                            : LABELS.ENABLE_WALK_IN
+                        }
+                        checked={isAvailableNowSlot}
+                        onChange={onChangeAvailableNowSlot}
+                      />
+                    </div>
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: "red",
+                        padding: "0px 0px 5px 14px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {showWalkinError ? LABELS.BOOKING_NOTICE_ALERT : ""}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: "#1677ff",
+                        padding: "0px 0px 25px 14px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {LABELS.BOOKING_NOTICE_WALKIN_DESC}
+                    </Text>
+                  </Col>
+                </Row>
+                <div style={{ padding: "0 30px", width: "100%" }}>
+                  <Divider
+                    style={{
+                      borderColor: "#f5f5f5",
+                      width: "50%",
+                      margin: "0 auto",
+                    }}
+                  />
+                </div>
+
+                <Row gutter={8}>
+                  <Col
+                    lg={{ span: 12 }}
+                    md={{ span: 12 }}
+                    sm={{ span: 23 }}
+                    xs={{ span: 23 }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "12px",
+                        gap: "20px",
+                      }}
+                    >
+                      <span>{LABELS.BOOKING_NOTICE}</span>
+                      <Switch
+                        title={
+                          isBookingNoticeEnabled
+                            ? LABELS.DISABLE_MIN_BOOKING_NOTICE
+                            : LABELS.ENABLE_MIN_BOOKING_NOTICE
+                        }
+                        checked={isBookingNoticeEnabled}
+                        onChange={onChangeBookingNotice}
+                      />
+                    </div>
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: "red",
+                        padding: "0px 0px 5px 14px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {showMBNError ? LABELS.BOOKING_NOTICE_WALKIN_ALERT : ""}
+                    </Text>
+
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: "#1677ff",
+                        padding: "0px 14px 35px 14px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {LABELS.BOOKING_NOTICE_DESC}
+                    </Text>
+                  </Col>
+                  <Col
+                    lg={{ span: 12 }}
+                    md={{ span: 12 }}
+                    sm={{ span: 23 }}
+                    xs={{ span: 23 }}
+                  >
+                    <Row
+                      gutter={[10, 10]}
+                      style={{
+                        display: "flex",
+                        marginRight: "5px",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      {/* <Col
                       lg={{ span: 5 }}
                       md={{ span: 5 }}
                       sm={{ span: 6 }}
@@ -1033,61 +1134,58 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                         />
                       </Form.Item>
                     </Col> */}
-                    <Col
-                      lg={{ span: 10 }}
-                      md={{ span: 10 }}
-                      sm={{ span: 10 }}
-                      xs={{ span: 14 }}
-                    >
-                      <Form.Item
-                        name='hours'
-                        label={
-                          <label className='label '>
-                            {LABELS.HOURS}
-                          </label>
-                        }
-                        validateTrigger={["handleFinish", "handleUpdate"]}
+                      <Col
+                        lg={{ span: 10 }}
+                        md={{ span: 10 }}
+                        sm={{ span: 10 }}
+                        xs={{ span: 14 }}
                       >
-                        <HoursDropdown
-                          disabled={!isBookingNoticeEnabled}
-                          onChange={(val: number) => {
-                            setIsDataChange(true);
-                          }}
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col
-                      lg={{ span: 10 }}
-                      md={{ span: 10 }}
-                      sm={{ span: 10 }}
-                      xs={{ span: 14 }}
-                    >
-                      <Form.Item
-                        name='minutes'
-                        label={
-                          <label className='label '>
-                            {LABELS.MINUTES}
-                          </label>
-                        }
-                        validateTrigger={["handleFinish", "handleUpdate"]}
+                        <Form.Item
+                          name="hours"
+                          label={
+                            <label className="label ">{LABELS.HOURS}</label>
+                          }
+                          validateTrigger={["handleFinish", "handleUpdate"]}
+                        >
+                          <HoursDropdown
+                            disabled={!isBookingNoticeEnabled}
+                            onChange={(val: number) => {
+                              setIsDataChange(true);
+                            }}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col
+                        lg={{ span: 10 }}
+                        md={{ span: 10 }}
+                        sm={{ span: 10 }}
+                        xs={{ span: 14 }}
                       >
-                        <MinutesDropdown
-                          disabled={!isBookingNoticeEnabled}
-                          onChange={(val: number) => {
-                            setIsDataChange(true);
-                          }}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </div>
-          </Col>
-        </Row>
-      </Form >}
-    </div >
-  )
+                        <Form.Item
+                          name="minutes"
+                          label={
+                            <label className="label ">{LABELS.MINUTES}</label>
+                          }
+                          validateTrigger={["handleFinish", "handleUpdate"]}
+                        >
+                          <MinutesDropdown
+                            disabled={!isBookingNoticeEnabled}
+                            onChange={(val: number) => {
+                              setIsDataChange(true);
+                            }}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+          </Row>
+        </Form>
+      }
+    </div>
+  );
 }
 
 export default LocationCreateUpdate

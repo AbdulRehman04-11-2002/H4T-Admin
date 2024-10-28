@@ -14,6 +14,7 @@ import { ApiError } from '../../services/api/Index';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
+import { emailValidate } from '../../utils/globalFunctions';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -261,7 +262,12 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const handleUpdate = () => {
   }
 
-  const handleOnChange = () => {
+  const handleOnChange = (changedValues: string) => {
+    const name = Object.keys(changedValues)?.[0];
+    const value = Object.values(changedValues)?.[0];
+    if(name === "emailAddress") {
+      form.setFieldValue(name, value.toLowerCase().trim());
+    }
     setIsDataChange(true)
   }
 
@@ -716,7 +722,24 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                         {LABELS.EMAIL_ADDRESS}
                       </label>
                     }
-                    rules={[{ required: true, message: ERRORS.EMAIL_ADDRESS }, { type: 'email', message: t("ERRORS.VALID_EMAIL", { type: "Email" }) }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: ERRORS.EMAIL_REQUIRED,
+                      },
+                      {
+                        validator: (_, value) => {
+                          if (!value) {
+                            return Promise.resolve();
+                          }
+                          const validationError = emailValidate(value);
+                          if (validationError) {
+                            return Promise.reject(new Error(validationError));
+                          }
+                          return Promise.resolve();
+                        },
+                      },
+                    ]}
                     validateTrigger={["handleFinish", "handleUpdate"]}
                   >
                     <Input
