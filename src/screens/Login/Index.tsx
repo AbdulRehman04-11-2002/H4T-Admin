@@ -79,7 +79,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
   };
 
   const resendCode = async () => {
-    const email = form.getFieldValue("email");
+    const email = emailForm.getFieldValue("email");
     if (!email) {
       showError(ERRORS.EMAIL);
       return false;
@@ -114,7 +114,7 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
   };
 
   const getOtp = async (values: SubmitEmailProps) => {
-    const email = form.getFieldValue("email");
+    const email = emailForm.getFieldValue("email");
     if (!email) {
       inputEmailRef?.current?.focus();
       showError(ERRORS.EMAIL);
