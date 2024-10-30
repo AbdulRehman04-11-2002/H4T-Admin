@@ -82,7 +82,11 @@ api.interceptors.response.use(
       else if (
         statusCode === API_STATUS.UNAUTHORIZED && error?.response?.headers['x-version-support-status'] === "UNSUPPORTED"
       ) {
-        message = JSON.stringify(error.response?.data?.message);
+        message = ERRORS.IS_SESSION_EXPIRED;
+        errorData = [{
+          code: 401,
+          msg: ERRORS.IS_SESSION_EXPIRED
+        }];
         setTimeout(() => {
           reload();
       }, 1000);

@@ -60,7 +60,8 @@ export const ERRORS = {
     EMAIL_REQUIRED:"Email field is required",
     MISSING_ATRATE: "Email is missing the '@' symbol",
     INVALID_EMAIL_FORMAT:"Invalid email format",
-    EMAIL_CONSECUTIVE_DTOS:"Email cannot contain consecutive dots"
+    EMAIL_CONSECUTIVE_DTOS:"Email cannot contain consecutive dots",
+    IS_SESSION_EXPIRED: "Your session has expired, please login again."
 };
 
 export const API_ERRORS = {

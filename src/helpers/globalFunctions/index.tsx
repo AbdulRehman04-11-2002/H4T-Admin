@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { UploadFile, message, notification } from "antd";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { API_ERRORS, API_STATUS } from "../../constants/constants";
+import { API_ERRORS, API_STATUS, ERRORS } from "../../constants/constants";
 
 dayjs.extend(customParseFormat);
 
@@ -90,7 +90,11 @@ export const handleErrorResponse = (
             const { obj, errorMessage } = errorsMessageFocus(JSON.parse(message), inputRefs);
             return { statusCode, errorMessage, obj };
         }
-    } else if (statusCode === API_STATUS.UNAUTHORIZED && message.includes("Version")) {
+    } 
+    else if (statusCode === API_STATUS.UNAUTHORIZED && message === ERRORS.IS_SESSION_EXPIRED){
+        return { statusCode, errorMessage: message, obj: {} };
+    }
+    else if (statusCode === API_STATUS.UNAUTHORIZED && message.includes("Version")) {
         return { statusCode, errorMessage: message, obj: {} };
     } else if (statusCode === API_STATUS.UNAUTHORIZED) {
         return { statusCode, errorMessage: API_ERRORS.UNAUTHORIZED, obj: {} };
