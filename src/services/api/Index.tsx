@@ -10,7 +10,7 @@ export const api = axios.create({
     "Content-Type": "application/json",
     "x-portal": "ADMIN",
     "x-platform": "WEB",
-    "x-version": "2.9.1"
+    "x-version": "2.7"
   },
 });
 
