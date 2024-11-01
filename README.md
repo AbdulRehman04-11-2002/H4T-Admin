@@ -1,46 +1,77 @@
-# Getting Started with Create React App
+# Health4travel admin platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the Health4travel admin platform. Below you will find information on how to run the platform, how to contribute and more.
 
-## Available Scripts
+## Contribution
 
-In the project directory, you can run:
+We follow a clone-based contribution model.
 
-### `npm start`
+This means you need to:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. Clone the repository.
+2. Create a branch in your clone repository.
+3. Push your work to the branch in your cloned repository.
+4. Create a pull request to the current milestone main branch.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+All tests, including linting and static code analysis, will also run in your cloned repository.
 
-### `npm test`
+## Running the platform
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Install the relevant packages using the following command:
 
-### `npm run build`
+```bash
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To run the development server, you can use the following command:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Project Structure
 
-### `npm run eject`
+```bash
+.
+└── H4T-CUSTOMER-FE-WEBAPP/
+    └── src/                        # Main source directory
+        ├── /assets                 # Static assets like images, icons, fonts, etc.           
+        ├── /components             # Reusable UI components used across the app
+        ├── /constants              # Application-wide constants and configuration variables
+        ├── /context                # React context definitions for global state management
+        ├── /helpers                # Helper functions for various utility purposes
+        ├── /hoc                    # Higher-order components for extending component functionality
+        ├── /hooks                  # Custom React hooks for managing state and effects
+        ├── /interfaces             # TypeScript interfaces and types
+        ├── /locales                # Localization files for supporting multiple languages
+        ├── /routes                 # Route definitions and configuration for the app
+        ├── /screens                # Page-level components or screens representing different views
+        ├── /services               # API service files for handling HTTP requests
+        ├── /types                  # Type definitions for TypeScript (models, global types, etc.)
+        ├── /utils                  # Utility functions used across the application
+        ├── App.css                 # Global CSS for the main application
+        ├── App.test.tsx            # Test file for the main App component
+        ├── App.tsx                 # Root component of the application
+        ├── index.css               # Global styles applied to the app
+        ├── index.tsx               # Main entry point for React rendering
+        ├── react-app-env.d.ts      # Environment type definitions for TypeScript
+        ├── reportWebVitals.ts      # Performance measurement functions 
+        └── setupTests.ts           # Jest setup file for configuring testing environment
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Root Files
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- `.env` - Environment configuration file.
+- `dev.env` - Development-specific environment configuration.
+- `prod.env` - Production-specific environment configuration.
+- `.gitignore` - Specifies which files and directories to ignore in version control.
+- `package-lock.json` - Locked versions of dependencies for consistency.
+- `package.json` - Lists project metadata and dependencies.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Conventions
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Filenames should follow the conventions for the language they are written in. For example, 
+1. Folders should be named in `kebab-case`.
+2. Any JSX/TSX files should be named with `CamelCase.tsx`.
+3. Any JS/TS files should be named with `camelCase.ts`.
+4. Use [ant.design](https://ant.design/) for layout and styling.
