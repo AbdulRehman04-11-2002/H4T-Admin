@@ -71,7 +71,7 @@ jobs:
 
       # invalidate outdated cache
       - name: Cloudfront Cache Invalidation Dev
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/fix/milestone-2.8-105'
         uses: chetan/invalidate-cloudfront-action@master
         env:
           DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_DEVELOPMENT }}
