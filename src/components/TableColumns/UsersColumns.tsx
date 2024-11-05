@@ -6,9 +6,10 @@ import { ROLES } from "../../constants/constants";
 
 interface TableColumnProps {
     partnerID: string;
+    partnerName: string;
 }
 
-export const UsersColumns = ({ partnerID }: TableColumnProps) => {
+export const UsersColumns = ({ partnerID, partnerName }: TableColumnProps) => {
     const { t } = useTranslation();
     const LABELS: any = t("LABELS", { returnObjects: true });
     //
@@ -48,7 +49,7 @@ export const UsersColumns = ({ partnerID }: TableColumnProps) => {
             render: (_: any, record: any) => {
 
                 return (
-                    <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageAccount/${record?.id}/updateUser`}>{record?.name}</Link></div>
+                    <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageAccount/${partnerName}/${record?.id}/updateUser`}>{record?.name}</Link></div>
                 )
             },
         },
