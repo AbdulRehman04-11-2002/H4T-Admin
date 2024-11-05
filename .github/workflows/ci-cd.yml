@@ -3,7 +3,7 @@ name: H4T-Admin-FE-CI-CD-Workflow
 on:
   push:
     branches:
-      - develop
+      - fix/milestone-2.8-105
       - main
       - stage
 jobs:
@@ -27,7 +27,7 @@ jobs:
         run: npm run build:prod
 
       - name: Build app development
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/fix/milestone-2.8-105'
         run: npm run build:dev
 
       - name: Build app staging
@@ -59,7 +59,7 @@ jobs:
 
       # upload to s3 bucket of dev
       - name: Upload to S3 Dev develop
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/fix/milestone-2.8-105'
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read
