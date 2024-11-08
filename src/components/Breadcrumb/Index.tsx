@@ -52,15 +52,19 @@ const DynamicBreadcrumb: React.FC = () => {
                 title: breadcrumbItems.length > 1 && index === breadcrumbItems.length - 1 ? (
                     <span style={{ color: "#00000073" }}>{item.title}</span>
                 ) : (
-                index < 2 ? (
-                    item.title === MENULABEL.PARTNER_MANAGE_ACCOUNT ? (
-                    <Link onClick={showLoader} to={"/" || ''} style={{ color: "#183A59" }}>{item.title}</Link>
+                    index < 2 ? (
+                        breadcrumbItems.length > 1 && item.title === MENULABEL.PARTNER_MANAGE_ACCOUNT ? (
+                            <Link onClick={showLoader} to={"/" || ''} style={{ color: "#183A59" }}>{item.title}</Link>
+                        ) : (
+                            breadcrumbItems.length > 1 ? (
+                                <Link onClick={showLoader} to={item.path || ''} style={{ color: "#183A59" }}>{item.title}</Link>
+                            ) : (
+                                <span style={{ color: "#183A59" }}>{item.title}</span>
+                            )
+                        )
                     ) : (
-                    <Link onClick={showLoader} to={item.path || ''} style={{ color: "#183A59" }}>{item.title}</Link>
+                        <span style={{ color: "#00000073" }}>{item.title}</span>
                     )
-                ) : (
-                    <span style={{ color: "#00000073" }}>{item.title}</span>
-                )
                 )
             }))}
         />
