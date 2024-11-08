@@ -75,7 +75,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
   let params = useParams();
-  let { partnerID, locationID } = params;
+  let { partnerID, locationID, partnerName } = params;
   const { ME, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -194,7 +194,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       } else {
         setSuccess(SUCCESS.PARTNER_LOCATION_CREATED)
       }
-      navigate(`/partner/${partnerID}/manageAccount`);
+      navigate(`/partner/${partnerID}/manageAccount/${partnerName}`);
 
     } catch (error) {
       const _error = error as ApiError;
@@ -473,7 +473,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     type="default"
                     htmlType="button"
                     onClick={() =>
-                      navigate(`/partner/${partnerID}/manageAccount/`)
+                      navigate(`/partner/${partnerID}/manageAccount/${partnerName}`)
                     }
                   >
                     {LABELS.CANCEL}

@@ -21,13 +21,13 @@ const Routing = () => {
                     <Route path='' element={<PartnersList />} />
                     <Route path='Create' element={<PartnerCreate />} />
                     <Route path=':partnerID/manageAccount'>
-                        <Route path='' element={<ManageAccount />} />
-                        <Route path='createLocation' element={<LocationCreateUpdate />} />
-                        <Route path=':locationID/updateLocation' element={<LocationCreateUpdate isUpdateForm={true} />} />
-                        <Route path='createProduct' element={<ProductCreateUpdate />} />
-                        <Route path=':productID/updateProduct' element={<ProductCreateUpdate isUpdateForm={true} />} />
-                        <Route path='createuser' element={<UserCreateUpdate />} />
-                        <Route path=':userID/updateUser' element={<UserCreateUpdate isUpdateForm={true} />} />
+                        <Route path=':partnerName' element={<ManageAccount />} />
+                        <Route path=':partnerName/createLocation' element={<LocationCreateUpdate />} />
+                        <Route path=':partnerName/:locationID/:locationName/updateLocation' element={<LocationCreateUpdate isUpdateForm={true} />} />
+                        <Route path=':partnerName/createProduct' element={<ProductCreateUpdate />} />
+                        <Route path=':partnerName/:productID/:productName/updateProduct' element={<ProductCreateUpdate isUpdateForm={true} />} />
+                        <Route path=':partnerName/createuser' element={<UserCreateUpdate />} />
+                        <Route path=':partnerName/:userID/:userName/updateUser' element={<UserCreateUpdate isUpdateForm={true} />} />
                     </Route>
                 </Route>
                 <Route path='/planning' element={<PlanningList />} />
