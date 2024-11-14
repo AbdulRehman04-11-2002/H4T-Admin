@@ -18,13 +18,20 @@ const DynamicBreadcrumb: React.FC = () => {
 
     const getBreadcrumbItems = (): BreadcrumbItem[] => {
         const breadcrumbItems: BreadcrumbItem[] = [];
+        const manageAccountIndex = pathSnippets?.indexOf("manageAccount");
 
-        if (!pathSnippets?.includes('partner')) {
+        if (manageAccountIndex !== -1) {
+            const path = `/${pathSnippets.slice(0, manageAccountIndex + 1).join('/')}`;
+            breadcrumbItems.push({
+                title: `${MENULABEL.PARTNER} - ${capitaize(pathSnippets[manageAccountIndex])}`,
+                path,
+            });
+        } else if (!pathSnippets?.includes('partner')) {
             breadcrumbItems.push({ title: MENULABEL.PARTNER, path: '/' });
         }
 
         pathSnippets?.forEach((snippet: string, index: number) => {
-            if (!isNaN(Number(snippet))) return;
+            if (!isNaN(Number(snippet)) || (index <= manageAccountIndex)) return;
 
             const path = `/${pathSnippets.slice(0, index + 1).join('/')}`;
             const title = capitaize(snippet);
@@ -38,16 +45,33 @@ const DynamicBreadcrumb: React.FC = () => {
     const breadcrumbItems = getBreadcrumbItems();
 
     return (
-        <Breadcrumb style={{ backgroundColor: "#fafafa", padding: "10px 20px", margin: 0 }} items={breadcrumbItems.map((item, index) => {
-            return ({
+        <Breadcrumb 
+            style={{ backgroundColor: "#fafafa", padding: "10px 20px", margin: 0 }}
+            items={breadcrumbItems.map((item, index) => ({
                 key: index,
-                title: index === breadcrumbItems.length - 1 ? (
-                    item.title
+                title: breadcrumbItems.length > 1 && index === breadcrumbItems.length - 1 ? (
+                    <span style={{ color: "#00000073" }}>{decodeURIComponent(item.title)}</span>
                 ) : (
-                    <Link onClick={showLoader} to={item.path || ''}>{item.title}</Link>
+                    index < 2 ? (
+                        breadcrumbItems.length > 1 && item.title === MENULABEL.PARTNER_MANAGE_ACCOUNT ? (
+                            <Link onClick={showLoader} to={"/" || ''} style={{ color: "#183A59" }}>
+                                {decodeURIComponent(item.title)}
+                            </Link>
+                        ) : (
+                            breadcrumbItems.length > 1 ? (
+                                <Link onClick={showLoader} to={item.path || ''} style={{ color: "#183A59" }}>
+                                    {decodeURIComponent(item.title)}
+                                </Link>
+                            ) : (
+                                <span style={{ color: "#183A59" }}>{decodeURIComponent(item.title)}</span>
+                            )
+                        )
+                    ) : (
+                        <span style={{ color: "#00000073" }}>{decodeURIComponent(item.title)}</span>
+                    )
                 )
-            })
-        })} />
+            }))}
+        />
     );
 };
 

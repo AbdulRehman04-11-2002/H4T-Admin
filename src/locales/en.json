@@ -3,7 +3,8 @@
     "PARTNER": "Partner",
     "DASHBOARD": "dashboard",
     "MANAGE_ACCOUNT": "Manage Account",
-    "PLANNING": "Planning"
+    "PLANNING": "Planning",
+    "PARTNER_MANAGE_ACCOUNT": "Partner - ManageAccount"
   },
   "LABELS": {
     "COMPANY_LOGO": "Company Logo",

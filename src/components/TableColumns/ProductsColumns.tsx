@@ -5,10 +5,10 @@ import { useTranslation } from "react-i18next";
 import { Image } from "antd";
 interface TableColumnProps {
     partnerID: string;
-    ME: any
+    partnerName: string;
 }
 
-export const ProductsColumns = ({ partnerID, ME }: TableColumnProps) => {
+export const ProductsColumns = ({ partnerID, partnerName }: TableColumnProps) => {
     const { t } = useTranslation();
     const LABELS: any = t("LABELS", { returnObjects: true });
 
@@ -59,7 +59,7 @@ export const ProductsColumns = ({ partnerID, ME }: TableColumnProps) => {
             showSorterTooltip: false,
             sorter: (a: any, b: any) => a.name.localeCompare(b.name),
             render: (_: any, record: any) => (
-                <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageAccount/${record?.id}/updateProduct`}>{record?.name}</Link></div>
+                <div className='fontWeight-semiBold'><Link to={`/partner/${partnerID}/manageAccount/${partnerName}/${record?.id}/${encodeURIComponent(record?.name).replace(/\s+/g, '-')}/updateProduct`}>{record?.name}</Link></div>
             ),
         },
         {

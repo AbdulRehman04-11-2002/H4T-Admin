@@ -53,7 +53,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
   const { ME, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
   let params = useParams();
-  const { partnerID, userID } = params;
+  const { partnerID, userID, partnerName } = params;
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -177,7 +177,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       } else {
         setSuccess(SUCCESS.PARTNER_USER_CREATED)
       }
-      navigate(`/partner/${partnerID}/manageAccount`);
+      navigate(`/partner/${partnerID}/manageAccount/${partnerName}`);
 
       form.resetFields();
       setFileList([]);
@@ -292,7 +292,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 <Button
                   type='default'
                   htmlType='button'
-                  onClick={() => navigate(`/partner/${partnerID}/manageAccount/`)}
+                  onClick={() => navigate(`/partner/${partnerID}/manageAccount/${partnerName}`)}
                 >
                   {LABELS.CANCEL}
                 </Button>
