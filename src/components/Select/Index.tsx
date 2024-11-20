@@ -12,6 +12,11 @@ interface Props {
 const Dropdown: React.FC<Props> = ({ options, handleDropDown, selectedValue, placeholder }) => {
     return (
         <Select
+            showSearch
+            filterOption={(input, option)=>{
+            const label = option?.label;
+            return typeof label === 'string' && label.toLowerCase().includes(input.toLowerCase());
+            }}
             allowClear
             placeholder={placeholder}
             style={{width: '100%', position:"relative"}}
@@ -19,7 +24,7 @@ const Dropdown: React.FC<Props> = ({ options, handleDropDown, selectedValue, pla
             value={selectedValue}
         >
             {options.map((option) => (
-                <Option key={option.id} value={option.id}>
+                <Option key={option.id} value={option.id} label={option.name}>
                     {option.name}
                 </Option>
             ))}
