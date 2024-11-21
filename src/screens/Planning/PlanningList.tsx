@@ -34,7 +34,7 @@ function PlanningList() {
     const [search, setSearch] = useState<string>(DEFAULT_FILTERS.searchValue);
     const [searchValue, setSearchValue] = useState<string>(DEFAULT_FILTERS.searchValue);
     const [totalRecord, setTotalRecord] = useState<number>(0);
-    const [currentTab, setCurrentTab] = useState<string>("current");
+    const [currentTab, setCurrentTab] = useState<string>("upcoming");
     const [orderItems, setOrderItems] = useState<Order[]>([]);
     const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
     const { success, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
@@ -81,17 +81,30 @@ function PlanningList() {
         endDate: string | null,
         orderBy: string
     ) => {
-        showLoader();
         try {
-            const response = await getOrderItems(
-                page = search ? 1 : page,
+            const params: any = {
+                page: search ? 1 : page,
                 limit,
-                status,
                 search,
                 partnerLocationId,
-                startDate,
                 endDate,
-                orderBy
+                startDate,
+                orderBy: status === "upcoming" ? `-${orderBy}` : orderBy,  
+            };
+    
+            if (currentTab !== "all") {
+                params.status = status;          
+            }
+    
+            const response = await getOrderItems(
+                params.page,
+                params.limit,
+                params.status,
+                params.search,
+                params.partnerLocationId,
+                params.startDate,
+                params.endDate,
+                params.orderBy
             );
             setOrderItems(response?.data?.orders?.results);
             setTotalRecord(response?.data?.orders?.count);
@@ -204,7 +217,7 @@ function PlanningList() {
                     setPageSize={setPageSize}
                     setSearch={setSearch}
                     handleSorting={handleSorting}
-                    tabs={["current", "history"]}
+                    tabs={["upcoming", "completed", "all"]}
                 />
             )}
         </div>
