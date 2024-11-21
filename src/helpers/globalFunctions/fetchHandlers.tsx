@@ -5,9 +5,10 @@ import { formatToTwoDecimalPlaces } from ".";
 const moment = require('moment-timezone');
 
 
-export const formattedDateTime = (date: string, timezone: string, format: string) => {
-    if (date && timezone && format) {
-        return moment(date).tz(timezone).format(format)
+export const formattedDateTime = (date: string, options:any) => {
+    const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+    if (date) {
+        return new Intl.DateTimeFormat(locale,options).format(new Date(date));
     }
     return "-"
 };
@@ -32,7 +33,10 @@ export const getOrderStatusColor = (status: string | undefined) => {
 export const getFormattedDateTime = (order: OrderItem) => {
     if (order && order?.serviceDateTime) {
         const timezone = order?.partnerLocation?.timeZone || defaultTimezone;
-        const formattedDate = formattedDateTime(order?.serviceDateTime, timezone, "DD/MM/YYYY HH:mm");
+        const formattedDate = formattedDateTime(order?.serviceDateTime, {
+            timeStyle: "short",
+            dateStyle: "short"
+          });
         return `${formattedDate} (${timezone})`;
     }
 }
@@ -88,7 +92,14 @@ export const getBookingDate = (orderItem: OrderItem) => {
         const timezone = orderItem?.partnerLocation?.timeZone;
         const dateTime =
             date && timezone
-                ? formattedDateTime(date, timezone, "MMM DD, dddd HH:mm")
+                ? formattedDateTime(date,{
+                    month: 'short', 
+                    day: 'numeric', 
+                    weekday: 'long',
+                    hour: 'numeric', 
+                    minute: 'numeric', 
+            
+                })
                 : "-";
         return `${dateTime} (${timezone})`;
     }
