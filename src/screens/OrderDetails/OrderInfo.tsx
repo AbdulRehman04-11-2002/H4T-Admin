@@ -12,7 +12,14 @@ const OrderInfo = ({ order }: Props) => {
   const ORDER: any = t("ORDER", { returnObjects: true });
   const date = order?.serviceDateTime;
   const timezone = order?.partnerLocation?.timeZone;
+  const dateTime = formattedDateTime(date, {
+    month: 'short', 
+    day: 'numeric', 
+    weekday: 'long',
+    hour: 'numeric', 
+    minute: 'numeric', 
 
+});
   const orderItems = [
     {
       index: 0,
@@ -41,9 +48,7 @@ const OrderInfo = ({ order }: Props) => {
       title: `${ORDER.DATE_TIME}`,
       content: (
         <>
-          <div>{formattedDateTime(date, timezone, "MMM DD, dddd")}</div>
-          <div>{formattedDateTime(date, timezone, "HH:mm")}</div>
-          <div style={{ visibility: "hidden" }}>{formattedDateTime(date, timezone, "HH:mm")}</div>
+         {dateTime}
         </>
       ),
     },
