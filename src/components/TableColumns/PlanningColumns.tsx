@@ -1,6 +1,6 @@
 import { Tag } from "antd";
 import { Link } from "react-router-dom";
-import { getFormattedDateTime, getOrderStatusColor, getOrderStatus, getOrderProcess } from '../../helpers/globalFunctions/fetchHandlers';
+import { getFormattedDateTime, getOrderStatusColor, getOrderStatus, checkPaymentStatus, checkPaymentStatusColor } from '../../helpers/globalFunctions/fetchHandlers';
 
 
 interface TableColumnProps {
@@ -114,7 +114,7 @@ export const PlanningColumns = ({ LABELS }: TableColumnProps) => {
         {
             title: (
                 <strong className='text-center sp-color-table-header text-capitalize'>
-                    {LABELS.STATUS}
+                    {LABELS.PROCESS}
                 </strong>
             ),
             dataIndex: "status",
@@ -122,20 +122,6 @@ export const PlanningColumns = ({ LABELS }: TableColumnProps) => {
             render: (_: any, record: any) => (
                 <Tag style={{ marginLeft: "20px" }} color={getOrderStatusColor(getOrderStatus(record?.status, record?.order?.orderStatus, record?.order?.paymentStatus))}>
                     {getOrderStatus(record?.status, record?.order?.orderStatus, record?.order?.paymentStatus)}
-                </Tag>
-            ),
-        },
-        {
-            title: (
-                <strong className='text-center sp-color-table-header text-capitalize'>
-                    {LABELS.PROCESS}
-                </strong>
-            ),
-            dataIndex: "process",
-            sorter: true,
-            render: (_: any, record: any) => (
-                <Tag style={{ marginLeft: "20px" }} color={getOrderStatusColor(record?.order?.orderStatus)}>
-                    {getOrderProcess(record?.order?.orderStatus)}
                 </Tag>
             ),
         },
@@ -145,11 +131,11 @@ export const PlanningColumns = ({ LABELS }: TableColumnProps) => {
                     {LABELS.PAYMENT}
                 </strong>
             ),
-            dataIndex: "status",
+            dataIndex: "paymemt",
             sorter: true,
             render: (_: any, record: any) => (
-                <Tag style={{ marginLeft: "20px" }} color={getOrderStatusColor(getOrderStatus(record?.status, record?.order?.orderStatus, record?.order?.paymentStatus))}>
-                    {getOrderStatus(record?.status, record?.order?.orderStatus, record?.order?.paymentStatus)}
+                <Tag style={{ marginLeft: "20px" }} color={checkPaymentStatusColor(checkPaymentStatus(record?.other_services, record?.order?.orderStatus))}>
+                    {checkPaymentStatus(record?.other_services, record?.order?.orderStatus)}
                 </Tag>
             ),
         },

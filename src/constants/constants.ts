@@ -41,6 +41,12 @@ export enum ORDER_STATUS_COLORS {
     DARK_GREEN = "darkgreen"
 }
 
+export enum PAYMENT_STATUS_COLOR {
+    PAID = "green",
+    PENDING = "red",
+    DEFAULT = "blue"
+}
+
 export const ERRORS = {
     NAME: "Please enter name",
     BUSINESS_ID: "Please enter business id",
