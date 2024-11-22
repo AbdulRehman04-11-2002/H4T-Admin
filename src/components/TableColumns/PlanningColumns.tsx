@@ -1,6 +1,6 @@
 import { Tag } from "antd";
 import { Link } from "react-router-dom";
-import { getFormattedDateTime, getOrderStatusColor, getOrderStatus } from '../../helpers/globalFunctions/fetchHandlers';
+import { getFormattedDateTime, getOrderStatusColor, getOrderStatus, getOrderProcess } from '../../helpers/globalFunctions/fetchHandlers';
 
 
 interface TableColumnProps {
@@ -13,6 +13,8 @@ interface TableColumnProps {
         SERVICE: string;
         LOCATION: string;
         STATUS: string;
+        PROCESS: string;
+        PAYMENT: string;
     }
 }
 
@@ -122,6 +124,34 @@ export const PlanningColumns = ({ LABELS }: TableColumnProps) => {
                     {getOrderStatus(record?.status, record?.order?.orderStatus, record?.order?.paymentStatus)}
                 </Tag>
             ),
-        }
+        },
+        {
+            title: (
+                <strong className='text-center sp-color-table-header text-capitalize'>
+                    {LABELS.PROCESS}
+                </strong>
+            ),
+            dataIndex: "process",
+            sorter: true,
+            render: (_: any, record: any) => (
+                <Tag style={{ marginLeft: "20px" }} color={getOrderStatusColor(record?.order?.orderStatus)}>
+                    {getOrderProcess(record?.order?.orderStatus)}
+                </Tag>
+            ),
+        },
+        {
+            title: (
+                <strong className='text-center sp-color-table-header text-capitalize'>
+                    {LABELS.PAYMENT}
+                </strong>
+            ),
+            dataIndex: "status",
+            sorter: true,
+            render: (_: any, record: any) => (
+                <Tag style={{ marginLeft: "20px" }} color={getOrderStatusColor(getOrderStatus(record?.status, record?.order?.orderStatus, record?.order?.paymentStatus))}>
+                    {getOrderStatus(record?.status, record?.order?.orderStatus, record?.order?.paymentStatus)}
+                </Tag>
+            ),
+        },
     ]
 };

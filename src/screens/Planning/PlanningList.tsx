@@ -46,6 +46,7 @@ function PlanningList() {
     const [endDate, setEndDate] = useState<string | null>(null);
     const [partnerLocationId, setPartnerLocationId] = useState<number | undefined>();
     const [orderBy, setOrderBy] = useState<string>(defaultPlannerSortBy);
+    console.log('orderItems', orderItems)
 
     useEffect(() => {
         getAllOrderItems(

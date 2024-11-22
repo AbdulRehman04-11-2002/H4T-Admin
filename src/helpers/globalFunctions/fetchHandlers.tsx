@@ -1,6 +1,6 @@
 
 import { OrderItem } from "../../interface/Order";
-import { ORDER_STATUS, ORDER_STATUS_COLORS, ORDER_BACKEND_STATUS, defaultTimezone } from "../../constants/constants";
+import { ORDER_STATUS, ORDER_STATUS_COLORS, ORDER_BACKEND_STATUS, defaultTimezone, ORDER_PROCESS_STATUS } from "../../constants/constants";
 import { formatToTwoDecimalPlaces } from ".";
 const moment = require('moment-timezone');
 
@@ -23,6 +23,8 @@ export const getOrderStatusColor = (status: string | undefined) => {
             return ORDER_STATUS_COLORS.GREEN;
         case ORDER_STATUS.INPROGRESS:
             return ORDER_STATUS_COLORS.BLUE;
+        case ORDER_STATUS.INPROGRESS_PROCESS: 
+            return ORDER_STATUS_COLORS.BLUE
         case ORDER_STATUS.NO_SHOW:
             return ORDER_STATUS_COLORS.ORANGE;
         default:
@@ -47,6 +49,10 @@ export const getOrderStatus = (orderItemStatus: string | undefined, orderStatus:
     else {
         return ORDER_STATUS[orderItemStatus as keyof typeof ORDER_STATUS]
     }
+}
+
+export const getOrderProcess = (orderStatus: string | undefined) => {
+    // return ORDER_PROCESS_STATUS[orderStatus as keyof typeof ORDER_STATUS]
 }
 //---------- PlanningList ends-----------//
 
