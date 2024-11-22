@@ -9,7 +9,8 @@ export const getOrderItems = async (
     partnerLocationId: number | undefined,
     startDate: string | null,
     endDate: string | null,
-    orderBy: string
+    orderBy: string,
+    planningTab: string
 ) => {
     const params = {
         ...(page ? { page: page } : {}),
@@ -20,6 +21,7 @@ export const getOrderItems = async (
         ...(startDate ? { startDate: startDate } : {}),
         ...(endDate ? { endDate: endDate } : {}),
         ...(orderBy ? { orderBy: orderBy } : {}),
+        ...(planningTab ? { planningTab: planningTab } : {}),
         ...({ now: new Date().toISOString()?.split('T')[0] })
     };
     const response = await api.get<GetOrderItemsApiResponse>("/order/orderItems", {

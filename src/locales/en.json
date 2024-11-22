@@ -182,8 +182,9 @@
     "SOME_THING_WENT_WRONG": "Something went wrong"
   },
   "TABS_KEY": {
-    "current": "Current",
-    "history": "History",
+    "UPCOMING": "Upcoming",
+    "COMPLETED": "Completed",
+    "DRAFT": "Draft",
     "ENABLED": "Enabled",
     "DISABLED": "Disabled",
     "ALL": "All"
