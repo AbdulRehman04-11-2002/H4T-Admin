@@ -1,6 +1,6 @@
 
 import { OrderItem } from "../../interface/Order";
-import { ORDER_STATUS, ORDER_STATUS_COLORS, ORDER_BACKEND_STATUS, defaultTimezone } from "../../constants/constants";
+import { ORDER_STATUS, ORDER_STATUS_COLORS, ORDER_BACKEND_STATUS, defaultTimezone, PAYMENT_STATUS_COLOR } from "../../constants/constants";
 import { formatToTwoDecimalPlaces } from ".";
 const moment = require('moment-timezone');
 
@@ -23,6 +23,8 @@ export const getOrderStatusColor = (status: string | undefined) => {
             return ORDER_STATUS_COLORS.GREEN;
         case ORDER_STATUS.INPROGRESS:
             return ORDER_STATUS_COLORS.BLUE;
+        case ORDER_STATUS.INPROGRESS_PROCESS: 
+            return ORDER_STATUS_COLORS.BLUE
         case ORDER_STATUS.NO_SHOW:
             return ORDER_STATUS_COLORS.ORANGE;
         default:
@@ -48,6 +50,27 @@ export const getOrderStatus = (orderItemStatus: string | undefined, orderStatus:
         return ORDER_STATUS[orderItemStatus as keyof typeof ORDER_STATUS]
     }
 }
+
+export const checkPaymentStatus = (otherServices: Array<{ status: string }> | undefined, orderStatus: string | undefined): string => {
+    if (!otherServices || otherServices.length === 0) {
+      return orderStatus === "CONFIRMED" ? "PAID" : "PENDING";
+    } else {
+      const allServicesPaid = otherServices.every((service) => service.status === "PAID");
+      return allServicesPaid ? "PAID" : "PENDING";
+    }
+};
+
+export const checkPaymentStatusColor = (status: string) => {
+    switch (status) {
+        case "PENDING":
+            return PAYMENT_STATUS_COLOR.PENDING;
+        case "PAID":
+            return PAYMENT_STATUS_COLOR.PAID;
+        default:
+            return PAYMENT_STATUS_COLOR.DEFAULT;
+    }
+}
+
 //---------- PlanningList ends-----------//
 
 //---------- LocationCreateUpdate starts---------------//

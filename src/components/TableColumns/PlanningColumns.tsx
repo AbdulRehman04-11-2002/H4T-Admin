@@ -1,6 +1,6 @@
 import { Tag } from "antd";
 import { Link } from "react-router-dom";
-import { getFormattedDateTime, getOrderStatusColor, getOrderStatus } from '../../helpers/globalFunctions/fetchHandlers';
+import { getFormattedDateTime, getOrderStatusColor, getOrderStatus, checkPaymentStatus, checkPaymentStatusColor } from '../../helpers/globalFunctions/fetchHandlers';
 
 
 interface TableColumnProps {
@@ -13,6 +13,8 @@ interface TableColumnProps {
         SERVICE: string;
         LOCATION: string;
         STATUS: string;
+        PROCESS: string;
+        PAYMENT: string;
     }
 }
 
@@ -112,7 +114,7 @@ export const PlanningColumns = ({ LABELS }: TableColumnProps) => {
         {
             title: (
                 <strong className='text-center sp-color-table-header text-capitalize'>
-                    {LABELS.STATUS}
+                    {LABELS.PROCESS}
                 </strong>
             ),
             dataIndex: "status",
@@ -122,6 +124,20 @@ export const PlanningColumns = ({ LABELS }: TableColumnProps) => {
                     {getOrderStatus(record?.status, record?.order?.orderStatus, record?.order?.paymentStatus)}
                 </Tag>
             ),
-        }
+        },
+        {
+            title: (
+                <strong className='text-center sp-color-table-header text-capitalize'>
+                    {LABELS.PAYMENT}
+                </strong>
+            ),
+            dataIndex: "paymemt",
+            sorter: true,
+            render: (_: any, record: any) => (
+                <Tag style={{ marginLeft: "20px" }} color={checkPaymentStatusColor(checkPaymentStatus(record?.other_services, record?.order?.orderStatus))}>
+                    {checkPaymentStatus(record?.other_services, record?.order?.orderStatus)}
+                </Tag>
+            ),
+        },
     ]
 };
