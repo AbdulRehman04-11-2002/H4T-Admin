@@ -121,7 +121,7 @@ export const PlanningColumns = ({ LABELS }: TableColumnProps) => {
             sorter: true,
             render: (_: any, record: any) => (
                 <Tag style={{ marginLeft: "20px" }} color={getOrderProcessStatusColor(record?.order?.orderStatus)}>
-                    {record?.order?.orderStatus}
+                    {record?.status}
                 </Tag>
             ),
         },
