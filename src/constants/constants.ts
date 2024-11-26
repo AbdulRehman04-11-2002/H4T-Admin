@@ -27,7 +27,8 @@ export enum ORDER_STATUS_COLORS {
     GREEN = "green",
     BLUE = "blue",
     ORANGE = "orange",
-    DARK_GREEN = "darkgreen"
+    DARK_GREEN = "darkgreen",
+    YELLOW = "yellow"
 }
 
 export enum PAYMENT_STATUS_COLOR {

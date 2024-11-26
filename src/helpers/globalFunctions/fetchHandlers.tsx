@@ -45,7 +45,7 @@ export const getOrderProcessStatusColor = (status: string | undefined) => {
         case ORDER_BACKEND_STATUS.COMPLETED:
             return ORDER_STATUS_COLORS.DARK_GREEN;
         case ORDER_BACKEND_STATUS.DRAFT:
-            return ORDER_STATUS_COLORS.DARK_GREEN;
+            return ORDER_STATUS_COLORS.YELLOW;
         default:
             return ORDER_STATUS_COLORS.DARK_GREEN; 
     }
