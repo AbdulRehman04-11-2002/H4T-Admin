@@ -157,7 +157,7 @@ function PlanningList() {
             setPlanningTab("current");
         } else if (currentTab === "COMPLETED") {
             setPlanningTab("history");
-        } else if (currentTab === "DRAFT") {
+        } else if (currentTab === "DRAFT" || currentTab === "ALL") {
             setPlanningTab(""); // Do not send status
         }
         setPage(1);
