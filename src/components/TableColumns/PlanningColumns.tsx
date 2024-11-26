@@ -117,7 +117,7 @@ export const PlanningColumns = ({ LABELS }: TableColumnProps) => {
                     {LABELS.PROCESS}
                 </strong>
             ),
-            dataIndex: "order?.orderStatus",
+            dataIndex: "status,order.orderStatus",
             sorter: true,
             render: (_: any, record: any) => (
                 <Tag style={{ marginLeft: "20px" }} color={getOrderProcessStatusColor(record?.order?.orderStatus)}>
