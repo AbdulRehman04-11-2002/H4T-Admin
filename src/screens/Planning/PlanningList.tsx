@@ -93,7 +93,7 @@ function PlanningList() {
                 partnerLocationId,
                 endDate,
                 startDate,
-                orderBy: planningTab === "current" || planningTab === "all" ? `-${orderBy}` : orderBy,  
+                orderBy: currentTab === "UPCOMING" || currentTab === "ALL" ? `-${orderBy}` : orderBy,  
                 planningTab: currentTab,
             };
     
