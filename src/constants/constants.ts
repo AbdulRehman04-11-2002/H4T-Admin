@@ -22,17 +22,6 @@ export enum ORDER_STATUS {
     INPROGRESS_PROCESS = "In progress"
 }
 
-export enum ORDER_PROCESS_STATUS {
-    DRAFT = "Payment pending",
-    PENDING = "Confirmed",
-    CONFIRMED = "Confirmed",
-    PAID = "Paid",
-    INPROGRESS = "In progress",
-    COMPLETE = "Completed",
-    PAYMENT_PENDING = "Payment pending",
-    NO_SHOW = "No show"
-}
-
 export enum ORDER_STATUS_COLORS {
     RED = "red",
     GREEN = "green",
