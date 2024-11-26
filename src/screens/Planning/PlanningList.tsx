@@ -94,11 +94,12 @@ function PlanningList() {
                 endDate,
                 startDate,
                 orderBy: planningTab === "current" || planningTab === "all" ? `-${orderBy}` : orderBy,  
-                planningTab: currentTab 
+                planningTab: currentTab,
             };
     
             if (planningTab && ((currentTab as string) !== "draft" || (currentTab as string) !== "all")) {
-                params.status = planningTab;          
+                params.status = planningTab;   
+                params.now = new Date().toISOString()?.split('T')[0];       
             }
     
             const response = await getOrderItems(
@@ -110,7 +111,8 @@ function PlanningList() {
                 params.startDate,
                 params.endDate,
                 params.orderBy,
-                params.planningTab
+                params.planningTab,
+                params.now,
             );
             setOrderItems(response?.data?.orders?.results);
             setTotalRecord(response?.data?.orders?.count);

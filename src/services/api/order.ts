@@ -10,7 +10,8 @@ export const getOrderItems = async (
     startDate: string | null,
     endDate: string | null,
     orderBy: string,
-    planningTab: string
+    planningTab: string,
+    now: string,
 ) => {
     const params = {
         ...(page ? { page: page } : {}),
@@ -22,7 +23,7 @@ export const getOrderItems = async (
         ...(endDate ? { endDate: endDate } : {}),
         ...(orderBy ? { orderBy: orderBy } : {}),
         ...(planningTab ? { planningTab: planningTab } : {}),
-        ...({ now: new Date().toISOString()?.split('T')[0] })
+        ...(now ? { now: now } : {})
     };
     const response = await api.get<GetOrderItemsApiResponse>("/order/orderItems", {
         params,
