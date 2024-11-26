@@ -34,7 +34,7 @@ function PlanningList() {
     const [search, setSearch] = useState<string>(DEFAULT_FILTERS.searchValue);
     const [searchValue, setSearchValue] = useState<string>(DEFAULT_FILTERS.searchValue);
     const [totalRecord, setTotalRecord] = useState<number>(0);
-    const [currentTab, setCurrentTab] = useState<string>("UPCOMING");
+    const [currentTab, setCurrentTab] = useState<string>("ALL");
     const [orderItems, setOrderItems] = useState<Order[]>([]);
     const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
     const { success, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
@@ -46,7 +46,7 @@ function PlanningList() {
     const [endDate, setEndDate] = useState<string | null>(null);
     const [partnerLocationId, setPartnerLocationId] = useState<number | undefined>();
     const [orderBy, setOrderBy] = useState<string>(defaultPlannerSortBy);
-    const [planningTab, setPlanningTab] = useState<string>("current")
+    const [planningTab, setPlanningTab] = useState<string>("")
 
     useEffect(() => {
         getAllOrderItems(
@@ -93,11 +93,11 @@ function PlanningList() {
                 partnerLocationId,
                 endDate,
                 startDate,
-                orderBy: planningTab === "current" ? `-${orderBy}` : orderBy,  
+                orderBy: planningTab === "current" || planningTab === "all" ? `-${orderBy}` : orderBy,  
                 planningTab: currentTab 
             };
     
-            if (planningTab && currentTab !== "draft") {
+            if (planningTab && ((currentTab as string) !== "draft" || (currentTab as string) !== "all")) {
                 params.status = planningTab;          
             }
     
@@ -230,7 +230,7 @@ function PlanningList() {
                     setPageSize={setPageSize}
                     setSearch={setSearch}
                     handleSorting={handleSorting}
-                    tabs={["UPCOMING", "COMPLETED", "DRAFT"]}
+                    tabs={["ALL", "UPCOMING", "COMPLETED", "DRAFT"]}
                 />
             )}
         </div>
