@@ -75,7 +75,7 @@ export const checkPaymentStatus = (
     orderStatus: string | undefined
 ): string => {
     if (!otherServices || otherServices.length === 0) {
-      return orderStatus === "CONFIRMED" ? "PAID" : "PENDING";
+        return orderStatus === 'DRAFT'?'PENDING':'PAID';
     } else {
       const allServicesPaid = otherServices.every((service) => service.paymentStatus === "PAID");
       return allServicesPaid ? "PAID" : "PENDING";
