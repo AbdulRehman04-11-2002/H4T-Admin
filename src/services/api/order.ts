@@ -16,14 +16,14 @@ export const getOrderItems = async (
     const params = {
         ...(page ? { page: page } : {}),
         ...(pageSize ? { pageSize: pageSize } : {}),
-        ...(status ? { status: status } : {}),
+        // ...(status ? { status: status } : {}),
         ...(searchString ? { searchString: searchString } : {}),
         ...(partnerLocationId ? { partnerLocationId: partnerLocationId } : {}),
         ...(startDate ? { startDate: startDate } : {}),
         ...(endDate ? { endDate: endDate } : {}),
         ...(orderBy ? { orderBy: orderBy } : {}),
         ...(planningTab ? { planningTab: planningTab } : {}),
-        ...(now ? { now: now } : {})
+        // ...(now ? { now: now } : {})
     };
     const response = await api.get<GetOrderItemsApiResponse>("/order/orderItems", {
         params,
