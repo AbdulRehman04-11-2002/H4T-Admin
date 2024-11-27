@@ -22,6 +22,22 @@ export enum ORDER_STATUS {
     INPROGRESS_PROCESS = "In progress"
 }
 
+export enum ORDER_ITEM_BACKEND_STATUS { // business convention to item status mapping
+    DRAFT = "DRAFT",
+    CONFIRMED  = "PENDING",
+    CHECKEDIN = "INPROGRESS",
+    COMPLETED = "COMPLETE",
+    NOSHOW = "NO_SHOW",
+}
+
+export enum ORDER_ITEM_STATUS {
+    DRAFT = "Draft",
+    PENDING = "Confirmed",
+    INPROGRESS = "Checked - in",
+    COMPLETE = "Completed",
+    NO_SHOW = "No show",
+}
+
 export enum ORDER_STATUS_COLORS {
     RED = "red",
     GREEN = "green",

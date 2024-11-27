@@ -1,6 +1,6 @@
 
 import { OrderItem } from "../../interface/Order";
-import { ORDER_STATUS, ORDER_STATUS_COLORS, ORDER_BACKEND_STATUS, defaultTimezone, PAYMENT_STATUS_COLOR } from "../../constants/constants";
+import { ORDER_STATUS, ORDER_STATUS_COLORS, ORDER_BACKEND_STATUS, defaultTimezone, PAYMENT_STATUS_COLOR, ORDER_ITEM_STATUS, ORDER_ITEM_BACKEND_STATUS } from "../../constants/constants";
 import { formatToTwoDecimalPlaces } from ".";
 const moment = require('moment-timezone');
 
@@ -34,17 +34,15 @@ export const getOrderStatusColor = (status: string | undefined) => {
 
 export const getOrderProcessStatusColor = (status: string | undefined) => {
     switch (status) {
-        case ORDER_BACKEND_STATUS.CONFIRMED:
-            return ORDER_STATUS_COLORS.GREEN;
-        case ORDER_BACKEND_STATUS.IN_PROGRESS:
+        case ORDER_ITEM_BACKEND_STATUS.CHECKEDIN:
             return ORDER_STATUS_COLORS.BLUE;
-        case ORDER_BACKEND_STATUS.PENDING: 
-            return ORDER_STATUS_COLORS.BLUE
-        case ORDER_BACKEND_STATUS.NO_SHOW:
+        case ORDER_ITEM_BACKEND_STATUS.CONFIRMED: 
+            return ORDER_STATUS_COLORS.GREEN
+        case ORDER_ITEM_BACKEND_STATUS.NOSHOW:
             return ORDER_STATUS_COLORS.ORANGE;
-        case ORDER_BACKEND_STATUS.COMPLETED:
+        case ORDER_ITEM_BACKEND_STATUS.COMPLETED:
             return ORDER_STATUS_COLORS.DARK_GREEN;
-        case ORDER_BACKEND_STATUS.DRAFT:
+        case ORDER_ITEM_BACKEND_STATUS.DRAFT:
             return ORDER_STATUS_COLORS.YELLOW;
         default:
             return ORDER_STATUS_COLORS.DARK_GREEN; 
@@ -68,6 +66,10 @@ export const getOrderStatus = (orderItemStatus: string | undefined, orderStatus:
     else {
         return ORDER_STATUS[orderItemStatus as keyof typeof ORDER_STATUS]
     }
+}
+
+export const getOtrderItemStatus = (orderItemStatus: string | undefined) => {
+    return ORDER_ITEM_STATUS[orderItemStatus as keyof typeof ORDER_ITEM_STATUS]
 }
 
 export const checkPaymentStatus = (
