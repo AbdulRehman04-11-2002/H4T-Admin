@@ -38,7 +38,9 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const SUCCESS: any = t("SUCCESS", { returnObjects: true });
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
   const { setSuccess, ME } = useContext(GlobalContext) as GlobalContextProps;
-  const [cityOptions, setCityOptions] = useState<{ label: string; value: string }[]>([]);
+  // const [cityOptions, setCityOptions] = useState<{ label: string; value: string }[]>([]);
+  const [generalCountries, setgeneralCountries] = useState<{label:string, value:number }[]>([]);
+  const [generalCities , setgeneralCities ] = useState<{label:string, value:number }[]>([]);
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [fileList, setFileList] = useState<AntUploadFile[]>([]);
@@ -57,6 +59,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     status: "",
     uploadLogo: "",
     contractNumber: "",
+    searchAndSelectCountry: "",
     searchAndSelectCity: "",
     streetAddress: "",
     postalCode: "",
@@ -74,6 +77,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputLicenseNumberRef = useRef<null | HTMLElement>(null);
   const inputStatusRef = useRef<null | HTMLElement>(null);
   const inputContractNumberRef = useRef<null | HTMLElement>(null);
+  const inputSearchAndSelectCountryRef = useRef<null | HTMLElement>(null);
   const inputSearchAndSelectCityRef = useRef<null | HTMLElement>(null);
   const inputStreetAddressRef = useRef<null | HTMLElement>(null);
   const inputPostalCodeRef = useRef<null | HTMLElement>(null);
@@ -99,6 +103,8 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         return inputContractNumberRef;
       case "searchAndSelectCity":
         return inputSearchAndSelectCityRef;
+        case "searchAndSelectCountry":
+        return inputSearchAndSelectCountryRef;  
       case "streetAddress":
         return inputStreetAddressRef;
       case "postalCode":
@@ -192,6 +198,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     try {
       showLoader();
       const response = await getPartner(partnerID);
+      getCities(response?.data?.partner.registeredCity?.location)
       setFormValues(response?.data?.partner, services);
     } catch (error) {
       const _error = error as ApiError;
@@ -213,6 +220,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       licenseNumber: currentPartner?.licenseNumber,
       status: currentPartner?.status,
       contractNumber: currentPartner?.contractNumber,
+      searchAndSelectCountry: currentPartner?.registeredCity?.location,
       searchAndSelectCity: currentPartner?.registeredCity?.id,
       streetAddress: currentPartner?.registeredStreetAddress,
       postalCode: currentPartner?.registeredPostalCode,
@@ -265,6 +273,10 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const handleOnChange = (changedValues: string) => {
     const name = Object.keys(changedValues)?.[0];
     const value = Object.values(changedValues)?.[0];
+    if(name === "searchAndSelectCountry"){
+      form.setFieldValue('searchAndSelectCity', undefined);
+      getCities(Number(value))
+    }
     if(name === "emailAddress") {
       form.setFieldValue(name, value.toLowerCase().trim());
     }
@@ -311,15 +323,27 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   };
 
   useEffect(() => {
-    let cityOptionsArr: any = []
+    let countryOptionsArr: any = []
     ME?.systemLocations && ME?.systemLocations.map((location: any) => {
-      if (location.type === "CITY" && location.status === "ENABLED") cityOptionsArr.push({ label: location.name, value: location.id })
+      if (location.type === "COUNTRY" && location.status === "ENABLED") countryOptionsArr.push({ label: location.name, value: location.id })
     })
-    setCityOptions(cityOptionsArr)
+    setgeneralCountries(countryOptionsArr)
     const services = ME?.systemServices && ME.systemServices.map((service: any) => { return { id: service.id, name: service.name, fee: 0, feeType: 'FIXED_FEE', checked: false } }) || []
-
-    partnerID ? getPartnerDetail(services) : setServices(services)
+    if(ME?.user){
+      partnerID ? getPartnerDetail(services) : setServices(services)
+    }
   }, [ME])
+
+  const getCities = (value:number) => {
+    let CityOptionsArr: any = []
+    ME?.systemLocations && ME?.systemLocations.map((location: any) => {
+      if (location.type === "CITY" && location.status === "ENABLED" && location.location === value) 
+        CityOptionsArr.push({ label: location.name, value: location.id })
+    
+    })
+    setgeneralCities(CityOptionsArr)
+  }
+ 
 
   useEffect(() => {
     getCountryCode();
@@ -586,6 +610,39 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                 >
                   {/* create a select with some defined cities */}
                   <Form.Item
+                    validateStatus={errors.searchAndSelectCountry ? "error" : ""}
+                    name='searchAndSelectCountry'
+                    label={
+                      <label className='label '>
+                        {LABELS.COUNTRY}
+                      </label>
+                    }
+                    rules={[{ required: true, message: ERRORS.SEARCH_AND_SELECT_COUNTRY }]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Select
+                      placeholder={LABELS.SEARCH_AND_SELECT_COUNTRY}
+                      ref={inputSearchAndSelectCountryRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    >
+                      {generalCountries.map((country) => (
+                        <Option key={country.value} value={country.value}>
+                          {country.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  {/* create a select with some defined cities */}
+                  <Form.Item
                     validateStatus={errors.searchAndSelectCity ? "error" : ""}
                     name='searchAndSelectCity'
                     label={
@@ -600,9 +657,9 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       placeholder={LABELS.SEARCH_AND_SELECT_CITY}
                       ref={inputSearchAndSelectCityRef as any}
                       autoFocus={false}
-                      disabled={false}
+                      disabled={generalCities.length > 0 ? false : true}
                     >
-                      {cityOptions.map((city) => (
+                      {generalCities.map((city) => (
                         <Option key={city.value} value={city.value}>
                           {city.label}
                         </Option>

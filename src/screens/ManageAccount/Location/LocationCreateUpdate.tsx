@@ -42,7 +42,8 @@ const { TextArea } = Input;
 
 function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [isDataChange, setIsDataChange] = useState(false)
-  const [cityOptions, setCityOptions] = useState<{ label: string, value: number }[]>([]);
+  const [generalCountries, setgeneralCountries] = useState<{label:string, value:number }[]>([]);
+  const [generalCities , setgeneralCities ] = useState<{label:string, value:number }[]>([]);
   const [fileList, setFileList] = useState<AntUploadFile[]>([]);
 
   const [imageUrl, setImageUrl] = useState<string>("");
@@ -50,6 +51,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     name: "",
     code: "",
     phoneNumber: "",
+    country: "",
     city: "",
     postalCode: "",
     longitude: "",
@@ -88,6 +90,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputNameRef = useRef<null | HTMLElement>(null);
   const inputCodeRef = useRef<null | HTMLElement>(null);
   const inputPhoneNumberRef = useRef<null | HTMLElement>(null);
+  const inputCountryRef = useRef<null | HTMLElement>(null);
   const inputCityRef = useRef<null | HTMLElement>(null);
   const inputPostalCodeRef = useRef<null | HTMLElement>(null);
   const inputLongitudeRef = useRef<null | HTMLElement>(null);
@@ -112,6 +115,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         return inputCodeRef;
       case "phoneNumber":
         return inputPhoneNumberRef;
+      case "country":
+        return inputCountryRef;
       case "city":
         return inputCityRef;
       case "postalCode":
@@ -137,6 +142,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     showLoader();
     try {
       const response = await getLocation(locationID || "");
+      getCities(response.data.response.city.location)
       setFormValues(response.data.response)
     } catch (error) {
       const _error = error as ApiError;
@@ -216,6 +222,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       name: data?.name,
       code: data?.code,
       phoneNumber: data?.phoneNumber || '',
+      country: data?.city.location,
       city: data?.city.id,
       postalCode: data?.postalCode,
       longitude: data?.longitude,
@@ -333,6 +340,10 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const handleOnChange = (changedValues: string) => {
     const name = Object.keys(changedValues)?.[0];
     const value = Object.values(changedValues)?.[0];
+    if (name === 'country'){
+      getCities(Number(value))
+      form.setFieldValue('city', undefined);
+    }
     if(name === "email") {
       form.setFieldValue(name, value.toLowerCase().trim());
     }
@@ -351,18 +362,31 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   };
 
   useEffect(() => {
-    locationID && getPartnerLocation();
     !locationID && createOperatingHours();
-    getCountryCode();
+    if(ME?.user){
+      locationID && getPartnerLocation();
+      getCountryCode();
+    }
+   
   }, [])
 
   useEffect(() => {
-    let cityOptionsArr: any = []
+    let CountryOptionsArr: any = []
     ME?.systemLocations && ME?.systemLocations.map((location: any) => {
-      if (location.type === "CITY" && location.status === "ENABLED") cityOptionsArr.push({ label: location.name, value: location.id })
+      if (location.type === "COUNTRY" && location.status === "ENABLED") CountryOptionsArr.push({ label: location.name, value: location.id })
     })
-    setCityOptions(cityOptionsArr)
+    setgeneralCountries(CountryOptionsArr)
   }, [ME])
+
+  const getCities = (value:number) => {
+    let CityOptionsArr: any = []
+    ME?.systemLocations && ME?.systemLocations.map((location: any) => {
+      if (location.type === "CITY" && location.status === "ENABLED" && location.location === value) 
+        CityOptionsArr.push({ label: location.name, value: location.id })
+    
+    })
+    setgeneralCities(CityOptionsArr)
+  }
 
   const onChangeAvailableNowSlot = (checked: boolean) => {
     if (isBookingNoticeEnabled && checked) {
@@ -669,6 +693,43 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   xs={{ span: 23 }}
                 >
                   <Form.Item
+                    validateStatus={errors.country ? "error" : ""}
+                    name="country"
+                    label={
+                      <label className="label ">
+                        {LABELS.COUNTRY}
+                        <Tooltip title={LABELS.COUNTRY_TOOLTIP} />
+                      </label>
+                    }
+                    rules={[
+                      {
+                        required: true,
+                        message: ERRORS.SEARCH_AND_SELECT_COUNTRY,
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <Select
+                      placeholder={LABELS.SEARCH_AND_SELECT_COUNTRY}
+                      ref={inputCountryRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                    >
+                      {generalCountries.map((country) => (
+                        <Option key={country.value} value={country.value}>
+                          {country.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                 <Form.Item
                     validateStatus={errors.city ? "error" : ""}
                     name="city"
                     label={
@@ -689,36 +750,14 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       placeholder={LABELS.SEARCH_AND_SELECT_CITY}
                       ref={inputCityRef as any}
                       autoFocus={false}
-                      disabled={false}
+                      disabled={generalCities.length > 0 ? false : true}
                     >
-                      {cityOptions.map((city) => (
+                      {generalCities.map((city) => (
                         <Option key={city.value} value={city.value}>
                           {city.label}
                         </Option>
                       ))}
                     </Select>
-                  </Form.Item>
-                </Col>
-                <Col
-                  lg={{ span: 12 }}
-                  md={{ span: 12 }}
-                  sm={{ span: 23 }}
-                  xs={{ span: 23 }}
-                >
-                  <Form.Item
-                    validateStatus={errors.postalCode ? "error" : ""}
-                    name="postalCode"
-                    label={
-                      <label className="label ">{LABELS.POSTAL_CODE}</label>
-                    }
-                    validateTrigger={["handleFinish", "handleUpdate"]}
-                  >
-                    <Input
-                      placeholder={LABELS.POSTAL_CODE}
-                      ref={inputPostalCodeRef as any}
-                      autoFocus={false}
-                      disabled={false}
-                    />
                   </Form.Item>
                 </Col>
               </Row>
@@ -895,6 +934,30 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                   xs={{ span: 23 }}
                 >
                   <Form.Item
+                  validateStatus={errors.postalCode ? "error" : ""}
+                  name="postalCode"
+                  label={
+                  <label className="label ">{LABELS.POSTAL_CODE}</label>
+                  }
+                  validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                  <Input
+                  placeholder={LABELS.POSTAL_CODE}
+                  ref={inputPostalCodeRef as any}
+                  autoFocus={false}
+                  disabled={false}
+                  />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={8}>
+                <Col
+                lg={{ span: 12 }}
+                md={{ span: 12 }}
+                sm={{ span: 23 }}
+                xs={{ span: 23 }}
+                >
+                 <Form.Item
                     name="fileList"
                     label={LABELS.LOCATION_IMAGE}
                     valuePropName="fileList"
@@ -912,7 +975,9 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       setImageUrl={setImageUrl}
                     />
                   </Form.Item>
+                
                 </Col>
+
               </Row>
             </Col>
 
@@ -1189,3 +1254,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 }
 
 export default LocationCreateUpdate
+
+
+
+ 
