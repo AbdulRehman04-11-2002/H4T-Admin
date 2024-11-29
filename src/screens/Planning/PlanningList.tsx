@@ -105,14 +105,12 @@ function PlanningList() {
             const response = await getOrderItems(
                 params.page,
                 params.limit,
-                params.status,
                 params.search,
                 params.partnerLocationId,
                 params.startDate,
                 params.endDate,
                 params.orderBy,
                 params.planningTab,
-                params.now,
             );
             setOrderItems(response?.data?.orders?.results);
             setTotalRecord(response?.data?.orders?.count);
