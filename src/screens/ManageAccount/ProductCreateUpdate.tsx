@@ -620,6 +620,7 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     <Option value='30'>30</Option>
                     <Option value='45'>45</Option>
                     <Option value='60'>60</Option>
+                    <Option value='120'>120</Option>
                   </Select>
                 </Form.Item>
               </Col>

@@ -1,6 +1,6 @@
 import { Tag } from "antd";
 import { Link } from "react-router-dom";
-import { getFormattedDateTime, getOrderStatusColor, getOrderStatus } from '../../helpers/globalFunctions/fetchHandlers';
+import { getFormattedDateTime, checkPaymentStatus, checkPaymentStatusColor, getOrderProcessStatusColor, getOtrderItemStatus } from '../../helpers/globalFunctions/fetchHandlers';
 
 
 interface TableColumnProps {
@@ -13,6 +13,8 @@ interface TableColumnProps {
         SERVICE: string;
         LOCATION: string;
         STATUS: string;
+        PROCESS: string;
+        PAYMENT: string;
     }
 }
 
@@ -112,16 +114,29 @@ export const PlanningColumns = ({ LABELS }: TableColumnProps) => {
         {
             title: (
                 <strong className='text-center sp-color-table-header text-capitalize'>
-                    {LABELS.STATUS}
+                    {LABELS.PROCESS}
                 </strong>
             ),
             dataIndex: "status",
             sorter: true,
             render: (_: any, record: any) => (
-                <Tag style={{ marginLeft: "20px" }} color={getOrderStatusColor(getOrderStatus(record?.status, record?.order?.orderStatus, record?.order?.paymentStatus))}>
-                    {getOrderStatus(record?.status, record?.order?.orderStatus, record?.order?.paymentStatus)}
+                <Tag style={{ marginLeft: "20px" }} color={record?.order?.orderStatus === "DRAFT" ? getOrderProcessStatusColor("DRAFT") :getOrderProcessStatusColor(record?.status)}>
+                    {record?.order?.orderStatus === "DRAFT" ? "DRAFT" : getOtrderItemStatus(record?.status)}
                 </Tag>
             ),
-        }
+        },
+        {
+            title: (
+                <strong className='text-center sp-color-table-header text-capitalize'>
+                    {LABELS.PAYMENT}
+                </strong>
+            ),
+            dataIndex: "order.paymentStatus",
+            render: (_: any, record: any) => (
+                <Tag style={{ marginLeft: "20px" }} color={checkPaymentStatusColor(checkPaymentStatus(record?.other_services, record?.order?.orderStatus))}>
+                    {checkPaymentStatus(record?.other_services, record?.order?.orderStatus)}
+                </Tag>
+            ),
+        },
     ]
 };

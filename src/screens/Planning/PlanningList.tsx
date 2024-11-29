@@ -34,7 +34,7 @@ function PlanningList() {
     const [search, setSearch] = useState<string>(DEFAULT_FILTERS.searchValue);
     const [searchValue, setSearchValue] = useState<string>(DEFAULT_FILTERS.searchValue);
     const [totalRecord, setTotalRecord] = useState<number>(0);
-    const [currentTab, setCurrentTab] = useState<string>("current");
+    const [currentTab, setCurrentTab] = useState<string>("ALL");
     const [orderItems, setOrderItems] = useState<Order[]>([]);
     const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
     const { success, setSuccess } = useContext(GlobalContext) as GlobalContextProps;
@@ -46,6 +46,7 @@ function PlanningList() {
     const [endDate, setEndDate] = useState<string | null>(null);
     const [partnerLocationId, setPartnerLocationId] = useState<number | undefined>();
     const [orderBy, setOrderBy] = useState<string>(defaultPlannerSortBy);
+    const [planningTab, setPlanningTab] = useState<string>("")
 
     useEffect(() => {
         getAllOrderItems(
@@ -56,7 +57,8 @@ function PlanningList() {
             partnerLocationId,
             startDate,
             endDate,
-            orderBy
+            orderBy,
+            planningTab
         );
     }, [page, pageSize, orderBy, currentTab, search, partnerLocationId, endDate, ME]);
 
@@ -79,19 +81,36 @@ function PlanningList() {
         partnerLocationId: number | undefined,
         startDate: string | null,
         endDate: string | null,
-        orderBy: string
+        orderBy: string,
+        planningTab: string
     ) => {
-        showLoader();
         try {
-            const response = await getOrderItems(
-                page = search ? 1 : page,
+            showLoader();
+            const params: any = {
+                page: search ? 1 : page,
                 limit,
-                status,
                 search,
                 partnerLocationId,
-                startDate,
                 endDate,
-                orderBy
+                startDate,
+                orderBy: currentTab === "UPCOMING" || currentTab === "ALL" ? `-${orderBy}` : orderBy,  
+                planningTab: currentTab,
+            };
+    
+            if (planningTab && ((currentTab as string) !== "draft" || (currentTab as string) !== "all")) {
+                params.status = planningTab;   
+                params.now = new Date().toISOString()?.split('T')[0];       
+            }
+    
+            const response = await getOrderItems(
+                params.page,
+                params.limit,
+                params.search,
+                params.partnerLocationId,
+                params.startDate,
+                params.endDate,
+                params.orderBy,
+                params.planningTab,
             );
             setOrderItems(response?.data?.orders?.results);
             setTotalRecord(response?.data?.orders?.count);
@@ -131,7 +150,14 @@ function PlanningList() {
     };
 
     const tabOnChange = (currentTab: string) => {
-        setCurrentTab(currentTab.toLowerCase());
+        setCurrentTab(currentTab);
+        if (currentTab === "UPCOMING") {
+            setPlanningTab("current");
+        } else if (currentTab === "COMPLETED") {
+            setPlanningTab("history");
+        } else if (currentTab === "DRAFT" || currentTab === "ALL") {
+            setPlanningTab(""); // Do not send status
+        }
         setPage(1);
     };
 
@@ -204,7 +230,7 @@ function PlanningList() {
                     setPageSize={setPageSize}
                     setSearch={setSearch}
                     handleSorting={handleSorting}
-                    tabs={["current", "history"]}
+                    tabs={["ALL", "UPCOMING", "COMPLETED", "DRAFT"]}
                 />
             )}
         </div>

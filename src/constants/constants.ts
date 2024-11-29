@@ -7,7 +7,7 @@ export enum ORDER_BACKEND_STATUS {
     NO_SHOW = "NO_SHOW",
     PAYMENT_PENDING = "PAYMENT_PENDING",
     COMPLETED = "COMPLETE",
-    DRAFT = "DRAFT"
+    DRAFT = "DRAFT",
 }
 
 export enum ORDER_STATUS {
@@ -18,7 +18,24 @@ export enum ORDER_STATUS {
     INPROGRESS = "Checked - in",
     COMPLETE = "Completed",
     PAYMENT_PENDING = "Payment pending",
-    NO_SHOW = "No show"
+    NO_SHOW = "No show",
+    INPROGRESS_PROCESS = "In progress"
+}
+
+export enum ORDER_ITEM_BACKEND_STATUS { // business convention to item status mapping
+    DRAFT = "DRAFT",
+    CONFIRMED  = "PENDING",
+    CHECKEDIN = "INPROGRESS",
+    COMPLETED = "COMPLETE",
+    NOSHOW = "NO_SHOW",
+}
+
+export enum ORDER_ITEM_STATUS {
+    DRAFT = "Draft",
+    PENDING = "Confirmed",
+    INPROGRESS = "Checked - in",
+    COMPLETE = "Completed",
+    NO_SHOW = "No show",
 }
 
 export enum ORDER_STATUS_COLORS {
@@ -26,7 +43,14 @@ export enum ORDER_STATUS_COLORS {
     GREEN = "green",
     BLUE = "blue",
     ORANGE = "orange",
-    DARK_GREEN = "darkgreen"
+    DARK_GREEN = "darkgreen",
+    YELLOW = "yellow"
+}
+
+export enum PAYMENT_STATUS_COLOR {
+    PAID = "green",
+    PENDING = "red",
+    DEFAULT = "blue"
 }
 
 export const ERRORS = {

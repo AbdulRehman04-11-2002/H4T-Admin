@@ -1,13 +1,14 @@
 
 import { OrderItem } from "../../interface/Order";
-import { ORDER_STATUS, ORDER_STATUS_COLORS, ORDER_BACKEND_STATUS, defaultTimezone } from "../../constants/constants";
+import { ORDER_STATUS, ORDER_STATUS_COLORS, ORDER_BACKEND_STATUS, defaultTimezone, PAYMENT_STATUS_COLOR, ORDER_ITEM_STATUS, ORDER_ITEM_BACKEND_STATUS } from "../../constants/constants";
 import { formatToTwoDecimalPlaces } from ".";
 const moment = require('moment-timezone');
 
 
-export const formattedDateTime = (date: string, timezone: string, format: string) => {
-    if (date && timezone && format) {
-        return moment(date).tz(timezone).format(format)
+export const formattedDateTime = (date: string, options:any) => {
+    const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+    if (date) {
+        return new Intl.DateTimeFormat(locale,options).format(new Date(date));
     }
     return "-"
 };
@@ -22,6 +23,8 @@ export const getOrderStatusColor = (status: string | undefined) => {
             return ORDER_STATUS_COLORS.GREEN;
         case ORDER_STATUS.INPROGRESS:
             return ORDER_STATUS_COLORS.BLUE;
+        case ORDER_STATUS.INPROGRESS_PROCESS: 
+            return ORDER_STATUS_COLORS.BLUE
         case ORDER_STATUS.NO_SHOW:
             return ORDER_STATUS_COLORS.ORANGE;
         default:
@@ -29,10 +32,30 @@ export const getOrderStatusColor = (status: string | undefined) => {
     }
 };
 
+export const getOrderProcessStatusColor = (status: string | undefined) => {
+    switch (status) {
+        case ORDER_ITEM_BACKEND_STATUS.CHECKEDIN:
+            return ORDER_STATUS_COLORS.BLUE;
+        case ORDER_ITEM_BACKEND_STATUS.CONFIRMED: 
+            return ORDER_STATUS_COLORS.GREEN
+        case ORDER_ITEM_BACKEND_STATUS.NOSHOW:
+            return ORDER_STATUS_COLORS.ORANGE;
+        case ORDER_ITEM_BACKEND_STATUS.COMPLETED:
+            return ORDER_STATUS_COLORS.DARK_GREEN;
+        case ORDER_ITEM_BACKEND_STATUS.DRAFT:
+            return ORDER_STATUS_COLORS.YELLOW;
+        default:
+            return ORDER_STATUS_COLORS.DARK_GREEN; 
+    }
+};
+
 export const getFormattedDateTime = (order: OrderItem) => {
     if (order && order?.serviceDateTime) {
         const timezone = order?.partnerLocation?.timeZone || defaultTimezone;
-        const formattedDate = formattedDateTime(order?.serviceDateTime, timezone, "DD/MM/YYYY HH:mm");
+        const formattedDate = formattedDateTime(order?.serviceDateTime, {
+            timeStyle: "short",
+            dateStyle: "short"
+          });
         return `${formattedDate} (${timezone})`;
     }
 }
@@ -44,6 +67,34 @@ export const getOrderStatus = (orderItemStatus: string | undefined, orderStatus:
         return ORDER_STATUS[orderItemStatus as keyof typeof ORDER_STATUS]
     }
 }
+
+export const getOtrderItemStatus = (orderItemStatus: string | undefined) => {
+    return ORDER_ITEM_STATUS[orderItemStatus as keyof typeof ORDER_ITEM_STATUS]
+}
+
+export const checkPaymentStatus = (
+    otherServices: Array<{ paymentStatus: string }> | undefined,
+    orderStatus: string | undefined
+): string => {
+    if (!otherServices || otherServices.length === 0) {
+        return orderStatus === 'DRAFT'?'PENDING':'PAID';
+    } else {
+      const allServicesPaid = otherServices.every((service) => service.paymentStatus === "PAID");
+      return allServicesPaid ? "PAID" : "PENDING";
+    }
+};
+
+export const checkPaymentStatusColor = (status: string) => {
+    switch (status) {
+        case "PENDING":
+            return PAYMENT_STATUS_COLOR.PENDING;
+        case "PAID":
+            return PAYMENT_STATUS_COLOR.PAID;
+        default:
+            return PAYMENT_STATUS_COLOR.DEFAULT;
+    }
+}
+
 //---------- PlanningList ends-----------//
 
 //---------- LocationCreateUpdate starts---------------//
@@ -88,7 +139,14 @@ export const getBookingDate = (orderItem: OrderItem) => {
         const timezone = orderItem?.partnerLocation?.timeZone;
         const dateTime =
             date && timezone
-                ? formattedDateTime(date, timezone, "MMM DD, dddd HH:mm")
+                ? formattedDateTime(date,{
+                    month: 'short', 
+                    day: 'numeric', 
+                    weekday: 'long',
+                    hour: 'numeric', 
+                    minute: 'numeric', 
+            
+                })
                 : "-";
         return `${dateTime} (${timezone})`;
     }

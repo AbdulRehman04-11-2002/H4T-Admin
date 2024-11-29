@@ -12,7 +12,14 @@ const OrderInfo = ({ order }: Props) => {
   const ORDER: any = t("ORDER", { returnObjects: true });
   const date = order?.serviceDateTime;
   const timezone = order?.partnerLocation?.timeZone;
+  const dateTime = formattedDateTime(date, {
+    month: 'short', 
+    day: 'numeric', 
+    weekday: 'long',
+    hour: 'numeric', 
+    minute: 'numeric', 
 
+});
   const orderItems = [
     {
       index: 0,
@@ -20,7 +27,7 @@ const OrderInfo = ({ order }: Props) => {
       content: (
         <>
           <div>{`${order.visitorFirstName} ${order.visitorLastName}`}</div>
-          <div>{order.visitorEmailAddress}</div>
+          <div style={{textTransform:"lowercase"}}>{order.visitorEmailAddress}</div>
           <div>{order.visitorPhoneNumber}</div>
         </>
       ),
@@ -41,9 +48,7 @@ const OrderInfo = ({ order }: Props) => {
       title: `${ORDER.DATE_TIME}`,
       content: (
         <>
-          <div>{formattedDateTime(date, timezone, "MMM DD, dddd")}</div>
-          <div>{formattedDateTime(date, timezone, "HH:mm")}</div>
-          <div style={{ visibility: "hidden" }}>{formattedDateTime(date, timezone, "HH:mm")}</div>
+         {dateTime}
         </>
       ),
     },
@@ -60,23 +65,28 @@ const OrderInfo = ({ order }: Props) => {
               md={8}
               lg={8}
               xl={8}
-              style={{
-                marginBottom: "16px",
-                paddingInline: "6px",
-                display: "flex",
-              }}
+              style={{ marginBottom: "16px", paddingInline: "6px" }}
             >
               <Card
                 title={order.title}
                 bordered={false}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  background: "rgb(232, 236, 239)",
+                styles={{
+                  header: { backgroundColor: "#F3F5F6", border: 0, padding: "16px", },
+                  body: {
+                    backgroundColor: "#E8ECEF",
+                    stroke: "#D1D8DE",
+                    border: 0,
+                    textTransform: "capitalize",
+                    padding: "16px",
+                    minHeight: "130px", // Set a fixed minimum height
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                    wordBreak: "break-word",
+                    height: "160px"
+                  },
                 }}
-              >
+                >
                 {order.content}
               </Card>
             </Col>

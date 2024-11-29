@@ -96,7 +96,9 @@
     "ALL_LOCATIONS_ACCESS": "This user has access to all locations.",
     "ALLOW_ALL_LOCATIONS": "Allow for all locations",
     "SELECT_ALL": "Select all",
-    "AMOUNT":"Amount"
+    "AMOUNT":"Amount",
+    "PROCESS": "Process",
+    "PAYMENT": "Payment"
   },
   "PLACEHOLDERS": {
     "SEARCH": "Search",
@@ -180,8 +182,9 @@
     "SOME_THING_WENT_WRONG": "Something went wrong"
   },
   "TABS_KEY": {
-    "current": "Current",
-    "history": "History",
+    "UPCOMING": "Upcoming",
+    "COMPLETED": "Completed",
+    "DRAFT": "Draft",
     "ENABLED": "Enabled",
     "DISABLED": "Disabled",
     "ALL": "All"

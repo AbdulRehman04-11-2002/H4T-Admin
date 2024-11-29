@@ -30,7 +30,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [selectAllLocations, setSelectAllLocations] = useState(false);
   const [selectedLocations, setselectedLocations] = useState<cityValType[]>([])
   const [partnerUserDetail, setPartnerUserDetail] = useState<User>()
-  const [indeterminate, setIndeterminate] = useState(false);
   const [allowAllLocations, setAllowAllLocations] = useState(false);
   const [role, setRole] = useState<number>();
   const [imageUrl, setImageUrl] = useState<string>("")
@@ -80,7 +79,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   useEffect(() => {
     // Update the "all" checkbox status based on the individual checkboxes
     setSelectAllLocations(selectedLocations.length === locationOptions.length);
-    setIndeterminate(!!selectedLocations.length && selectedLocations.length < locationOptions.length);
+    
   }, [selectedLocations, locationOptions]);
 
   const getRoleLabelById = (roleObj: any) => {
@@ -232,7 +231,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     const allLocationIds = locationOptions?.map((location: any) => location?.value);
     setselectedLocations(checked ? allLocationIds : []);
     setSelectAllLocations(checked);
-    setIndeterminate(false);
     setIsDataChange(true)
   };
 
@@ -527,17 +525,16 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     {!allowAllLocations && (
                       <>
                         <List.Item>
+                          <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
+                            <div>
                           <Checkbox
-                            indeterminate={indeterminate}
                             onChange={handleSelectAllLocations}
                             checked={selectAllLocations}
                           >
                             {LABELS.SELECT_ALL}
                           </Checkbox>
-                        </List.Item>
-                        <List.Item>
-                          <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
                             <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedLocations} options={locationOptions} onChange={locationOnchange} />
+                            </div>
                           </Form.Item>
                         </List.Item>
                       </>
