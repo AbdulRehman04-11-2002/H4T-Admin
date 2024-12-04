@@ -33,7 +33,7 @@ npm start
 
 ```bash
 .
-└── H4T-CUSTOMER-FE-WEBAPP/
+└── H4T-ADMIN-FE-WEBAPP/
     └── src/                        # Main source directory
         ├── /assets                 # Static assets like images, icons, fonts, etc.           
         ├── /components             # Reusable UI components used across the app
@@ -41,7 +41,6 @@ npm start
         ├── /context                # React context definitions for global state management
         ├── /helpers                # Helper functions for various utility purposes
         ├── /hoc                    # Higher-order components for extending component functionality
-        ├── /hooks                  # Custom React hooks for managing state and effects
         ├── /interfaces             # TypeScript interfaces and types
         ├── /locales                # Localization files for supporting multiple languages
         ├── /routes                 # Route definitions and configuration for the app
@@ -75,3 +74,7 @@ Filenames should follow the conventions for the language they are written in. Fo
 2. Any JSX/TSX files should be named with `CamelCase.tsx`.
 3. Any JS/TS files should be named with `camelCase.ts`.
 4. Use [ant.design](https://ant.design/) for layout and styling.
+
+## Branching and Merging Strategy
+
+[Doc for branching and merging strategy](https://docs.google.com/document/d/1DNrQTwFFHISwuNx1I6fdMjp_9cwt-w6MneYIWmYee-Q/edit?tab=t.0)
