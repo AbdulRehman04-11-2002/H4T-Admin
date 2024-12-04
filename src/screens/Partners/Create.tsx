@@ -38,7 +38,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const SUCCESS: any = t("SUCCESS", { returnObjects: true });
   const { isLoading, showLoader, hideLoader } = useContext(LoaderContext) as LoaderContextValue;
   const { setSuccess, ME } = useContext(GlobalContext) as GlobalContextProps;
-  // const [cityOptions, setCityOptions] = useState<{ label: string; value: string }[]>([]);
   const [generalCountries, setgeneralCountries] = useState<{label:string, value:number }[]>([]);
   const [generalCities , setgeneralCities ] = useState<{label:string, value:number }[]>([]);
   const [form] = Form.useForm();
@@ -657,7 +656,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       placeholder={LABELS.SEARCH_AND_SELECT_CITY}
                       ref={inputSearchAndSelectCityRef as any}
                       autoFocus={false}
-                      disabled={generalCities.length > 0 ? false : true}
+                      disabled={!generalCities.length}
                     >
                       {generalCities.map((city) => (
                         <Option key={city.value} value={city.value}>

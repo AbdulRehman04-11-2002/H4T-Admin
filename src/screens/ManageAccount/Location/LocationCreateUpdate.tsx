@@ -750,7 +750,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       placeholder={LABELS.SEARCH_AND_SELECT_CITY}
                       ref={inputCityRef as any}
                       autoFocus={false}
-                      disabled={generalCities.length > 0 ? false : true}
+                      disabled={!generalCities.length}
                     >
                       {generalCities.map((city) => (
                         <Option key={city.value} value={city.value}>
