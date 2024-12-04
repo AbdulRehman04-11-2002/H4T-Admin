@@ -33,7 +33,7 @@ npm start
 
 ```bash
 .
-└── H4T-CUSTOMER-FE-WEBAPP/
+└── H4T-ADMIN-FE-WEBAPP/
     └── src/                        # Main source directory
         ├── /assets                 # Static assets like images, icons, fonts, etc.           
         ├── /components             # Reusable UI components used across the app
@@ -41,7 +41,6 @@ npm start
         ├── /context                # React context definitions for global state management
         ├── /helpers                # Helper functions for various utility purposes
         ├── /hoc                    # Higher-order components for extending component functionality
-        ├── /hooks                  # Custom React hooks for managing state and effects
         ├── /interfaces             # TypeScript interfaces and types
         ├── /locales                # Localization files for supporting multiple languages
         ├── /routes                 # Route definitions and configuration for the app
