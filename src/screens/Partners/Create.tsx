@@ -974,41 +974,71 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
 
             <Col
-              lg={{ span: 8 }}
-              md={{ span: 24 }}
-              sm={{ span: 24 }}
-              xs={{ span: 24 }}
+  lg={{ span: 8 }}
+  md={{ span: 24 }}
+  sm={{ span: 24 }}
+  xs={{ span: 24 }}
+>
+  <Row gutter={8}>
+    <Col
+      lg={{ span: 24 }}
+      md={{ span: 24 }}
+      sm={{ span: 23 }}
+      xs={{ span: 23 }}
+    >
+      <Title level={3} className="remove-vertical-margin">
+        {HEADING.CONFIGURATIONS}
+      </Title>
+    </Col>
+  </Row>
+
+  <Row gutter={[16, 16]}>
+    {/* Heading Row */}
+    <Row
+      style={{
+        marginBottom: 16,
+        fontWeight: "bold",
+        display: "flex",
+        alignItems: "center",
+        width: "100%", 
+      }}
+    >
+      <Col span={8} style={{ textAlign: "left", paddingLeft: "16px" }}>
+        <label>{HEADING.SERVICE}</label>
+      </Col>
+      <Col span={8} style={{ textAlign: "center" }}>
+        <label>{HEADING.ADVANCE_BOOKING}</label>
+      </Col>
+      <Col span={8} style={{ textAlign: "center" }}>
+        <label>{HEADING.WALK_IN}</label>
+      </Col>
+    </Row>
+
+    {/* Services Rows */}
+    {services.map((service) => (
+      <Row
+        key={service.id}
+        gutter={[16, 16]}
+        style={{
+          alignItems: "center",
+          width: "100%", // Match full width for service rows
+        }}
+      >
+        {/* Service Name and Checkbox */}
+        <Col span={8} style={{ paddingLeft: "16px" }}>
+          <Form.Item>
+            <Checkbox
+              checked={service.checked}
+              onChange={() => handleCheckboxChange(service.id)}
             >
-              <Row gutter={8}>
-                <Col
-                  lg={{ span: 24 }}
-                  md={{ span: 24 }}
-                  sm={{ span: 23 }}
-                  xs={{ span: 23 }}
-                >
-                  <Title level={3} className='remove-vertical-margin '>
-                    {HEADING.CONFIGURATIONS}
-                  </Title>
-                </Col>
-              </Row>
+              {service.name}
+            </Checkbox>
+          </Form.Item>
+        </Col>
 
-              <Row gutter={8}>
-                <Col
-                  lg={{ span: 24 }}
-                  md={{ span: 12 }}
-                  sm={{ span: 23 }}
-                  xs={{ span: 23 }}
-                >
-                  <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-
-                    {services.map((service, index) => (
-                      <div key={service.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-                        <Form.Item>
-                          <Checkbox className='' checked={service.checked} onChange={() => handleCheckboxChange(service.id)}>
-                            {service.name}
-                          </Checkbox>
-                        </Form.Item>
-                        <Form.Item
+        {/* Advance Booking Input */}
+        <Col span={8}>
+        <Form.Item
                           validateStatus={errors.fixedFee ? "error" : ""}
                           name={service.name}
                           rules={[{ required: service.checked, message: ERRORS.FIXED_FEE }]}
@@ -1020,15 +1050,45 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                             disabled={!service.checked}
                           />
                         </Form.Item>
-                      </div>
-                    ))}
-                    <label className='label '>
-                      {"Currency: Euro"}
-                    </label>
-                  </div>
-                </Col>
-              </Row>
-            </Col>
+        </Col>
+
+        {/* Walk-In Input */}
+        <Col span={8}>
+        <Form.Item
+                          validateStatus={errors.fixedFee ? "error" : ""}
+                          name={service.name}
+                          rules={[{ required: service.checked, message: ERRORS.FIXED_FEE }]}
+                          validateTrigger={["handleFinish", "handleUpdate"]}>
+                          <Input
+                            placeholder={PLACEHOLDERS.ENTER_FEE + (service.checked ? " *" : "")}
+                            value={service.fee}
+                            onChange={(e) => handleInputChange(service.id, Number(e.target.value))}
+                            disabled={!service.checked}
+                          />
+          </Form.Item>
+        </Col>
+      </Row>
+    ))}
+
+    {/* Currency Label */}
+    <Row>
+      <Col
+        span={24}
+        style={{
+          textAlign: "right",
+          marginTop: 16,
+          paddingRight: "16px",
+          fontWeight: "bold",
+        }}
+      >
+        <label>{"Currency: Euro (€)"}</label>
+      </Col>
+    </Row>
+  </Row>
+</Col>
+
+
+
           </Row>
         </Form >}
     </div >
