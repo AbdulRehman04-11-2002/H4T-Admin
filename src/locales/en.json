@@ -97,6 +97,8 @@
     "SERVICE": "Service",
     "LOCATION": "Location",
     "ALL_LOCATIONS_ACCESS": "This user has access to all locations.",
+    "NOTIFICATION_SETTINGS": "Notifications are sent to users by default. ",
+    "SELECT_NOTIFICATION": "Please opt out of any locations where they",
     "ALLOW_ALL_LOCATIONS": "Allow for all locations",
     "SELECT_ALL": "Select all",
     "AMOUNT":"Amount",
@@ -213,7 +215,8 @@
     "UPDATE_PARTNER_LOCATION": "Update Location",
     "CREATE_PARTNER_PRODUCT": "Create Product",
     "UPDATE_PARTNER_PRODUCT": "Update Product",
-    "SELECT_USER_LOCATIONS": "Which locations can this user operate?"
+    "SELECT_USER_LOCATIONS": "Which locations can this user operate?",
+    "SELECT_NOTIFICATION_SETTINGS": "Notification Settings"
   },
   "TABS_LABEL": {
     "CURRENT": "current",
