@@ -58,6 +58,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     lattitude: "",
     streetAddress: "",
     customerGuidelines: "",
+    walkinGuidelines: "",
     status: "",
     docConsFixedFee: "",
     email: ""
@@ -976,6 +977,40 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     />
                   </Form.Item>
                 
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.walkinGuidelines ? "error" : ""}
+                    name="customerGuidelines"
+                    label={
+                      <label className="label ">
+                        {LABELS.WALK_IN_GUIDELINES}
+                        <Tooltip title={LABELS.GUIDELINE_TOOLTIP} />
+                      </label>
+                    }
+                    rules={[
+                      {
+                        min: 3,
+                        message: t("ERRORS.MIN_LENGTH_3", {
+                          type: "Arrival Instructions",
+                        }),
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <TextArea
+                      placeholder={LABELS.CUSTOM_GUIDELINES}
+                      ref={inputStreetAddressRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                      rows={5}
+                    />
+                  </Form.Item>
                 </Col>
 
               </Row>
