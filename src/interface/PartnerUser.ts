@@ -26,6 +26,10 @@ interface UserPartner {
     allowAllLocations: boolean;
 }
 
+export interface UserPreferences {
+    partnerConfirmationOptOutLocationIds: number[];
+}
+
 export interface User {
     id: number;
     name: string;
@@ -37,6 +41,7 @@ export interface User {
     user_partner_locations: UserPartnerLocation[];
     user_roles: UserRole[];
     user_partners: UserPartner[];
+    user_preferences: UserPreferences;
 }
 
 interface UserData {
