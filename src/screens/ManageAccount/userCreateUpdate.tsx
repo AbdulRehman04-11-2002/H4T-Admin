@@ -81,7 +81,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }, [ME])
 
   useEffect(() => {
-    console.log("UseEffect1")
     // Update the "all" checkbox status based on the individual checkboxes
     if(role===ROLEIDS.CLINIC_ADMIN){
       setselectedLocations(locationOptions.map((location:any)=>location.value))
@@ -109,7 +108,6 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }, [JSON.stringify(selectedLocations), locationOptions,role]);
 
   useEffect(()=>{
-    console.log("UseEffect2")
     setSelectAllNotifications(selectedNotifications.length === notificationOptions.length)
 },[selectedNotifications, notificationOptions, role])
 
