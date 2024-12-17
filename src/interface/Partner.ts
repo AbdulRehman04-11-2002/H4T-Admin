@@ -8,14 +8,18 @@ export interface RegisteredCity {
 }
 
 export interface Service {
-    id: number;
-    feeType: string;
-    feeValue: number;
+    id: number; // Partner Service ID
+    status: string;
+    fees: Array<{
+      category: "WALK_IN" | "ADVANCE_BOOKING";
+      feeValue: number;
+      amountType: string;
+    }>;
     service: {
-        id: number;
-        name: string;
+      id: number; // Original Service ID
+      name: string;
     };
-}
+  }
 interface BankDetails {
     id: number;
     name: string;

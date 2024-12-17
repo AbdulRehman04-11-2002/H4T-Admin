@@ -1,12 +1,18 @@
 import { PartnerLocation } from "./PartnerLocation";
 
+interface fees {
+    category: "WALK_IN" | "ADVANCE_BOOKING";
+    feeValue: number;
+    amountType: "FIXED_FEE";
+    partnerServiceId: number;
+}
+
 interface PartnerService {
     id: number;
-    feeValue: number;
-    feeType: string;
     status: string;
     partnerId: number;
     serviceId: number;
+    fees: fees;
     service: service
 }
 

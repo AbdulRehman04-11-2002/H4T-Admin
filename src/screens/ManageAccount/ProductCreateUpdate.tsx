@@ -138,7 +138,12 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     }
   }
   const customerSeesPrice = (serviceID: number, partnerService?: any) => {
-    let feeValue = partnerService?.feeValue || selectedPartner?.services.find((service: any) => service.id === serviceID)?.feeValue
+    let feeValue =
+  partnerService?.fees.find((fee: any) => fee.category === "ADVANCE_BOOKING")?.feeValue || 
+  selectedPartner?.services
+    .find((service: any) => service.service.id === serviceID)
+    ?.fees.find((fee: any) => fee.category === "ADVANCE_BOOKING")
+    ?.feeValue;
 
     let price = form.getFieldValue("price")
     setPrice(price)

@@ -21,12 +21,17 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 interface Service {
-  id: number;
+  id: number; // Original Service ID
   name: string;
-  fee: number;
-  feeType: 'FIXED_FEE';
   checked: boolean;
+  partnerServiceId: number | undefined; // Partner Service ID, or null if not present
+  fees: {
+    category: "WALK_IN" | "ADVANCE_BOOKING";
+    feeValue: number;
+    amountType: "FIXED_FEE";
+  }[];
 }
+
 
 function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const { t } = useTranslation();
@@ -47,9 +52,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [isDataChange, setIsDataChange] = useState(false)
   const [phone, setPhone] = useState<string>('');
   const [countryCode, setCountryCode] = useState<string>('');
-  const [services, setServices] = useState<Service[]>([
-    { id: 1, name: 'Doctor Consultation', fee: 0, feeType: 'FIXED_FEE', checked: true },
-  ]);
+  const [services, setServices] = useState<Service[]>([]);
   const [imageUrl, setImageUrl] = useState('');
   const [errors, setErrors] = useState({
     name: "",
@@ -145,7 +148,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       contactPerson: form.getFieldValue('contactPerson'),
       createAdminAccount: isAdminAccount,
       bankDetails: JSON.stringify([{ name: form.getFieldValue('bankName'), accountNumber: form.getFieldValue('accountNumber'), accountHolderName: form.getFieldValue('accountHolderName'), status: "ENABLED" }]),
-      services: JSON.stringify(createServicepayload()),
+      services: JSON.stringify(createServicePayload()),
     }
 
     return request;
@@ -153,7 +156,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   const handleFinish = async () => {
     showLoader();
-    if (createServicepayload().length === 0) {
+    if (createServicePayload().length === 0) {
       openToastNotification(
         ERRORS.SELECT_ATLEAST_ONE,
         "notifications toast-notification-error"
@@ -229,24 +232,65 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       bankName: currentPartner?.bankDetails?.[0]?.name,
       accountNumber: currentPartner?.bankDetails?.[0]?.accountNumber,
       accountHolderName: currentPartner?.bankDetails?.[0]?.accountHolderName,
+      
+      // Dynamically set the fees based on service name and category
       ...currentPartner?.services?.reduce((acc: any, service: any) => {
-        acc[service.service.name] = service.feeValue;
+        // Iterate over the fees array
+        service.fees.forEach((fee:any) => {
+          // Construct the key based on the service name and fee category
+          console.log(fee)
+          acc[`${service.service.name}-${fee.category.toLowerCase()}Fee`] = fee.feeValue;
+        });
         return acc;
-      }, {})
-    })
-
-    services && setServices(services.map((service) => {
-      const serviceFee = currentPartner?.services?.find((partnerService) => partnerService.service.id == service.id);
-      return {
-        ...service,
-        checked: serviceFee ? true : false,
-        fee: serviceFee?.feeValue || 0,
-      }
-    }))
-
-    currentPartner?.imageUrl ? setFileList([{ uid: '-1', name: 'image', status: 'done', url: currentPartner?.imageUrl }]) : setFileList([]);
-    setImageUrl(currentPartner?.imageUrl || '');
-  }
+      }, {}),
+    });
+  
+    if (services) {
+      const updatedServices = services.map((service) => {
+        // Find the matching service in currentPartner's services
+        const existingService = currentPartner?.services?.find(
+          (partnerService) => partnerService.service.id === service.id
+        );
+    
+        // Determine if the service should be checked based on the existence of fees in relevant categories
+        const isChecked = existingService
+          ? existingService.fees.some(
+              (fee) => fee.category === "WALK_IN" || fee.category === "ADVANCE_BOOKING"
+            )
+          : false;
+    
+        // Return the updated service object
+        return {
+          ...service,
+          checked: isChecked, // Set `checked` if relevant fees exist
+          partnerServiceId: existingService?.id || undefined, // Store partner service ID if available
+          fees: existingService
+            ? existingService.fees.map((fee) => ({
+                category: fee.category,
+                feeValue: fee.feeValue,
+                amountType: fee.amountType as "FIXED_FEE", // Type assertion for safety
+              }))
+            : service.fees, // Use default fees if no existing service
+        };
+      });
+    
+      // Update the state with the modified services
+      setServices(updatedServices);
+    }
+    
+    
+   
+    
+  
+    if (currentPartner?.imageUrl) {
+      setFileList([{ uid: "-1", name: "image", status: "done", url: currentPartner.imageUrl }]);
+      setImageUrl(currentPartner.imageUrl || "");
+    } else {
+      setFileList([]);
+      setImageUrl("");
+    }
+  };
+  
 
   const submitFailed = (errorInfo: any) => {
     const errorFields = errorInfo.errorFields;
@@ -282,16 +326,21 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     setIsDataChange(true)
   }
 
-  const createServicepayload = () => {
+  const createServicePayload = () => {
     return services
-      .filter((service) => service.checked)
-      .map(({ id, fee, feeType }) => ({
-        serviceId: id,
-        feeValue: fee,
-        feeType,
-        status: 'ENABLED',
+      .filter((service) => service.checked)  // Only include checked services
+      .map(({ id, partnerServiceId, fees }) => ({
+        serviceId: id,  // ID of the service
+        partnerServiceId: partnerServiceId || undefined,  // Optional partnerServiceId
+        status: "ENABLED",  // Status of the service
+        fees: fees.map(({ category, feeValue, amountType }) => ({
+          category,  // The fee category (e.g., "WALK_IN", "ADVANCE_BOOKING")
+          feeValue,  // The fee value for that category
+          amountType,  // The type of amount (e.g., "FIXED_FEE")
+        })),
       }));
   };
+  
 
   const handleCheckboxChange = (serviceId: number) => {
     const updatedServices = services.map((service) =>
@@ -302,13 +351,40 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   };
 
-  const handleInputChange = (serviceId: number, fee: number) => {
-    const updatedServices = services.map((service) =>
-      service.id === serviceId ? { ...service, fee } : service
-    );
-    setServices(updatedServices);
-    setIsDataChange(true)
+  const handleInputChange = (
+    serviceId: number,
+    category: "WALK_IN" | "ADVANCE_BOOKING",
+    feeValue: number
+  ) => {
+    const updatedServices = services.map((service) => {
+      if (service.id === serviceId) {
+        // Ensure the category exists in the fees array
+        const existingFee = service.fees.find((fee) => fee.category === category);
+        
+        let updatedFees;
+        if (existingFee) {
+          // Update the feeValue for the existing category
+          updatedFees = service.fees.map((fee) =>
+            fee.category === category ? { ...fee, feeValue } : fee
+          );
+        } else {
+          // Add a new fee for the specified category
+          updatedFees = [
+            ...service.fees,
+            { category, feeValue, amountType: "FIXED_FEE" as const },
+          ];
+        }
+  
+        return { ...service, fees: updatedFees };
+      }
+      return service;
+    });
+  
+    setServices(updatedServices); // Update the state with the modified services
+    setIsDataChange(true); // Set the data change flag to true
   };
+  
+  
 
   const getCountryCode = async () => {
     try {
@@ -327,9 +403,23 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       if (location.type === "COUNTRY" && location.status === "ENABLED") countryOptionsArr.push({ label: location.name, value: location.id })
     })
     setgeneralCountries(countryOptionsArr)
-    const services = ME?.systemServices && ME.systemServices.map((service: any) => { return { id: service.id, name: service.name, fee: 0, feeType: 'FIXED_FEE', checked: false } }) || []
-    if(ME?.user){
-      partnerID ? getPartnerDetail(services) : setServices(services)
+    if (ME?.systemServices) {
+      const initializedServices = ME.systemServices.map((service: any) => ({
+        id: service.id,
+        name: service.name,
+        checked: false,
+        partnerServiceId: undefined,
+        fees: [
+          { category: "WALK_IN", feeValue: 0, amountType: "FIXED_FEE" },
+          { category: "ADVANCE_BOOKING", feeValue: 0, amountType: "FIXED_FEE" },
+        ],
+      }));
+  
+      if (partnerID) {
+        getPartnerDetail(initializedServices);  // Assuming this updates the partner details
+      } else {
+        setServices(initializedServices);  // Setting initial services state
+      }
     }
   }, [ME])
 
@@ -1014,61 +1104,66 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       </Col>
     </Row>
 
-    {/* Services Rows */}
     {services.map((service) => (
-      <Row
-        key={service.id}
-        gutter={[16, 16]}
-        style={{
-          alignItems: "center",
-          width: "100%", // Match full width for service rows
-        }}
+  <Row
+    key={service.id}
+    gutter={[16, 16]}
+    style={{
+      alignItems: "center",
+      width: "100%", // Match full width for service rows
+    }}
+  >
+    {/* Service Name and Checkbox */}
+    <Col span={8} style={{ paddingLeft: "16px" }}>
+      <Form.Item>
+        <Checkbox
+          checked={service.checked}
+          onChange={() => handleCheckboxChange(service.id)}
+        >
+          {service.name} {/* Use service.name directly */}
+        </Checkbox>
+      </Form.Item>
+    </Col>
+
+    {/* Advance Booking Input */}
+    <Col span={8}>
+      <Form.Item
+        name={`${service.name}-advance_bookingFee`}
+        rules={[{ required: service.checked, message: ERRORS.FIXED_FEE }]}
+        validateTrigger={["handleFinish", "handleUpdate"]}
       >
-        {/* Service Name and Checkbox */}
-        <Col span={8} style={{ paddingLeft: "16px" }}>
-          <Form.Item>
-            <Checkbox
-              checked={service.checked}
-              onChange={() => handleCheckboxChange(service.id)}
-            >
-              {service.name}
-            </Checkbox>
-          </Form.Item>
-        </Col>
+        <Input
+          placeholder={PLACEHOLDERS.ENTER_FEE + (service.checked ? " *" : "")}
+          value={service.fees.find(fee => fee.category === "ADVANCE_BOOKING")?.feeValue}
+          onChange={(e) =>
+            handleInputChange(service.id, "ADVANCE_BOOKING", Number(e.target.value))
+          }
+          disabled={!service.checked}
+        />
+      </Form.Item>
+    </Col>
 
-        {/* Advance Booking Input */}
-        <Col span={8}>
-        <Form.Item
-                          validateStatus={errors.fixedFee ? "error" : ""}
-                          name={service.name}
-                          rules={[{ required: service.checked, message: ERRORS.FIXED_FEE }]}
-                          validateTrigger={["handleFinish", "handleUpdate"]}>
-                          <Input
-                            placeholder={PLACEHOLDERS.ENTER_FEE + (service.checked ? " *" : "")}
-                            value={service.fee}
-                            onChange={(e) => handleInputChange(service.id, Number(e.target.value))}
-                            disabled={!service.checked}
-                          />
-                        </Form.Item>
-        </Col>
+    {/* Walk-In Input */}
+    <Col span={8}>
+      <Form.Item
+        name={`${service.name}-walk_inFee`}
+        rules={[{ required: service.checked, message: ERRORS.FIXED_FEE }]}
+        validateTrigger={["handleFinish", "handleUpdate"]}
+      >
+        <Input
+          placeholder={PLACEHOLDERS.ENTER_FEE + (service.checked ? " *" : "")}
+          value={service.fees.find(fee => fee.category === "WALK_IN")?.feeValue}
+          onChange={(e) =>
+            handleInputChange(service.id, "WALK_IN", Number(e.target.value))
+          }
+          disabled={!service.checked}
+        />
+      </Form.Item>
+    </Col>
+  </Row>
+))}
 
-        {/* Walk-In Input */}
-        <Col span={8}>
-        <Form.Item
-                          validateStatus={errors.fixedFee ? "error" : ""}
-                          name={service.name}
-                          rules={[{ required: service.checked, message: ERRORS.FIXED_FEE }]}
-                          validateTrigger={["handleFinish", "handleUpdate"]}>
-                          <Input
-                            placeholder={PLACEHOLDERS.ENTER_FEE + (service.checked ? " *" : "")}
-                            value={service.fee}
-                            onChange={(e) => handleInputChange(service.id, Number(e.target.value))}
-                            disabled={!service.checked}
-                          />
-          </Form.Item>
-        </Col>
-      </Row>
-    ))}
+
 
     {/* Currency Label */}
     <Row>
