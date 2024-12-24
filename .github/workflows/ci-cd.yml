@@ -6,6 +6,7 @@ on:
       - Milestone-2.10
       - main
       - stage
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
