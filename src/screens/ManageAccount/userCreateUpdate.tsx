@@ -82,7 +82,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   useEffect(() => {
     // Update the "all" checkbox status based on the individual checkboxes
-    if(role===ROLEIDS.CLINIC_ADMIN){
+    if(role===ROLEIDS.CLINIC_ADMIN || allowAllLocations){
       setselectedLocations(locationOptions.map((location:any)=>location.value))
       setNotificationOptions(locationOptions.map((location: any) => ({
           label: location.label, 
@@ -105,7 +105,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
     setSelectAllLocations(selectedLocations.length === locationOptions.length);
 
-  }, [JSON.stringify(selectedLocations), locationOptions,role]);
+  }, [JSON.stringify(selectedLocations), locationOptions,role,allowAllLocations]);
 
   useEffect(()=>{
     setSelectAllNotifications(selectedNotifications.length === notificationOptions.length)
@@ -596,14 +596,14 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                                         {LABELS.SELECT_NOTIFICATION}
                         </Title>
                         <Form.Item name="selectLoction" valuePropName="selectLoction" noStyle>
-                            <div style={{display:'flex', flexDirection:'column'}}>
+                            <div style={{display:'flex', flexDirection:'column', width:'max-content'}}>
                             <Checkbox
                                 onChange={handleSelectAllNotifications}
                                 checked={selectAllNotifications}
                             >
                                 {LABELS.SELECT_ALL}
                                 </Checkbox>
-                                <Checkbox.Group style={{ display: "flex", flexDirection: "column" }} value={selectedNotifications} options={notificationOptions} onChange={notificationOnchange} />
+                                <Checkbox.Group style={{ flexDirection:'column', width:'max-content'}} value={selectedNotifications} options={notificationOptions} onChange={notificationOnchange} />
                                 </div>
                         </Form.Item>
                         </Col>}
@@ -623,7 +623,7 @@ function UserCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                                     <Button
                                         type='default'
                                         htmlType='button'
-                                        onClick={() => navigate(`/manage-account/users`)}
+                                        onClick={() => navigate(`/partner/${partnerID}/manageAccount/${partnerName}`)}
                                     >
                                         {LABELS.CANCEL}
                                     </Button>
