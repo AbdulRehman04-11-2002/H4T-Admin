@@ -425,7 +425,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     })
     setgeneralCountries(countryOptionsArr)
     if (ME?.systemServices) {
-      const initializedServices = ME.systemServices.map((service: any) => ({
+      const initializedServices = ME.systemServices.map((service: Service) => ({
         id: service.id,
         name: service.name,
         checked: false,
