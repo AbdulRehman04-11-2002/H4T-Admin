@@ -15,16 +15,16 @@ import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
 import { emailValidate } from '../../utils/globalFunctions';
-
+import { Fee } from '../../interface/Partner';
 const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
 interface Service {
-  id: number; // Original Service ID
+  id: number;
   name: string;
   checked: boolean;
-  partnerServiceId: number | undefined; // Partner Service ID, or null if not present
+  partnerServiceId: number | undefined;
   fees: {
     category: "WALK_IN" | "ADVANCE_BOOKING";
     feeValue: number;
@@ -236,26 +236,25 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       // Dynamically set the fees based on service name and category
       ...currentPartner?.services?.reduce((acc: any, service: any) => {
         // Iterate over the fees array
-        service.fees.forEach((fee:any) => {
+        service?.fees?.forEach((fee:Fee) => {
           // Construct the key based on the service name and fee category
-          console.log(fee)
-          acc[`${service.service.name}-${fee.category.toLowerCase()}Fee`] = fee.feeValue;
+          acc[`${service?.service?.name}-${fee?.category?.toLowerCase()}Fee`] = fee?.feeValue;
         });
         return acc;
       }, {}),
     });
   
-    if (services) {
-      const updatedServices = services.map((service) => {
+    if (services?.length) {
+      const updatedServices = services?.map((service) => {
         // Find the matching service in currentPartner's services
         const existingService = currentPartner?.services?.find(
-          (partnerService) => partnerService.service.id === service.id
+          (partnerService) => partnerService?.service?.id === service?.id
         );
     
         // Determine if the service should be checked based on the existence of fees in relevant categories
         const isChecked = existingService
-          ? existingService.fees.some(
-              (fee) => fee.category === "WALK_IN" || fee.category === "ADVANCE_BOOKING"
+          ? existingService?.fees?.some(
+              (fee) => fee?.category === "WALK_IN" || fee?.category === "ADVANCE_BOOKING"
             )
           : false;
     
@@ -265,12 +264,12 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
           checked: isChecked, // Set `checked` if relevant fees exist
           partnerServiceId: existingService?.id || undefined, // Store partner service ID if available
           fees: existingService
-            ? existingService.fees.map((fee) => ({
-                category: fee.category,
-                feeValue: fee.feeValue,
-                amountType: fee.amountType as "FIXED_FEE", // Type assertion for safety
+            ? existingService?.fees?.map((fee) => ({
+                category: fee?.category,
+                feeValue: fee?.feeValue,
+                amountType: fee?.amountType as "FIXED_FEE", // Type assertion for safety
               }))
-            : service.fees, // Use default fees if no existing service
+            : service?.fees, // Use default fees if no existing service
         };
       });
     
@@ -278,10 +277,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       setServices(updatedServices);
     }
     
-    
-   
-    
-  
     if (currentPartner?.imageUrl) {
       setFileList([{ uid: "-1", name: "image", status: "done", url: currentPartner.imageUrl }]);
       setImageUrl(currentPartner.imageUrl || "");
@@ -343,12 +338,33 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   
 
   const handleCheckboxChange = (serviceId: number) => {
-    const updatedServices = services.map((service) =>
-      service.id === serviceId ? { ...service, checked: !service.checked } : service
+    const updatedServices = services?.map((service: Service) =>
+      service?.id === serviceId 
+        ? {
+            ...service,
+            checked: !service?.checked,
+            // When unchecking, reset fees to 0 but maintain the structure
+            fees: service?.fees?.map(fee => ({
+              ...fee,
+              feeValue: !service?.checked ? fee?.feeValue : 0
+            }))
+          }
+        : service
     );
-    setServices(updatedServices);
-    setIsDataChange(true)
+    
+    // Reset form values for the unchecked service
+    if (!updatedServices.find(s => s.id === serviceId)?.checked) {
+      const service = services?.find(s => s.id === serviceId);
+      if (service) {
+        form.setFieldsValue({
+          [`${service?.name}-advance_bookingFee`]: undefined,
+          [`${service?.name}-walk_inFee`]: undefined
+        });
+      }
+    }
 
+    setServices(updatedServices);
+    setIsDataChange(true);
   };
 
   const handleInputChange = (
@@ -356,32 +372,24 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     category: "WALK_IN" | "ADVANCE_BOOKING",
     feeValue: number
   ) => {
-    const updatedServices = services.map((service) => {
-      if (service.id === serviceId) {
-        // Ensure the category exists in the fees array
-        const existingFee = service.fees.find((fee) => fee.category === category);
+  const updatedServices = services?.map((service) => {
+      if (service?.id === serviceId) {
+        const updatedFees = service?.fees?.map(fee =>
+          fee?.category === category
+            ? { ...fee, feeValue }
+            : fee
+        );
         
-        let updatedFees;
-        if (existingFee) {
-          // Update the feeValue for the existing category
-          updatedFees = service.fees.map((fee) =>
-            fee.category === category ? { ...fee, feeValue } : fee
-          );
-        } else {
-          // Add a new fee for the specified category
-          updatedFees = [
-            ...service.fees,
-            { category, feeValue, amountType: "FIXED_FEE" as const },
-          ];
-        }
-  
-        return { ...service, fees: updatedFees };
+        return {
+          ...service,
+          fees: updatedFees
+        };
       }
       return service;
     });
-  
-    setServices(updatedServices); // Update the state with the modified services
-    setIsDataChange(true); // Set the data change flag to true
+
+    setServices(updatedServices);
+    setIsDataChange(true);
   };
   
   
@@ -1134,7 +1142,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       >
         <Input
           placeholder={PLACEHOLDERS.ENTER_FEE + (service.checked ? " *" : "")}
-          value={service.fees.find(fee => fee.category === "ADVANCE_BOOKING")?.feeValue}
+          value={service.checked ? service.fees.find(fee => fee.category === "ADVANCE_BOOKING")?.feeValue : undefined}
           onChange={(e) =>
             handleInputChange(service.id, "ADVANCE_BOOKING", Number(e.target.value))
           }
@@ -1152,7 +1160,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       >
         <Input
           placeholder={PLACEHOLDERS.ENTER_FEE + (service.checked ? " *" : "")}
-          value={service.fees.find(fee => fee.category === "WALK_IN")?.feeValue}
+          value={service.checked ? service.fees.find(fee => fee.category === "WALK_IN")?.feeValue : undefined}
           onChange={(e) =>
             handleInputChange(service.id, "WALK_IN", Number(e.target.value))
           }
