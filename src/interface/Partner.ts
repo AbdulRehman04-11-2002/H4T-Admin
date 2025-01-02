@@ -7,15 +7,21 @@ export interface RegisteredCity {
     location: number;
 }
 
-export interface Service {
-    id: number;
-    feeType: string;
+export interface Fee {
+    category: "WALK_IN" | "ADVANCE_BOOKING";
     feeValue: number;
-    service: {
-        id: number;
-        name: string;
-    };
+    amountType: "FIXED_FEE";
 }
+
+export interface Service {
+    id: number; // Partner Service ID
+    status: string;
+    fees: Fee[];
+    service: {
+      id: number; // Original Service ID
+      name: string;
+    };
+  }
 interface BankDetails {
     id: number;
     name: string;

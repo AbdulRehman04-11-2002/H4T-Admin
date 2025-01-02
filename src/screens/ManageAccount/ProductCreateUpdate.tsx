@@ -11,10 +11,10 @@ import { useTranslation } from 'react-i18next';
 import { GlobalContext, GlobalContextProps } from '../../context/GlobalContext';
 import { ApiError } from '../../services/api/Index';
 import { createPartnerProduct, getProducts, updatePartnerProduct } from '../../services/api/partnerProduct';
-import { PartnerProduct } from '../../interface/PartnerProduct';
+import { PartnerProduct, PartnerService } from '../../interface/PartnerProduct';
 import { getPartnerLocations } from '../../services/api/partnerLocation';
 import { getPartner } from '../../services/api/partner';
-import { Partner } from '../../interface/Partner';
+import { Fee, Partner, Service } from '../../interface/Partner';
 import Tooltip from '../../components/Tooltip/Index';
 
 const { Title, Text } = Typography;
@@ -30,7 +30,8 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [selectedLocations, setselectedLocations] = useState<number[]>([])
   const [price, setPrice] = useState<number>()
   const [imageUrl, setImageUrl] = useState<string>('')
-  const [partnerSeerviceFee, setPartnerServiceFee] = useState<number>(0)
+  const [partnerAdvanceBookingFee, setPartnerAdvanceBookingFee] = useState<number>(0)
+  const [partnerWalkInFee, setPartnerWalkInFee] = useState<number>(0)
   const [selectedPartner, setselectedPartner] = useState<Partner | null>(null)
   const [errors, setErrors] = useState({
     name: "",
@@ -71,8 +72,8 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     form.setFieldsValue({
       serviceType:SelectedID
     });
-    customerSeesPrice(SelectedID)
-
+    customerSeesAdvanceBookingPrice(SelectedID)
+    customerSeesWalkInPrice(SelectedID)
 
   }
 
@@ -123,7 +124,8 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     showLoader();
     try {
       const response = await getProducts(productID || "");
-      customerSeesPrice(response?.data?.partnerProduct.partner_service.id, response?.data?.partnerProduct.partner_service)
+      customerSeesAdvanceBookingPrice(response?.data?.partnerProduct?.partner_service?.id, response?.data?.partnerProduct?.partner_service)
+      customerSeesWalkInPrice(response?.data?.partnerProduct?.partner_service?.id, response?.data?.partnerProduct?.partner_service)
       setFormValues(response?.data?.partnerProduct)
     } catch (error) {
       const _error = error as ApiError;
@@ -137,12 +139,29 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       hideLoader();
     }
   }
-  const customerSeesPrice = (serviceID: number, partnerService?: any) => {
-    let feeValue = partnerService?.feeValue || selectedPartner?.services.find((service: any) => service.id === serviceID)?.feeValue
+  const customerSeesWalkInPrice = (serviceID: number, partnerService?: PartnerService) => {
+    let feeValue =
+  partnerService?.fees?.find((fee: Fee) => fee?.category === "WALK_IN")?.feeValue || 
+  selectedPartner?.services
+    .find((service: Service) => service?.service?.id === serviceID)
+    ?.fees?.find((fee: Fee) => fee?.category === "WALK_IN")
+    ?.feeValue;
 
     let price = form.getFieldValue("price")
     setPrice(price)
-    setPartnerServiceFee(+feeValue || 0)
+    setPartnerWalkInFee(Number(feeValue) || 0)
+  }
+  const customerSeesAdvanceBookingPrice = (serviceID: number, partnerService?: PartnerService) => {
+    let feeValue =
+  partnerService?.fees?.find((fee: Fee) => fee?.category === "ADVANCE_BOOKING")?.feeValue || 
+  selectedPartner?.services
+    .find((service: Service) => service?.service?.id === serviceID)
+    ?.fees?.find((fee: Fee) => fee?.category === "ADVANCE_BOOKING")
+    ?.feeValue;
+
+    let price = form.getFieldValue("price")
+    setPrice(price)
+    setPartnerAdvanceBookingFee(Number(feeValue) || 0)
 
   }
 
@@ -504,8 +523,10 @@ function ProductCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       value={price}
                     />
                   </Form.Item>
-                  <Text style={{ fontSize: 11, color: "#1677ff", position: "absolute", bottom: -20 }} >{`${LABELS.CUSTOMER_SEES} : ${+(price || 0) + partnerSeerviceFee}`}</Text>
-
+                 
+                  <Text style={{ fontSize: 11, color: "#1677ff", position: "absolute", bottom: -20 }} >{`${LABELS.ADVANCE_BOOKING_CUSTOMER_SEES} : ${+(price || 0) + partnerAdvanceBookingFee}`}</Text>
+                  <Text style={{ fontSize: 11, color: "#1677ff", position: "absolute", bottom: -40 }} >{`${LABELS.WALK_IN_CUSTOMER_SEES} : ${+(price || 0) + partnerWalkInFee}`}</Text>
+                  
                 </div>
 
               </Col>
