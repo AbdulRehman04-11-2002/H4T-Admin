@@ -1,18 +1,18 @@
 import { PartnerLocation } from "./PartnerLocation";
 
-interface fees {
+export interface fees {
     category: "WALK_IN" | "ADVANCE_BOOKING";
     feeValue: number;
     amountType: "FIXED_FEE";
     partnerServiceId: number;
 }
 
-interface PartnerService {
+export interface PartnerService {
     id: number;
     status: string;
     partnerId: number;
     serviceId: number;
-    fees: fees;
+    fees: fees[];
     service: service
 }
 

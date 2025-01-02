@@ -324,16 +324,29 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const createServicePayload = () => {
     return services
       .filter((service) => service.checked)  // Only include checked services
-      .map(({ id, partnerServiceId, fees }) => ({
-        serviceId: id,  // ID of the service
-        partnerServiceId: partnerServiceId || undefined,  // Optional partnerServiceId
-        status: "ENABLED",  // Status of the service
-        fees: fees.map(({ category, feeValue, amountType }) => ({
-          category,  // The fee category (e.g., "WALK_IN", "ADVANCE_BOOKING")
-          feeValue,  // The fee value for that category
-          amountType,  // The type of amount (e.g., "FIXED_FEE")
-        })),
-      }));
+      .map((service) => {
+        // Get the form values for this service's fees
+        const walkInFee = form.getFieldValue(`${service.name}-walk_inFee`);
+        const advanceBookingFee = form.getFieldValue(`${service.name}-advance_bookingFee`);
+
+        return {
+          serviceId: service.id,
+          partnerServiceId: service.partnerServiceId || undefined,
+          status: "ENABLED",
+          fees: [
+            {
+              category: "WALK_IN",
+              feeValue: walkInFee || 0,
+              amountType: "FIXED_FEE",
+            },
+            {
+              category: "ADVANCE_BOOKING",
+              feeValue: advanceBookingFee || 0,
+              amountType: "FIXED_FEE",
+            },
+          ],
+        };
+      });
   };
   
 
