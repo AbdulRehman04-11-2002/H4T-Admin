@@ -363,16 +363,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         : service
     );
     
-    // Reset form values for the unchecked service
-    // if (!updatedServices.find(s => s.id === serviceId)?.checked) {
-    //   const service = services?.find(s => s.id === serviceId);
-    //   if (service) {
-    //     form.setFieldsValue({
-    //       [`${service?.name}-advance_bookingFee`]: service.fees.find((fee)=>fee.category==="ADVANCE_BOOKING")?.feeValue,
-    //       [`${service?.name}-walk_inFee`]: service.fees.find((fee)=>fee.category==="ADVANCE_BOOKING")?.feeValue
-    //     });
-    //   }
-    // }
 
     setServices(updatedServices);
     setIsDataChange(true);
