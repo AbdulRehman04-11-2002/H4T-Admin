@@ -24,6 +24,7 @@ interface Service {
   id: number;
   name: string;
   checked: boolean;
+  status: string;
   partnerServiceId: number | undefined;
   fees: {
     category: "WALK_IN" | "ADVANCE_BOOKING";
@@ -253,10 +254,8 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     
         // Determine if the service should be checked based on the existence of fees in relevant categories
         const isChecked = existingService
-          ? existingService?.fees?.some(
-              (fee) => fee?.category === "WALK_IN" || fee?.category === "ADVANCE_BOOKING"
-            )
-          : false;
+        ? existingService?.status === "ENABLED" // Check if status is "Enabled"
+        : false;
     
         // Return the updated service object
         return {
@@ -271,7 +270,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
               }))
             : service?.fees, // Use default fees if no existing service
         };
-      });
+      })
     
       // Update the state with the modified services
       setServices(updatedServices);
@@ -328,7 +327,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         // Get the form values for this service's fees
         const walkInFee = form.getFieldValue(`${service.name}-walk_inFee`);
         const advanceBookingFee = form.getFieldValue(`${service.name}-advance_bookingFee`);
-
         return {
           serviceId: service.id,
           partnerServiceId: service.partnerServiceId || undefined,
@@ -366,15 +364,15 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     );
     
     // Reset form values for the unchecked service
-    if (!updatedServices.find(s => s.id === serviceId)?.checked) {
-      const service = services?.find(s => s.id === serviceId);
-      if (service) {
-        form.setFieldsValue({
-          [`${service?.name}-advance_bookingFee`]: undefined,
-          [`${service?.name}-walk_inFee`]: undefined
-        });
-      }
-    }
+    // if (!updatedServices.find(s => s.id === serviceId)?.checked) {
+    //   const service = services?.find(s => s.id === serviceId);
+    //   if (service) {
+    //     form.setFieldsValue({
+    //       [`${service?.name}-advance_bookingFee`]: service.fees.find((fee)=>fee.category==="ADVANCE_BOOKING")?.feeValue,
+    //       [`${service?.name}-walk_inFee`]: service.fees.find((fee)=>fee.category==="ADVANCE_BOOKING")?.feeValue
+    //     });
+    //   }
+    // }
 
     setServices(updatedServices);
     setIsDataChange(true);
