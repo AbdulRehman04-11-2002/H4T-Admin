@@ -24,6 +24,7 @@ interface Service {
   id: number;
   name: string;
   checked: boolean;
+  status: string;
   partnerServiceId: number | undefined;
   fees: {
     category: "WALK_IN" | "ADVANCE_BOOKING";
@@ -235,9 +236,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       
       // Dynamically set the fees based on service name and category
       ...currentPartner?.services?.reduce((acc: any, service: any) => {
-        // Iterate over the fees array
         service?.fees?.forEach((fee:Fee) => {
-          // Construct the key based on the service name and fee category
           acc[`${service?.service?.name}-${fee?.category?.toLowerCase()}Fee`] = fee?.feeValue;
         });
         return acc;
@@ -252,28 +251,23 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         );
     
         // Determine if the service should be checked based on the existence of fees in relevant categories
-        const isChecked = existingService
-          ? existingService?.fees?.some(
-              (fee) => fee?.category === "WALK_IN" || fee?.category === "ADVANCE_BOOKING"
-            )
-          : false;
+        const isChecked = existingService && existingService?.status === "ENABLED" ? true : false
+        
     
         // Return the updated service object
         return {
           ...service,
-          checked: isChecked, // Set `checked` if relevant fees exist
-          partnerServiceId: existingService?.id || undefined, // Store partner service ID if available
+          checked: isChecked, 
+          partnerServiceId: existingService?.id || undefined, 
           fees: existingService
             ? existingService?.fees?.map((fee) => ({
                 category: fee?.category,
                 feeValue: fee?.feeValue,
-                amountType: fee?.amountType as "FIXED_FEE", // Type assertion for safety
+                amountType: fee?.amountType as "FIXED_FEE", 
               }))
-            : service?.fees, // Use default fees if no existing service
+            : service?.fees, 
         };
-      });
-    
-      // Update the state with the modified services
+      })
       setServices(updatedServices);
     }
     
@@ -328,7 +322,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         // Get the form values for this service's fees
         const walkInFee = form.getFieldValue(`${service.name}-walk_inFee`);
         const advanceBookingFee = form.getFieldValue(`${service.name}-advance_bookingFee`);
-
         return {
           serviceId: service.id,
           partnerServiceId: service.partnerServiceId || undefined,
@@ -365,16 +358,6 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         : service
     );
     
-    // Reset form values for the unchecked service
-    if (!updatedServices.find(s => s.id === serviceId)?.checked) {
-      const service = services?.find(s => s.id === serviceId);
-      if (service) {
-        form.setFieldsValue({
-          [`${service?.name}-advance_bookingFee`]: undefined,
-          [`${service?.name}-walk_inFee`]: undefined
-        });
-      }
-    }
 
     setServices(updatedServices);
     setIsDataChange(true);
