@@ -236,9 +236,7 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       
       // Dynamically set the fees based on service name and category
       ...currentPartner?.services?.reduce((acc: any, service: any) => {
-        // Iterate over the fees array
         service?.fees?.forEach((fee:Fee) => {
-          // Construct the key based on the service name and fee category
           acc[`${service?.service?.name}-${fee?.category?.toLowerCase()}Fee`] = fee?.feeValue;
         });
         return acc;
@@ -253,26 +251,23 @@ function PartnerCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         );
     
         // Determine if the service should be checked based on the existence of fees in relevant categories
-        const isChecked = existingService
-        ? existingService?.status === "ENABLED" // Check if status is "Enabled"
-        : false;
+        const isChecked = existingService && existingService?.status === "ENABLED" ? true : false
+        
     
         // Return the updated service object
         return {
           ...service,
-          checked: isChecked, // Set `checked` if relevant fees exist
-          partnerServiceId: existingService?.id || undefined, // Store partner service ID if available
+          checked: isChecked, 
+          partnerServiceId: existingService?.id || undefined, 
           fees: existingService
             ? existingService?.fees?.map((fee) => ({
                 category: fee?.category,
                 feeValue: fee?.feeValue,
-                amountType: fee?.amountType as "FIXED_FEE", // Type assertion for safety
+                amountType: fee?.amountType as "FIXED_FEE", 
               }))
-            : service?.fees, // Use default fees if no existing service
+            : service?.fees, 
         };
       })
-    
-      // Update the state with the modified services
       setServices(updatedServices);
     }
     
