@@ -62,6 +62,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     lattitude: "",
     streetAddress: "",
     customerGuidelines: "",
+    walkInGuidelines: "",
     status: "",
     docConsFixedFee: "",
     email: ""
@@ -101,6 +102,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputLatitudeRef = useRef<null | HTMLElement>(null);
   const inputStreetAddressRef = useRef<null | HTMLElement>(null);
   const inputCustomerGuidelinesRef = useRef<null | HTMLElement>(null);
+  const inputWalkInGuidelinesRef = useRef<null | HTMLElement>(null);
   const inputStatusRef = useRef<null | HTMLElement>(null);
   const inputEmailRef = useRef<null | HTMLElement>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState('')
@@ -133,6 +135,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
         return inputStreetAddressRef;
       case "customerGuidelines":
         return inputCustomerGuidelinesRef;
+      case "walkInGuidelines":
+        return inputWalkInGuidelinesRef
       case "status":
         return inputStatusRef;
       case "email":
@@ -175,6 +179,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       lattitude: form.getFieldValue('lattitude'),
       streetAddress: form.getFieldValue('streetAddress'),
       customerGuidelines: form.getFieldValue('customerGuidelines'),
+      walkInGuidelines: form.getFieldValue('walkInGuidelines'),
       status: form.getFieldValue('status').toUpperCase(),
       partner_location_timings: JSON.stringify(createPayloadForOperatingHours()),
       partnerId: partnerID,
@@ -235,6 +240,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       lattitude: data?.lattitude,
       streetAddress: data?.streetAddress,
       customerGuidelines: data?.customerGuidelines,
+      walkInGuidelines: data?.walkInGuidelines,
       status: data?.status,
       email: data?.emailAddress,
       days: days,
@@ -1095,6 +1101,40 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     />
                   </Form.Item>
                 
+                </Col>
+                <Col
+                  lg={{ span: 12 }}
+                  md={{ span: 12 }}
+                  sm={{ span: 23 }}
+                  xs={{ span: 23 }}
+                >
+                  <Form.Item
+                    validateStatus={errors.walkInGuidelines ? "error" : ""}
+                    name="walkInGuidelines"
+                    label={
+                      <label className="label ">
+                        {LABELS.WALK_IN_GUIDELINES}
+                        <Tooltip title={LABELS.GUIDELINE_TOOLTIP} />
+                      </label>
+                    }
+                    rules={[
+                      {
+                        min: 3,
+                        message: t("ERRORS.MIN_LENGTH_3", {
+                          type: "WalkIn Instructions",
+                        }),
+                      },
+                    ]}
+                    validateTrigger={["handleFinish", "handleUpdate"]}
+                  >
+                    <TextArea
+                      placeholder={LABELS.WALK_IN_GUIDELINES}
+                      ref={inputWalkInGuidelinesRef as any}
+                      autoFocus={false}
+                      disabled={false}
+                      rows={5}
+                    />
+                  </Form.Item>
                 </Col>
 
               </Row>

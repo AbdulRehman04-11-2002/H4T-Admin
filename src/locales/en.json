@@ -56,6 +56,7 @@
     "SERVICE_PHOTO": "Service Photo",
     "LOCATION_IMAGE": "Location Image",
     "CUSTOM_GUIDELINES": "Arrival Instructions",
+    "WALK_IN_GUIDELINES": "Walk-in Instructions",
     "CUSTOMER_GUIDELINES": "Customer Guidelines",
     "ENABLE_WALK_IN": "Enable Walk-in",
     "DISABLE_WALK_IN": "Disable Walk-in",
