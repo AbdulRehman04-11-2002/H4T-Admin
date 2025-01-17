@@ -68,6 +68,7 @@ export interface PartnerLocation {
     isBookingNoticeEnabled: boolean;
     emailAddress: string;
     bookingNoticeMinutes: number;
+    walkInUrl: string
 }
 
 interface PartnerLocationResponse {

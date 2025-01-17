@@ -1,5 +1,5 @@
 import {
-  Switch, Button, Col, Divider, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile, Modal,
+  Switch, Button, Col, Divider, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile, Modal, Image
 } from 'antd';
 import { SetStateAction, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -24,6 +24,10 @@ import DaysInput from './DaysInput';
 import HoursDropdown from './HoursDropdown';
 import MinutesDropdown from './MinutesDropdown';
 import { emailValidate } from '../../../utils/globalFunctions';
+import { customerURL, NOTIFICATION_STATUS } from '../../../constants/constants';
+import QRCode from 'qrcode';
+import { pdf } from '@react-pdf/renderer';
+import { MyDocument } from './MyDocument';
 const { Text } = Typography;
 type operatingHoursType = {
   day: string;
@@ -45,7 +49,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const [generalCountries, setgeneralCountries] = useState<{label:string, value:number }[]>([]);
   const [generalCities , setgeneralCities ] = useState<{label:string, value:number }[]>([]);
   const [fileList, setFileList] = useState<AntUploadFile[]>([]);
-
+  const [walkInUrl, setWalkInUrl] = useState('')
   const [imageUrl, setImageUrl] = useState<string>("");
   const [errors, setErrors] = useState({
     name: "",
@@ -99,7 +103,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   const inputCustomerGuidelinesRef = useRef<null | HTMLElement>(null);
   const inputStatusRef = useRef<null | HTMLElement>(null);
   const inputEmailRef = useRef<null | HTMLElement>(null);
-
+  const [qrCodeUrl, setQrCodeUrl] = useState('')
   const handleOperatingHoursChange = (timeString: string | string[], index: number, dayName: string) => {
     const updatedOperatingHours = [...operatingHours];
     updatedOperatingHours[index][dayName] = Array.isArray(timeString) ? timeString[0] : timeString;
@@ -144,6 +148,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       const response = await getLocation(locationID || "");
       getCities(response.data.response.city.location)
       setFormValues(response.data.response)
+      setWalkInUrl(response.data.response.walkInUrl)
+      generateQRCode()
     } catch (error) {
       const _error = error as ApiError;
       const { errorMessage } = handleErrorResponse(_error);
@@ -242,6 +248,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
   }
 
   const createOperatingHours = (partner_location_timings?: any) => {
+    generateQRCode()
     const operatingHours: operatingHoursType[] = [];
     const days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
     days.forEach((day, index) => {
@@ -361,6 +368,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     }
   };
 
+  
   useEffect(() => {
     !locationID && createOperatingHours();
     if(ME?.user){
@@ -432,6 +440,117 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
     return bookingNoticeMinutes;
   }
+
+  const generateQRCode = async () => {
+    try {
+      const url = `${customerURL}/walk-in/${walkInUrl}`;
+      const qrDataUrl = await QRCode.toDataURL(url, {
+        width: 500,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        },
+        scale: 100
+      });
+      setQrCodeUrl(qrDataUrl);
+    } catch (err) {
+      console.error('Error generating QR code:', err);
+    }
+  };
+  const handleDownloadPdf = async () => {
+    
+    const blob = await pdf(<MyDocument clinicName={form.getFieldValue('code')} streetAddress={form.getFieldValue('streetAddress')} walkinInstructions={form.getFieldValue('walkInGuidelines')} qrCodeUrl={qrCodeUrl}/>).toBlob();
+    const url = URL.createObjectURL(blob);
+    console.log('blob', blob)
+    console.log('url', url)
+    // Create a link element and trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'example.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Clean up the URL object
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadImage = () => {
+    const imageUrl = qrCodeUrl; // Replace with your image URL
+    const fileName = "Walkin-QrCode.jpg"; // Desired file name
+  
+    const img = document.createElement("img"); // Use document.createElement
+    img.crossOrigin = "anonymous"; // Handle cross-origin issues
+    img.src = imageUrl;
+  
+    img.onload = () => {
+      // Create a canvas for resizing
+      const canvas = document.createElement("canvas");
+      canvas.width = 1028;
+      canvas.height = 1028;
+      const ctx = canvas.getContext("2d");
+  
+      // Draw the resized image on the canvas
+      ctx?.drawImage(img, 0, 0, 1028, 1028);
+  
+      // Create a temporary download link
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/jpeg");
+      link.download = fileName;
+  
+      // Trigger the download
+      link.click();
+    };
+  
+    img.onerror = () => {
+      console.error("Failed to load the image.");
+    };
+  };
+
+  const handleCopyQRCode = async () => {
+    try {
+      // Create an image element
+      const img = document.createElement("img");
+      img.src = qrCodeUrl; // QR code image URL
+      
+      img.onload = () => {
+        // Create a canvas element
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        if (ctx) {
+          // Set the canvas size to match the image size
+          canvas.width = img.width;
+          canvas.height = img.height;
+          
+          // Draw the image onto the canvas
+          ctx.drawImage(img, 0, 0);
+  
+          // Try to copy the canvas image to the clipboard
+          canvas.toBlob((blob) => {
+            // Check if the blob is not null
+            if (blob) {
+              const item = new ClipboardItem({ 'image/png': blob });
+              navigator.clipboard.write([item]);
+              openToastNotification(
+                NOTIFICATION_STATUS.SUCCESS,
+                "QR Image Copied"
+              );
+            } else {
+              console.error("Failed to create Blob from canvas.");
+            }
+          }, 'image/png');
+        }
+      };
+  
+      img.onerror = () => {
+        console.error("Failed to load the image.");
+      };
+    } catch (err) {
+      console.error("Error during copying QR code:", err);
+    }
+  };
 
   return (
     <div className="create-partner-content">
@@ -1099,6 +1218,15 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                     >
                       {LABELS.BOOKING_NOTICE_WALKIN_DESC}
                     </Text>
+                    {isAvailableNowSlot && qrCodeUrl && <div style={{display:'flex', justifyItems:'center', alignItems:'center', flexDirection:'column', backgroundColor:'#F6F6F6', paddingTop:20, paddingBottom:20,marginLeft:10, marginRight:10, borderRadius:10, marginBottom:20}}>
+               <span id='qr-container'> <Image src={qrCodeUrl} height={200} width={200}/> </span>
+                {walkInUrl ? <div style={{display:'flex', gap:10, alignItems:'center', marginTop:10}}>
+                <Button onClick={downloadImage} style={{backgroundColor:'#183A59', color:'white', marginTop:5, marginBottom:5}}>Download JPG</Button>
+                <Button onClick={handleDownloadPdf} style={{backgroundColor:'#183A59', color:'white', marginTop:5, marginBottom:5}}>Download PDF</Button>
+                <Button onClick={handleCopyQRCode} style={{backgroundColor:'#183A59', color:'white', marginTop:5, marginBottom:5}}>Copy QR Image</Button>
+                </div> : <p style={{textAlign:'center', marginTop:10}}>This is a draft QR code. To download the final QR code, please create the location first.</p>}
+               
+                </div>}
                   </Col>
                 </Row>
                 <div style={{ padding: "0 30px", width: "100%" }}>
