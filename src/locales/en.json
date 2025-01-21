@@ -105,7 +105,9 @@
     "SELECT_ALL": "Select all",
     "AMOUNT":"Amount",
     "PROCESS": "Process",
-    "PAYMENT": "Payment"
+    "PAYMENT": "Payment",
+    "QR_IMAGE_COPIED": "QR Image has been copied"
+
   },
   "PLACEHOLDERS": {
     "SEARCH": "Search",
@@ -180,7 +182,10 @@
     "UPDATE": "Update",
     "SEARCH": "Search",
     "RESET": "Reset",
-    "RESEND_CODE": "Resend Code"
+    "RESEND_CODE": "Resend Code",
+    "DOWNLOAD_JPG": "Download JPG",
+    "DOWNLOAD_PDF": "Download PDF",
+    "COPY_QR_IMAGE": "Copy QR Image"
   },
   "API_ERRORS": {
     "UNAUTHORIZED": "Unauthorized",
