@@ -1,5 +1,5 @@
 import {
-  Switch, Button, Col, Divider, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile, Modal, Image
+  Switch, Button, Col, Divider, Form, Input, Row, Select, Space, Typography, UploadFile as AntUploadFile, Modal, Image, QRCode as QRImage
 } from 'antd';
 import { SetStateAction, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -540,8 +540,9 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
               const item = new ClipboardItem({ 'image/png': blob });
               navigator.clipboard.write([item]);
               openToastNotification(
-                NOTIFICATION_STATUS.SUCCESS,
-                "QR Image Copied"
+                "QR Image has been copied",
+                NOTIFICATION_STATUS.SUCCESS
+                
               );
             } else {
               console.error("Failed to create Blob from canvas.");
@@ -1133,6 +1134,8 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       autoFocus={false}
                       disabled={false}
                       rows={5}
+                      maxLength={600}
+                      showCount
                     />
                   </Form.Item>
                 </Col>
@@ -1259,12 +1262,12 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
                       {LABELS.BOOKING_NOTICE_WALKIN_DESC}
                     </Text>
                     {isAvailableNowSlot && qrCodeUrl && <div style={{display:'flex', justifyItems:'center', alignItems:'center', flexDirection:'column', backgroundColor:'#F6F6F6', paddingTop:20, paddingBottom:20,marginLeft:10, marginRight:10, borderRadius:10, marginBottom:20}}>
-               <span id='qr-container'> <Image src={qrCodeUrl} height={200} width={200}/> </span>
+               <span id='qr-container'> {walkInUrl && <Image src={qrCodeUrl} height={200} width={200}/>} </span>
                 {walkInUrl ? <div style={{display:'flex', gap:10, alignItems:'center', marginTop:10}}>
                 <Button onClick={downloadImage} style={{backgroundColor:'#183A59', color:'white', marginTop:5, marginBottom:5}}>Download JPG</Button>
                 <Button onClick={handleDownloadPdf} style={{backgroundColor:'#183A59', color:'white', marginTop:5, marginBottom:5}}>Download PDF</Button>
                 <Button onClick={handleCopyQRCode} style={{backgroundColor:'#183A59', color:'white', marginTop:5, marginBottom:5}}>Copy QR Image</Button>
-                </div> : <p style={{textAlign:'center', marginTop:10}}>This is a draft QR code. To download the final QR code, please create the location first.</p>}
+                </div> : <p style={{textAlign:'center', marginTop:10}}>QR image will be available for download only after the location is created.</p>}
                
                 </div>}
                   </Col>
