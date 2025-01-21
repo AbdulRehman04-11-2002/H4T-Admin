@@ -58,6 +58,7 @@ export interface PartnerLocation {
     lattitude: string;
     streetAddress: string;
     customerGuidelines: string;
+    walkInGuidelines: string;
     imageUrl: string | null;
     status: string;
     cityId: number;
@@ -68,6 +69,7 @@ export interface PartnerLocation {
     isBookingNoticeEnabled: boolean;
     emailAddress: string;
     bookingNoticeMinutes: number;
+    walkInUrl: string
 }
 
 interface PartnerLocationResponse {

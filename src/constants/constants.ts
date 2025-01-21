@@ -114,6 +114,7 @@ export const API_STATUS = {
 }
 export const defaultPlannerSortBy = "serviceDateTime";
 export const defaultTimezone = "Europe/Amsterdam";
+export const customerURL = process.env.REACT_APP_CUSTOMER_URL;
 export const baseURL = process.env.REACT_APP_BASE_URL;
 export const REFRESH_TOKEN_KEY = "refreshToken";
 export const DELAY_COUNT = 30;
