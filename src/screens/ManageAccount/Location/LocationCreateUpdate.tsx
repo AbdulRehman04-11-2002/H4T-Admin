@@ -382,7 +382,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       getCountryCode();
     }
    
-  }, [])
+  }, [ME])
 
   useEffect(() => {
     let CountryOptionsArr: any = []
@@ -449,7 +449,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
 
   const generateQRCode = async (walkinUrlString?:string) => {
     try {
-      const url = `${customerURL}/walk-in/${walkinUrlString}`;
+      const url = `${customerURL}/walk-in${walkinUrlString}`;
       const qrDataUrl = await QRCode.toDataURL(url, {
         width: 500,
         margin: 2,
