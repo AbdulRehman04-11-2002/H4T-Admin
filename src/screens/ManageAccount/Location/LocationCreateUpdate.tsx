@@ -153,7 +153,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
       getCities(response.data.response.city.location)
       setFormValues(response.data.response)
       setWalkInUrl(response.data.response.walkInUrl)
-      generateQRCode()
+      generateQRCode(response.data.response.walkInUrl)
     } catch (error) {
       const _error = error as ApiError;
       const { errorMessage } = handleErrorResponse(_error);
@@ -447,9 +447,9 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     return bookingNoticeMinutes;
   }
 
-  const generateQRCode = async () => {
+  const generateQRCode = async (walkinUrlString?:string) => {
     try {
-      const url = `${customerURL}/walk-in/${walkInUrl}`;
+      const url = `${customerURL}/walk-in/${walkinUrlString}`;
       const qrDataUrl = await QRCode.toDataURL(url, {
         width: 500,
         margin: 2,
