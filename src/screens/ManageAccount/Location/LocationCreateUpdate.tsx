@@ -473,7 +473,7 @@ function LocationCreateUpdate({ isUpdateForm }: { isUpdateForm?: boolean }) {
     // Create a link element and trigger the download
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'example.pdf';
+    link.download = 'WalkIn_QRCode';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
